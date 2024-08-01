@@ -1,0 +1,650 @@
+<div class="card mb-4">
+    <form id="myCreateContractForm">
+
+        <div class="card-header text-center">
+            Configuración Venta - Nuevo Pospago B2B
+        </div>
+        <div class="card-body">
+            <div>
+                <div class="row">
+                    <div class="card">
+
+                        <div class="card-body">
+                            <h5 class="card-title  text-center">Cliente: 123456789-0 Empresa CallingCenter</h5>
+
+                            <div class="container">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="info-contrato-tab" data-bs-toggle="tab"
+                                            data-bs-target="#info-contrato" type="button" role="tab"
+                                            aria-controls="info-contrato" aria-selected="true">Contrato</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="cuenta-facturacion-tab" data-bs-toggle="tab"
+                                            data-bs-target="#cuenta-facturacion" type="button" role="tab"
+                                            aria-controls="cuenta-facturacion" aria-selected="false">Cuenta
+                                            Facturación</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="descuento-tab" data-bs-toggle="tab"
+                                            data-bs-target="#descuento" type="button" role="tab"
+                                            aria-controls="descuento" aria-selected="false">Descuentos</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="producto-tab" data-bs-toggle="tab"
+                                            data-bs-target="#producto" type="button" role="tab" aria-controls="producto"
+                                            aria-selected="false">Producto</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="registro-equipos-tab" data-bs-toggle="tab"
+                                            data-bs-target="#registro-equipos" type="button" role="tab"
+                                            aria-controls="registro-equipos" aria-selected="false">Equipos</button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="info-contrato" role="tabpanel"
+                                        aria-labelledby="info-contrato-tab">
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                Información de contrato
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+                                                <!-- src/app/components/nuevo-formulario/nuevo-formulario.component.html -->
+                                                <div class="row g-3">
+                                                    <div class="col-md-4">
+                                                        <label for="numeroContrato" class="form-label">Número
+                                                            Contrato</label>
+                                                        <input type="number" class="form-control" id="numeroContrato"
+                                                            required [(ngModel)]="newContract.contract.numeroContrato"
+                                                            name="numeroContrato">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="tipoContrato" class="form-label">Tipo
+                                                            Contrato</label>
+                                                        <select class="form-select" id="tipoContrato" required
+                                                            [(ngModel)]="newContract.contract.tipoContrato"
+                                                            name="tipoContrato">
+                                                            <option selected disabled value="">Seleccione...
+                                                            </option>
+                                                            <option value="Tipo1">Contrato Estandar</option>
+                                                            <option value="Tipo2">Contrato Negociado</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="inicioVigencia" class="form-label">Inicio de
+                                                            Vigencia</label>
+                                                        <input type="date" class="form-control" id="inicioVigencia"
+                                                            required [(ngModel)]="newContract.contract.inicioVigencia"
+                                                            name="inicioVigencia">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="mesesContrato" class="form-label">Meses de
+                                                            Contrato</label>
+                                                        <input type="number" class="form-control" id="mesesContrato"
+                                                            required [(ngModel)]="newContract.contract.mesesContrato"
+                                                            name="mesesContrato">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="finVigencia" class="form-label">Fin de
+                                                            Vigencia</label>
+                                                        <input type="date" class="form-control" id="finVigencia"
+                                                            readonly [(ngModel)]="newContract.contract.finVigencia"
+                                                            name="finVigencia">
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <label for="codigoVendedor" class="form-label">Identificación
+                                                            del KAM</label>
+                                                        <input type="number" class="form-control" id="codigoVendedor"
+                                                            required [(ngModel)]="newContract.contract.codigoVendedor"
+                                                            name="codigoVendedor">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="valorBolsa" class="form-label">Valor
+                                                            Bolsa</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">$</span>
+                                                            <input type="number" class="form-control" id="valorBolsa"
+                                                                required [(ngModel)]="newContract.contract.valorBolsa"
+                                                                name="valorBolsa">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="saldo" class="form-label">Saldo</label>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">$</span>
+                                                            <input type="number" class="form-control" id="saldo"
+                                                                required [(ngModel)]="newContract.contract.saldo"
+                                                                name="saldo">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="cuenta-facturacion" role="tabpanel"
+                                        aria-labelledby="cuenta-facturacion-tab">
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                Cuenta de Facturación
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+
+                                                <div class="row g-3 mt-4">
+                                                    <div class="col-md-12">
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col">Seleccione cuenta</th>
+                                                                    <th scope="col">Id cuenta</th>
+                                                                    <th scope="col"># Cuenta Facturación</th>
+                                                                    <th scope="col">Ciclo de Facturación</th>
+                                                                    <th scope="col">Fecha de creación</th>
+                                                                    <th scope="col"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr
+                                                                    *ngFor="let cuenta of newContract.billAccounts; let i = index">
+                                                                    <td>
+                                                                        <input type="radio" name="selectedAccount"
+                                                                            [value]="cuenta.id"
+                                                                            [(ngModel)]="selectedAccountId"
+                                                                            (change)="selectAccount(cuenta.id)">
+                                                                    </td>
+                                                                    <td>{{ cuenta.id }}</td>
+                                                                    <td>{{ cuenta.cuentaFacturacion ?
+                                                                        cuenta.cuentaFacturacion : "PENDIENTE" }}</td>
+                                                                    <td>{{ cuenta.cicloFacturacion ?
+                                                                        cuenta.cicloFacturacion : "PENDIENTE" }}</td>
+                                                                    <td>{{ cuenta.fechaCreacion ? cuenta.fechaCreacion :
+                                                                        "PENDIENTE" }}</td>
+                                                                    <td><button type="button"
+                                                                            class="btn btn-danger btn-sm"
+                                                                            (click)="eliminarCuenta(i)">Eliminar</button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer text-end">
+                                                <button type="button" class="btn btn-primary" id="adicionarCuentaButton"
+                                                    (click)="adicionarCuenta()">Adicionar Cuenta Facturación</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="descuento" role="tabpanel"
+                                        aria-labelledby="descuento-tab">
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                Descuento Personalizado Discontinuo
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+
+                                                <!-- src/app/components/nuevo-formulario/nuevo-formulario.component.html -->
+                                                <div class="row g-3">
+                                                    <!-- Campos existentes -->
+
+                                                    <!-- Nueva sección de Descuentos -->
+                                                    <div class="row g-3 mt-4">
+                                                        <div class="col-md-3">
+                                                            <label for="valorDescuento" class="form-label">Valor del
+                                                                Descuento</label>
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control"
+                                                                    id="valorDescuento" step="0.01" required
+                                                                    [(ngModel)]="newContract.discount.valorDescuento"
+                                                                    name="valorDescuento">
+                                                                <span class="input-group-text">%</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-3">
+                                                            <label for="motivoDescuento" class="form-label">Motivo del
+                                                                Descuento</label>
+                                                            <select class="form-select" id="motivoDescuento" required
+                                                                [(ngModel)]="newContract.discount.motivoDescuento"
+                                                                name="motivoDescuento">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option value="motivo1">Descuento Comercial</option>
+                                                                <option value="motivo2">Descuento por Retención</option>
+                                                                <option value="motivo3">Descuento por renovación
+                                                                    comercial</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <ul class="list-group list-group-horizontal">
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox1"
+                                                                        (change)="toggleMonth('ENE')"
+                                                                        [checked]="newContract.discount.meses.includes('ENE')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox1">ENE</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox2"
+                                                                        (change)="toggleMonth('FEB')"
+                                                                        [checked]="newContract.discount.meses.includes('FEB')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox2">FEB</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox3"
+                                                                        (change)="toggleMonth('MAR')"
+                                                                        [checked]="newContract.discount.meses.includes('MAR')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox3">MAR</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox4"
+                                                                        (change)="toggleMonth('ABR')"
+                                                                        [checked]="newContract.discount.meses.includes('ABR')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox4">ABR</label>
+                                                                </li>
+                                                            </ul>
+
+                                                            <ul class="list-group list-group-horizontal">
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox5"
+                                                                        (change)="toggleMonth('MAY')"
+                                                                        [checked]="newContract.discount.meses.includes('MAY')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox5">MAY</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox6"
+                                                                        (change)="toggleMonth('JUN')"
+                                                                        [checked]="newContract.discount.meses.includes('JUN')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox6">JUN</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox7"
+                                                                        (change)="toggleMonth('JUL')"
+                                                                        [checked]="newContract.discount.meses.includes('JUL')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox7">JUL</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox8"
+                                                                        (change)="toggleMonth('AGO')"
+                                                                        [checked]="newContract.discount.meses.includes('AGO')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox8">AGO</label>
+                                                                </li>
+                                                            </ul>
+
+                                                            <ul class="list-group list-group-horizontal">
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox9"
+                                                                        (change)="toggleMonth('SEP')"
+                                                                        [checked]="newContract.discount.meses.includes('SEP')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox9">SEP</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox10"
+                                                                        (change)="toggleMonth('OCT')"
+                                                                        [checked]="newContract.discount.meses.includes('OCT')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox10">OCT</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox11"
+                                                                        (change)="toggleMonth('NOV')"
+                                                                        [checked]="newContract.discount.meses.includes('NOV')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox11">NOV</label>
+                                                                </li>
+                                                                <li class="list-group-item">
+                                                                    <input class="form-check-input" type="checkbox"
+                                                                        id="inlineCheckbox12"
+                                                                        (change)="toggleMonth('DIC')"
+                                                                        [checked]="newContract.discount.meses.includes('DIC')">
+                                                                    <label class="form-check-label"
+                                                                        for="inlineCheckbox12">DIC</label>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="producto" role="tabpanel"
+                                        aria-labelledby="producto-tab">
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                Producto - Planes y Lineas a activar
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+
+                                                <div class="row g-2">
+                                                    <div class="col-12">
+                                                        <div class="p-3 border bg-light">
+                                                            <div class="row g-3">
+                                                                <div class="col-md-3">
+                                                                    <label for="tipoProducto" class="form-label">Tipo de
+                                                                        Producto</label>
+                                                                    <select class="form-select" id="tipoProducto"
+                                                                        [(ngModel)]="newPlan.tipoProducto"
+                                                                        name="tipoProducto" required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="tipo1">Estandar</option>
+                                                                        <option value="tipo2">Avanzado</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label for="familia"
+                                                                        class="form-label">Familia</label>
+                                                                    <select class="form-select" id="familia"
+                                                                        [(ngModel)]="newPlan.familia" name="familia"
+                                                                        required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="familia1">Movil</option>
+                                                                        <option value="familia2">IoT</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label for="producto"
+                                                                        class="form-label">Producto</label>
+                                                                    <select class="form-select" id="producto"
+                                                                        [(ngModel)]="newPlan.producto" name="producto"
+                                                                        required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="producto1">Pospago Empresarial
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label for="plan" class="form-label">Plan</label>
+                                                                    <select class="form-select" id="plan"
+                                                                        [(ngModel)]="newPlan.plan" name="plan" required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="plan1">Plan 1</option>
+                                                                        <option value="plan2">Plan 2</option>
+                                                                        <option value="plan3">Plan 3</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label for="cantidad"
+                                                                        class="form-label">Cantidad</label>
+                                                                    <input type="number" class="form-control"
+                                                                        id="cantidad" [(ngModel)]="newPlan.cantidad"
+                                                                        name="cantidad" required>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label for="valorUnitario" class="form-label">Valor
+                                                                        Unitario</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text">$</span>
+                                                                        <input type="number" class="form-control"
+                                                                            id="valorUnitario"
+                                                                            [(ngModel)]="newPlan.valorUnitario"
+                                                                            name="valorUnitario" readonly>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <label for="grupo" class="form-label">Grupo</label>
+                                                                    <input type="text" class="form-control" id="grupo"
+                                                                        [(ngModel)]="newPlan.grupo" name="grupo">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+
+                                                                </div>
+
+
+                                                                <div class="col-md-3">
+                                                                    <button class="btn btn-primary"
+                                                                        (click)="agregarPlan()">Adicionar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <div class="p-3 border bg-light">
+                                                            <div class="row g-3">
+                                                                <div class="col-md-4">
+                                                                    <label for="valorDescuento" class="form-label">Descuento Personalizado</label>
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control"
+                                                                            id="valorDescuento"
+                                                                            [(ngModel)]="newPlan.valorDescuento"
+                                                                            name="valorDescuento" step="0.01" required>
+                                                                        <span class="input-group-text">%</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <label for="motivoDescuento"
+                                                                        class="form-label">Motivo del Descuento</label>
+                                                                    <select class="form-select" id="motivoDescuento"
+                                                                        [(ngModel)]="newPlan.motivoDescuento"
+                                                                        name="motivoDescuento" required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="motivo1">Descuento Comercial
+                                                                        </option>
+                                                                        <option value="motivo2">Descuento por Retención
+                                                                        </option>
+                                                                        <option value="motivo3">Descuento por renovacion
+                                                                            comercial</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <label for="codigoPromocion"
+                                                                        class="form-label">Descuento Campaña</label>
+                                                                    <select class="form-select" id="codigoPromocion"
+                                                                        [(ngModel)]="newPlan.idPromocion"
+                                                                        name="codigoPromocion" required>
+                                                                        <option selected disabled value="">Seleccione...
+                                                                        </option>
+                                                                        <option value="1">Campaña 1
+                                                                        </option>
+                                                                        <option value="2">Campaña 2
+                                                                        </option>
+                                                                        <option value="3">Campaña 3</option>
+                                                                    </select>
+
+                                                                </div>
+
+                                                                
+
+
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <div class="p-3 border bg-light">
+                                                            <div class="row g-3">
+
+                                                                <div class="row">
+                                                                    <div class="table-responsive">
+                                                                      <table class="table table-striped table-hover" id="tablaServiciosAdicionales">
+                                                                        <thead>
+                                                                          <tr>
+                                                                            <th>Servicio Adicional</th>
+                                                                            <th>Cargo Básico</th>
+                                                                            <th>% Descuento</th>
+                                                                            <th>Eliminar</th>
+                                                                            <th><button class="btn btn-primary" (click)="adicionarServicioAdicional()">+</button></th>
+                                                                          </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                          <tr *ngFor="let servicio of serviciosAdicionales; let i = index">
+                                                                            <td>
+                                                                              <select class="form-select" [(ngModel)]="servicio.tipo">
+                                                                                <option selected disabled value="">Seleccione...</option>
+                                                                                <option value="voz-sms">Voz/SMS</option>
+                                                                                <option value="roaming1">Roaming 1</option>
+                                                                                <option value="roaming2">Roaming 2</option>
+                                                                                <option value="ldi">LDI</option>
+                                                                                <option value="numeroPrivado">Número Privado</option>
+                                                                              </select>
+                                                                            </td>
+                                                                            <td><input type="text" class="form-control" [(ngModel)]="servicio.cargoBasico"></td>
+                                                                            <td><input type="text" class="form-control" [(ngModel)]="servicio.descuento"></td>
+                                                                            <td>
+                                                                              <button class="btn btn-danger btn-sm" (click)="eliminarServicioAdicional(i)">-</button>
+                                                                            </td>
+                                                                            <td>                                                                         
+
+                                                                            </td>
+                                                                          </tr>
+                                                                        </tbody>
+                                                                      </table>
+                                                                    </div>
+                                                                  </div>                                                               
+                                                                  
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <div class="p-3 border bg-light">
+                                                            <div class="row g-3">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12">
+                                                        <div class="p-3 border bg-light">
+                                                            <div class="row g-3">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="registro-equipos" role="tabpanel"
+                                        aria-labelledby="registro-equipos-tab">
+                                        <div class="card mt-2">
+                                            <div class="card-header">
+                                                Registro de Equipos
+                                            </div>
+                                            <div class="card-body">
+                                                <h5 class="card-title"></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row  mt-2">
+                    <div class="card ">
+                        <div class="card-header">
+                            Resumen de venta por plan antes de activar
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">El siguiente no contiene los descuentos por promociones o masivos
+                                aplicados. </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Id Plan</th>
+                                            <th>Plan</th>
+                                            <th>Id Cuenta</th>
+                                            <th>Cantidad de líneas</th>
+                                            <th>Tarifa unitaria Cargo Básico</th>
+                                            <th>Descuento Personalizado</th>
+                                            <th>Precio Unitario sin Iva con Descuento</th>
+                                            <th>Precio Unitario con Descuento + IVA</th>
+                                            <th>Precio Total sin Iva con Descuento</th>
+                                            <th>Precio Total con Descuento + IVA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Plan Empresarial Tigo 6.0</td>
+                                            <td>1</td>
+                                            <td>20</td>
+                                            <td>30000</td>
+                                            <td>15%</td>
+                                            <td>25500</td>
+                                            <td>30345</td>
+                                            <td>510000</td>
+                                            <td>606900</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Plan Empresarial Tigo 6.1</td>
+                                            <td>1</td>
+                                            <td>30</td>
+                                            <td>40000</td>
+                                            <td>20%</td>
+                                            <td>32000</td>
+                                            <td>38080</td>
+                                            <td>960000</td>
+                                            <td>1142400</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Plan Empresarial Tigo 6.2</td>
+                                            <td>1</td>
+                                            <td>50</td>
+                                            <td>50000</td>
+                                            <td>5%</td>
+                                            <td>47500</td>
+                                            <td>56525</td>
+                                            <td>2375000</td>
+                                            <td>2826250</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-footer text-end">
+            <button type="button" class="btn btn-primary">GUARDAR</button>
+            <button type="button" class="btn btn-success">ACTIVAR</button>
+        </div>
+
+    </form>
+</div>
