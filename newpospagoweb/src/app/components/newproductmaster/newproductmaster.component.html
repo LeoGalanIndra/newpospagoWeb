@@ -63,7 +63,8 @@
         <table class="table table-striped" *ngIf="contratos.length > 0">
             <thead>
                 <tr>
-                    <th scope="col">Id</th>
+                    <th scope="col">Numero Contrato</th>
+                    <th scope="col">Tipo Contrato</th>
                     <th scope="col">Estado</th>
                     <th scope="col">Editar</th>
                     <th scope="col">Informe de venta</th>
@@ -76,7 +77,8 @@
             <tbody>
                 <!-- Aquí puedes agregar filas de ejemplo o utilizar datos dinámicos en el futuro -->
                 <tr *ngFor="let contrato of contratos">
-                    <td>{{ contrato.id }}</td>
+                    <td>{{ contrato.numeroContrato }}</td>
+                    <td>{{ contrato.tipoContrato }}</td>
                     <td>{{ contrato.estado }}</td>
                     <td>{{ contrato.editar }}</td>
                     <td>{{ contrato.informeVenta }}</td>

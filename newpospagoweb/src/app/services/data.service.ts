@@ -37,14 +37,15 @@ export class DataService {
         activacionLineas: this.getRandomBoolean(),
         eliminacionLineas: this.getRandomBoolean(),
         edicionLineas: this.getRandomBoolean(), 
-        numeroContrato: 0,
-        tipoContrato: '',
+        numeroContrato: '' + Math.floor(100 + Math.random() * 99),
+        tipoContrato: this.getRandomTipoContrato(),
         inicioVigencia: '',
         mesesContrato: 0,
-        finVigencia: '',
+        finVigencia: null,
         codigoVendedor: 0,
         valorBolsa: 0,
-        saldo: 0
+        saldo: 0, 
+        valorNoRedimible: 0 
       });
     }
 
@@ -63,6 +64,11 @@ export class DataService {
   private getRandomEstado(): string {
     const estados = ['Activo', 'Inactivo'];
     return estados[Math.floor(Math.random() * estados.length)];
+  }
+
+  private getRandomTipoContrato(): string {
+    const contratos = ['Estandar', 'Negociado'];
+    return contratos[Math.floor(Math.random() * contratos.length)];
   }
 
   private getRandomBoolean(): boolean {

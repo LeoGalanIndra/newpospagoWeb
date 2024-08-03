@@ -1,5 +1,7 @@
 export interface Plan {
 
+    idPlan: number ; 
+    idCuentaFacturacion: number, 
     tipoProducto: string;
     familia: string;
     producto: string;
@@ -10,6 +12,7 @@ export interface Plan {
     motivoDescuento: string;
     grupo: string;
     idPromocion: number ; 
+    valorTotal: number
     
 
 

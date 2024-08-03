@@ -71,7 +71,16 @@ export class NewproductmasterComponent {
   }
 
   openNewContract(){
-    this.router.navigate(['/createproduct']);
+
+    console.log("sending " + this.customer.documentNumber); 
+    this.router.navigate(['/createproduct'], { 
+      queryParams: { 
+        idAccount: this.customer.idAccount, 
+        idContract: '-1',
+        documentNumber: this.customer.documentNumber, 
+        legalName: this.customer.legalName 
+      }
+    });
 
   }
 

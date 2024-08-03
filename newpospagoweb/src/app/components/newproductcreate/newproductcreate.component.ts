@@ -3,6 +3,10 @@ import { NewProductContract } from '../../models/new-product-contract';
 import { BillAccount } from '../../models/bill-account';
 import { Plan } from '../../models/plan';
 import { AddServices } from '../../models/add-services';
+import { Linea } from '../../models/linea';
+import { Device } from '../../models/device';
+import { ActivatedRoute } from '@angular/router';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-newproductcreate',
@@ -24,14 +28,15 @@ export class NewproductcreateComponent implements OnInit {
       activacionLineas: false,
       eliminacionLineas: false,
       edicionLineas: false,
-      numeroContrato: NaN,
+      numeroContrato: '',
       tipoContrato: '',
       inicioVigencia: '',
       mesesContrato: NaN,
-      finVigencia: '',
+      finVigencia: null,
       codigoVendedor: NaN,
       valorBolsa: NaN,
-      saldo: NaN
+      saldo: NaN, 
+      valorNoRedimible: 0 ,
     },
     billAccounts: [],
     discount: {
@@ -39,7 +44,9 @@ export class NewproductcreateComponent implements OnInit {
       motivoDescuento: "",
       valorDescuento: 0
     },
-    plans: []
+    plans: [], 
+    lineas: [] , 
+    devices: []
 
   };
 
@@ -53,19 +60,70 @@ export class NewproductcreateComponent implements OnInit {
     valorDescuento: NaN,
     motivoDescuento: '',
     grupo: '', 
-    idPromocion: NaN
+    idPromocion: 0, 
+    valorTotal: 0 , 
+    idCuentaFacturacion: NaN, 
+    idPlan: 0 
+  };
+  
+  newLinea: Linea = {
+    tipoLinea: '',
+    numeroLinea: NaN,
+    imsi: NaN,
+    imei: '',
+    operador: '',
+    tipoPersona: '',
+    tipoIdentificacion: '',
+    numeroDocumento: NaN,
+    nombre: '',
+    fechaExpedicion: NaN,
+    tipoEnvio: '' , 
+    idPlan: NaN
+  };
+
+  nuevoEquipo: Device = {
+    equipo: '',
+    cantidadInventario: 0,
+    cantidad: 0,
+    valorEquipo: 0,
+    porcentajeDescuento: 0,
+    valorDescontado: 0,
+    redencionEquipos: '', 
+    id: NaN
   };
 
   serviciosAdicionales: AddServices [] = [] ; 
 
   selectedAccountId: number | null = null;
 
-  constructor() {
+  selectedPlanId: number | null = null;
+
+  idAccountParam: any | null = null; 
+  idContractParam: any | null = null ; 
+  documentNumberParam: any | null = null ;
+  legalNameParam: string | null = null ;
+
+  constructor(private route: ActivatedRoute, private dataService: DataService ) {
 
   }
 
   ngOnInit(): void {
     this.idContract = Math.random();
+
+    this.route.queryParamMap.subscribe(params => {
+
+      console.log("recieve: " + params.get('documentNumber') ); 
+
+      this.idAccountParam = params.get('idAccount');
+      this.idContractParam = params.get('idContract');
+      this.documentNumberParam = params.get('documentNumber');
+      this.legalNameParam = params.get('legalName');
+      
+    });
+
+    this.idContract = this.idContractParam == "-1" ? Math.random() : this.idContractParam;
+    
+
   }
 
   adicionarCuenta() {
@@ -98,6 +156,10 @@ export class NewproductcreateComponent implements OnInit {
     this.selectedAccountId = id;
   }
 
+  selectPlan(id: number) {
+    this.selectedPlanId = id;
+  }
+
   toggleMonth(month: string) {
     const index = this.newContract.discount.meses.indexOf(month);
     if (index === -1) {
@@ -108,7 +170,15 @@ export class NewproductcreateComponent implements OnInit {
   }
 
   agregarPlan() {
+
+    let idCuentaFacturacion = this.selectedAccountId ; 
+
+    this.newPlan.idCuentaFacturacion = idCuentaFacturacion ? idCuentaFacturacion : NaN ; 
+
     this.newContract.plans.push({ ...this.newPlan });
+
+    let newIdPlan = this.newContract.plans.length + 1 ; 
+
     this.newPlan = {
       tipoProducto: '',
       familia: '',
@@ -119,11 +189,15 @@ export class NewproductcreateComponent implements OnInit {
       valorDescuento: NaN,
       motivoDescuento: '',
       grupo: '', 
-      idPromocion: NaN
+      idPromocion: NaN, 
+      valorTotal: 0 , 
+      idCuentaFacturacion: NaN , 
+      idPlan : newIdPlan
     };
   }
 
   eliminarPlan(index: number) {
+    console.log("para borrar indez" + index); 
     this.newContract.plans.splice(index, 1);
   }
 
@@ -138,6 +212,71 @@ export class NewproductcreateComponent implements OnInit {
 
   eliminarServicioAdicional(index: number) {
     this.serviciosAdicionales.splice(index, 1);
+  }
+
+  adicionarLinea() {
+
+    console.log(this.newLinea); 
+
+    this.newLinea.idPlan = this.selectedPlanId ? this.selectedPlanId : -1 ; 
+
+    this.newContract.lineas.push({ ...this.newLinea });
+
+    console.log(this.newContract.lineas) ; 
+
+    this.newLinea = {
+      tipoLinea: '',
+      numeroLinea: NaN,
+      imsi: NaN,
+      imei: '',
+      operador: '',
+      tipoPersona: '',
+      tipoIdentificacion: '',
+      numeroDocumento: NaN,
+      nombre: '',
+      fechaExpedicion: NaN,
+      tipoEnvio: '' , 
+      idPlan: NaN
+    };
+  }
+
+  eliminarLinea(index: number) {
+    this.newContract.lineas.splice(index, 1);
+  }
+
+  adicionarEquipo() {
+    this.newContract.devices.push({ ...this.nuevoEquipo });
+    this.nuevoEquipo = {
+      equipo: '',
+      cantidadInventario: 0,
+      cantidad: 0,
+      valorEquipo: 0,
+      porcentajeDescuento: 0,
+      valorDescontado: 0,
+      redencionEquipos: '', 
+      id: NaN
+    };
+  }
+
+  eliminarEquipo(index: number) {
+    this.newContract.devices.splice(index, 1);
+  }
+
+  calcularMesFinContrato(){
+
+    if (this.newContract.contract.inicioVigencia && this.newContract.contract.mesesContrato > 0 ) {
+      // Convertir la fecha inicial a un objeto Date
+      const startDate = new Date(this.newContract.contract.inicioVigencia);
+      
+      // Sumar los meses
+      const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newContract.contract.mesesContrato));
+      
+      
+      // Asignar la nueva fecha al atributo del componente
+      this.newContract.contract.finVigencia =  newDate.toDateString() ;
+    }
+
+    this.newContract.contract.inicioVigencia 
   }
 
 
