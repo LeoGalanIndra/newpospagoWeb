@@ -1,3 +1,4 @@
+import { AddServices } from "./add-services";
 import { BillAccount } from "./bill-account";
 import { Contrato } from "./contrato";
 import { Device } from "./device";
@@ -13,5 +14,6 @@ export interface NewProductContract {
     plans: Plan [] ; 
     lineas: Linea[] ;
     devices: Device[] ; 
+    addServices: AddServices[]; 
     
 }

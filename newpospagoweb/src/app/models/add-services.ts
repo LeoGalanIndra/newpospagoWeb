@@ -1,8 +1,8 @@
 export interface AddServices {
 
     tipo: string;
-    cargoBasico: string;
-    descuento: string;
-    idPlan: string ; 
+    cargoBasico: number;
+    descuento: number;
+    idPlan: number ; 
 
 }

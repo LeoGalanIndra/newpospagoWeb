@@ -9,7 +9,22 @@ export interface Linea {
     tipoIdentificacion: string;
     numeroDocumento: number;
     nombre: string;
-    fechaExpedicion: number;
-    tipoEnvio: string;
+    fechaExpedicion: number;    
     idPlan: number ; 
+
+    
+    idCuentaFacturacion?: number, 
+    tipoProducto?: string;
+    familia?: string;
+    producto?: string;
+    plan?: string;
+    
+    valorUnitario?: number;
+    valorDescuento?: number;
+    motivoDescuento?: string;
+    grupo?: string;
+    idPromocion?: string ; 
+    valorTotal?: number ; 
+
+    tipoEnvio?: string ;
 }

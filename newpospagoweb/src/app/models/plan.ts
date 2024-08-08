@@ -11,8 +11,10 @@ export interface Plan {
     valorDescuento: number;
     motivoDescuento: string;
     grupo: string;
-    idPromocion: number ; 
-    valorTotal: number
+    idPromocion: string ; 
+    valorTotal: number ; 
+
+    tipoEnvio: string ;  
     
 
 
