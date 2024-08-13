@@ -29,7 +29,7 @@ export class DataService {
       const idAccount = this.getRandomIdAccount(customers);
       contracts.push({
         idAccount: idAccount,
-        id: i,
+        idContract: i,
         estado: this.getRandomEstado(),
         editar: this.getRandomBoolean(),
         informeVenta: this.getRandomBoolean(),

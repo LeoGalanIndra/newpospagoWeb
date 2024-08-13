@@ -1,3 +1,5 @@
+import { AddServices } from "./add-services";
+
 export interface Linea {
 
     tipoLinea: string;
@@ -27,4 +29,8 @@ export interface Linea {
     valorTotal?: number ; 
 
     tipoEnvio?: string ;
+
+    addServices: AddServices[]; 
+    idContract: number ; 
+    
 }

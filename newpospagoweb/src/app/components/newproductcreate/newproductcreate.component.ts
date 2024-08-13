@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { NewProductContract } from '../../models/new-product-contract';
 import { BillAccount } from '../../models/bill-account';
 import { Plan } from '../../models/plan';
@@ -14,14 +14,14 @@ import { Tax } from '../../models/tax';
   templateUrl: './newproductcreate.component.html',
   styleUrl: './newproductcreate.component.css'
 })
-export class NewproductcreateComponent implements OnInit {
+export class NewproductcreateComponent implements OnInit, OnChanges {
 
   idContract: number = NaN;
 
   newContract: NewProductContract = {
     contract: {
       idAccount: NaN,
-      id: this.idContract,
+      idContract: NaN,
       estado: '',
       editar: false,
       informeVenta: false,
@@ -43,12 +43,12 @@ export class NewproductcreateComponent implements OnInit {
     discount: {
       meses: [],
       motivoDescuento: "",
-      valorDescuento: 0
+      valorDescuento: 0, 
+      idContract: NaN
     },
     plans: [],
     lineas: [],
-    devices: [],
-    addServices: [],
+    devices: []  
 
   };
 
@@ -67,6 +67,9 @@ export class NewproductcreateComponent implements OnInit {
     idCuentaFacturacion: NaN,
     idPlan: 1,
     tipoEnvio: '',
+    vozAndSMS: null, 
+    cuentaFacturacion: null , 
+    idContract: NaN
   };
 
   showedPlans: Plan[] = [];
@@ -83,7 +86,9 @@ export class NewproductcreateComponent implements OnInit {
     nombre: '',
     fechaExpedicion: NaN,
 
-    idPlan: NaN
+    idPlan: NaN, 
+    addServices: [], 
+    idContract: NaN
   };
 
   portableLines: Linea[] = [];
@@ -96,7 +101,9 @@ export class NewproductcreateComponent implements OnInit {
     porcentajeDescuento: 0,
     valorDescontado: 0,
     redencionEquipos: '',
-    id: NaN
+    id: NaN, 
+    idContract: NaN
+
   };
 
   addService: AddServices = {
@@ -108,13 +115,28 @@ export class NewproductcreateComponent implements OnInit {
 
   };
 
+  vozAndSMSService: AddServices = {
+    cargoBasico: 10000,
+    descuento: 0,
+    idPlan: 1,
+    tipo: 'VozAndSMS',
+  };
+
+  aplicaVozAndSMS: boolean = true ; 
+
   ivaTax: Tax = {
     id : 0, 
     name: 'IVA', 
     value: 0.19 
   }
 
-  selectedAccountId: number | null = null;
+  selectedBillAccount: BillAccount = {
+    cicloFacturacion : NaN , 
+    cuentaFacturacion: NaN , 
+    fechaCreacion: '' , 
+    id: NaN , 
+    idContract : this.idContract
+  }
 
   selectedPlanId: number | null = null;
 
@@ -125,6 +147,9 @@ export class NewproductcreateComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private dataService: DataService) {
 
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    throw new Error('Method not implemented.');
   }
 
   ngOnInit(): void {
@@ -142,6 +167,8 @@ export class NewproductcreateComponent implements OnInit {
     });
 
     this.idContract = this.idContractParam == "-1" ? Math.random() : this.idContractParam;
+
+    this.newContract.contract.idContract = this.idContract ; 
 
     this.adicionarServicioAdicionalDefault();
 
@@ -176,9 +203,10 @@ export class NewproductcreateComponent implements OnInit {
     this.newContract.billAccounts.splice(index, 1);
   }
 
-  selectAccount(id: number) {
-    this.selectedAccountId = id;
-    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === this.selectedAccountId);
+  selectAccount(id: BillAccount) {
+    let selectedAccountId = id.id;
+    this.selectedBillAccount = id ; 
+    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === selectedAccountId);
   }
 
   selectPlan(id: number) {
@@ -198,14 +226,18 @@ export class NewproductcreateComponent implements OnInit {
 
   agregarPlan() {
 
-    let idCuentaFacturacion = this.selectedAccountId;
+    let idCuentaFacturacion = this.selectedBillAccount.id;
+    let cuentaFacturacionValue = this.selectedBillAccount.cuentaFacturacion ; 
 
     this.newPlan.idCuentaFacturacion = idCuentaFacturacion ? idCuentaFacturacion : NaN;
     this.newPlan.valorUnitario += this.calcularTotalCargosServiciosAdicionales();
+    this.newPlan.vozAndSMS = this.aplicaVozAndSMS ? this.vozAndSMSService : null ; 
+    this.newPlan.cuentaFacturacion = cuentaFacturacionValue ; 
+    this.newPlan.idContract = this.idContract ; 
 
     this.newContract.plans.push({ ...this.newPlan });
 
-    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === this.selectedAccountId);
+    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === idCuentaFacturacion );
 
     let newIdPlan = this.newContract.plans[this.newContract.plans.length - 1].idPlan + 1;
 
@@ -223,18 +255,22 @@ export class NewproductcreateComponent implements OnInit {
       valorTotal: 0,
       idCuentaFacturacion: NaN,
       idPlan: newIdPlan,
-      tipoEnvio: ''
+      tipoEnvio: '', 
+      vozAndSMS: null, 
+      cuentaFacturacion: null, 
+      idContract: NaN
+       
     };
   }
 
   eliminarPlan(index: number) {
 
     this.newContract.plans.splice(index, 1);
-    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === this.selectedAccountId);
+    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === this.selectedBillAccount.id );
   }
 
   adicionarServicioAdicional() {
-    this.newContract.addServices.push({ ... this.addService });
+    this.newLinea.addServices.push({ ... this.addService });
 
     let addServiceId = this.addService.idPlan + 1;
 
@@ -249,27 +285,13 @@ export class NewproductcreateComponent implements OnInit {
 
   adicionarServicioAdicionalDefault() {
 
-    this.addService = {
-      cargoBasico: 10000,
-      descuento: 0,
-      idPlan: 1,
-      tipo: 'voz-sms',
+    
 
-    };
-
-    this.newContract.addServices.push({ ... this.addService });
-
-    this.addService = {
-      cargoBasico: 0,
-      descuento: 0,
-      idPlan: 2,
-      tipo: '',
-
-    };
+    
   }
 
   eliminarServicioAdicional(index: number) {
-    this.newContract.addServices.splice(index, 1);
+    this.newLinea.addServices.splice(index, 1);
   }
 
   adicionarLinea() {
@@ -289,6 +311,7 @@ export class NewproductcreateComponent implements OnInit {
     this.newLinea.tipoEnvio = mySelectedPlan.tipoEnvio;
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
+    this.newLinea.idContract = this.idContract ; 
 
     this.newContract.lineas.push({ ...this.newLinea });
 
@@ -307,7 +330,9 @@ export class NewproductcreateComponent implements OnInit {
       numeroDocumento: NaN,
       nombre: '',
       fechaExpedicion: NaN,
-      idPlan: NaN
+      idPlan: NaN, 
+      addServices: [], 
+      idContract: NaN
     };
   }
 
@@ -316,6 +341,7 @@ export class NewproductcreateComponent implements OnInit {
   }
 
   adicionarEquipo() {
+    this.nuevoEquipo.idContract = this.idContract ; 
     this.newContract.devices.push({ ...this.nuevoEquipo });
     this.nuevoEquipo = {
       equipo: '',
@@ -325,7 +351,8 @@ export class NewproductcreateComponent implements OnInit {
       porcentajeDescuento: 0,
       valorDescontado: 0,
       redencionEquipos: '',
-      id: NaN
+      id: NaN, 
+      idContract: NaN
     };
   }
 
@@ -352,18 +379,54 @@ export class NewproductcreateComponent implements OnInit {
 
   calcularTotalCargosServiciosAdicionales() {
 
-    if (this.newContract
-      .addServices.length == 0) {
+    if (!this.aplicaVozAndSMS) {
       return 0;
     }
 
-    return this.newContract
+    return this.vozAndSMSService.cargoBasico ; 
+
+    /** return this.newContract
       .addServices
       .map(a => a.cargoBasico)
-      .reduce((a, b) => a + b);
+      .reduce((a, b) => a + b);*/
 
 
   }
+
+  activarVozAndSMS(){
+
+  }
+
+  crearContrato(){
+    console.log("crearContrato "); 
+
+    console.log(this.newContract);
+
+  }
+
+  guardarContrato(){
+    console.log("GUARDAR"); 
+    console.log(this.newContract);
+
+  }
+
+  uploadFile(){
+
+  }
+
+  onFileChange(event: any){
+
+  }
+
+  crearCuentasFacturacion(){
+    console.log("crearCuentasFacturacion "); 
+
+  }
+
+  cargarRegistrosMasivos(){
+    
+  }
+
 
 
 }

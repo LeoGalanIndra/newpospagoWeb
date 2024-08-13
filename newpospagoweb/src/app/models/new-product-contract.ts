@@ -14,6 +14,7 @@ export interface NewProductContract {
     plans: Plan [] ; 
     lineas: Linea[] ;
     devices: Device[] ; 
-    addServices: AddServices[]; 
+    
+    
     
 }

@@ -1,6 +1,6 @@
 export interface Contrato {
 
-    id: number;
+    idContract: number;
     estado: string;
     editar: boolean;
     informeVenta: boolean;
