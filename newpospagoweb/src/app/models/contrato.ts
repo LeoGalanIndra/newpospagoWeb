@@ -8,7 +8,7 @@ export interface Contrato {
     activacionLineas: boolean;
     eliminacionLineas: boolean;
     edicionLineas: boolean;
-    idAccount : number ; 
+    idAccount : string ; 
     numeroContrato : string;
     tipoContrato: string;
     inicioVigencia: string;

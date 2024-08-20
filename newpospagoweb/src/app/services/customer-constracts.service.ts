@@ -6,6 +6,7 @@ import { Contrato } from './../models/contrato';
 
 import { CustomerContracts } from './../models/customer-contracts';
 import { DataService } from './data.service';
+import { NewProductContract } from '../models/new-product-contract';
 
 
 @Injectable({
@@ -13,16 +14,8 @@ import { DataService } from './data.service';
 })
 export class CustomerConstractsService {
 
-
-  private customers: Customer[] = [];
-  private contracts: Contrato[] = [];
-
   constructor(private dataService: DataService) {
-    const data = this.dataService.generateCustomersAndContracts();
-    this.customers = data.customers;
-    this.contracts = data.contracts;
-    console.log(this.customers);
-    console.log(this.contracts);
+    
   }
 
   getContractsByCustomer(customer: Customer): CustomerContracts {
@@ -31,10 +24,8 @@ export class CustomerConstractsService {
 
     let customerContract: CustomerContracts = { contracts: [] };
 
-    let foundCustomer = this
-      .customers
-      .filter(c => c.documentType === customer.documentType && c.documentNumber === customer.documentNumber);
-
+    let foundCustomer = this.dataService.getCustomersByIdAccount(customer.documentType, customer.documentNumber); 
+    
     console.log(foundCustomer);
 
     if (foundCustomer.length === 0) {
@@ -44,7 +35,7 @@ export class CustomerConstractsService {
 
     customerContract.customer = foundCustomer[0];
 
-    let customerContracts = this.contracts.filter(contract => contract.idAccount === foundCustomer[0].idAccount);
+    let customerContracts = this.dataService.getContractsByAccount(foundCustomer[0].idAccount);
 
     if (customerContracts.length > 0) {
       customerContract.contracts = customerContracts ; 
@@ -52,5 +43,48 @@ export class CustomerConstractsService {
 
     return customerContract;
 
+  }
+
+  printDatasource(){
+    this.dataService.printDatasource(); 
+  }
+
+  saveNewContract(newContract : NewProductContract){
+
+    if(!newContract){
+      return ; 
+    }
+
+    if(!newContract.contract){
+      return ; 
+    }
+
+    this.dataService.saveContract(newContract.contract); 
+
+    if(newContract.billAccounts.length > 0){
+      this.dataService.saveBillAccounts(newContract.billAccounts); 
+    }
+
+    if(newContract.discount.meses.length > 0){
+      this.dataService.saveDiscounts(newContract.discount); 
+    }
+
+    if(newContract.devices.length > 0){
+      this.dataService.saveDevices(newContract.devices); 
+    }
+
+    if(newContract.plans.length > 0){
+      this.dataService.saveProduct(newContract.plans); 
+    }
+
+    if(newContract.lineas.length > 0){
+      this.dataService.saveLine(newContract.lineas); 
+    }
+
+
+  }
+
+  public getBillAccountsByIdContract(idContract : number){
+    return this.dataService.getBillAccountsByIdContract(idContract); 
   }
 }
