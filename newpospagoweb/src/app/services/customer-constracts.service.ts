@@ -7,6 +7,10 @@ import { Contrato } from './../models/contrato';
 import { CustomerContracts } from './../models/customer-contracts';
 import { DataService } from './data.service';
 import { NewProductContract } from '../models/new-product-contract';
+import { Device } from '../models/device';
+import { Discount } from '../models/discount';
+import { Linea } from '../models/linea';
+import { Plan } from '../models/plan';
 
 
 @Injectable({
@@ -86,5 +90,25 @@ export class CustomerConstractsService {
 
   public getBillAccountsByIdContract(idContract : number){
     return this.dataService.getBillAccountsByIdContract(idContract); 
+  }
+
+  public getContractsByIdContract(idContract: number): Contrato[] {
+    return this.dataService.getContractsByIdContract(idContract);
+  }
+
+  public getProductsByIdContract(idContract: number): Plan[] {
+    return this.dataService.getProductsByIdContract(idContract);
+  }
+
+  public getLinesByIdContract(idContract: number): Linea[] {
+    return this.dataService.getLinesByIdContract(idContract);
+  }
+
+  public getDiscountByIdContract(idContract: number): Discount[] {
+    return this.dataService.getDiscountByIdContract(idContract);
+  }
+
+  public getDevicesByIdContract(idContract: number): Device[] {
+    return this.dataService.getDevicesByIdContract(idContract);
   }
 }

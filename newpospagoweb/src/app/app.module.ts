@@ -12,6 +12,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NewproductcreateComponent } from './components/newproductcreate/newproductcreate.component';
 import { ConfirmationModalComponent } from './components/modals/confirmation-modal/confirmation-modal.component';
 import { ModalService } from './services/modal/modal.service';
+import { SucessModalComponent } from './components/modals/sucess-modal/sucess-modal.component';
+import { NewproductdetailComponent } from './components/newproductdetail/newproductdetail.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ModalService } from './services/modal/modal.service';
     NewproductmasterComponent,
     DashboardComponent,
     NewproductcreateComponent,
-    ConfirmationModalComponent
+    ConfirmationModalComponent,
+    SucessModalComponent,
+    NewproductdetailComponent
   ],
   imports: [
     BrowserModule,

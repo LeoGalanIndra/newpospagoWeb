@@ -80,21 +80,63 @@ export class DataService {
   }
 
   public getContractsByIdContract(idContract: number): Contrato[] {
-    return DataService.contracts.filter(c => c.idContract === idContract);
+    return DataService.contracts.filter(c => c.idContract == idContract);
+  }
+
+  public getProductsByIdContract(idContract: number): Plan[] {
+    return DataService.plans.filter(c => c.idContract == idContract);
+  }
+
+  public getLinesByIdContract(idContract: number): Linea[] {
+    return DataService.lineas.filter(c => c.idContract == idContract);
+  }
+
+  public getDiscountByIdContract(idContract: number): Discount[] {
+    return DataService.discounts.filter(c => c.idContract == idContract);
+  }
+
+  public getDevicesByIdContract(idContract: number): Device[] {
+    return DataService.devices.filter(c => c.idContract == idContract);
   }
 
   public saveContract(contract: Contrato) {
 
     if (this.getContractsByIdContract(contract.idContract).length == 0) {
-      DataService.contracts.push({ ...contract })
+      DataService.contracts.push({ ...contract }); 
     } else {
-      this.getContractsByIdContract(contract.idContract)[0] = contract;
+      DataService
+        .contracts
+        .filter(c => c.idContract === contract.idContract)
+        .forEach(c => {
+          c.codigoVendedor = contract.codigoVendedor ;          
+          c.estado = contract.estado; 
+          c.editar= contract.editar;
+          c.informeVenta= contract.informeVenta;
+          c.seguimientoLineas= contract.seguimientoLineas;
+          c.activacionLineas= contract.activacionLineas;
+          c.eliminacionLineas= contract.eliminacionLineas;
+          c.edicionLineas= contract.edicionLineas;
+          c.idAccount = contract.idAccount;
+          c.numeroContrato = contract.numeroContrato;
+          c.tipoContrato= contract.tipoContrato;
+          c.inicioVigencia= contract.inicioVigencia;
+          c.mesesContrato= contract.mesesContrato;
+          c.finVigencia= contract.finVigencia;
+          c.codigoVendedor= contract.codigoVendedor;
+          c.valorBolsa= contract.valorBolsa;
+          c.saldo= contract.saldo;
+          c.valorNoRedimible= contract.valorNoRedimible;
+
+
+        }); 
+
+      
     }
 
   }
 
   public getBillAccountsByIdContract(idContract: number) {
-    return DataService.billAccounts.filter(c => c.idContract === idContract);
+    return DataService.billAccounts.filter(c => c.idContract == idContract);
   }
 
   public saveBillAccounts(billAccount: BillAccount[]) {
@@ -112,6 +154,15 @@ export class DataService {
     billAccount.forEach(bill => {
       if (DataService.billAccounts.filter(temp => temp.idBill === bill.idBill).length > 0) {
 
+        DataService
+        .billAccounts
+        .filter(temp => temp.idBill === bill.idBill)
+        .forEach(temp => {
+          temp.cicloFacturacion = bill.cicloFacturacion ; 
+          temp.cuentaFacturacion = bill.cuentaFacturacion ; 
+          temp.fechaCreacion = bill.fechaCreacion ; 
+        }) ; 
+
 
       } else {
         DataService.billAccounts.push({ ...bill });
@@ -126,6 +177,14 @@ export class DataService {
     if (DataService.discounts.filter(d => d.idContract == discount.idContract).length === 0) {
       DataService.discounts.push({ ...discount });
     } else {
+      DataService
+      .discounts
+      .filter(d => d.idContract == discount.idContract)
+      .forEach(d => {
+        d.meses = discount.meses ; 
+        d.motivoDescuento = discount.motivoDescuento ; 
+        d.valorDescuento = discount.valorDescuento ; 
+      }); 
       
     }
 
@@ -245,6 +304,10 @@ export class DataService {
     console.log(DataService.devices);
     console.log("Discounts: ");
     console.log(DataService.discounts);
+    console.log("Plan: ");
+    console.log(DataService.plans);
+    console.log("Lineas: ");
+    console.log(DataService.lineas);
 
   }
 }

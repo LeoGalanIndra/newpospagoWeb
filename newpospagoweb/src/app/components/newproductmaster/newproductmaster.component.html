@@ -66,12 +66,8 @@
                     <th scope="col">Numero Contrato</th>
                     <th scope="col">Tipo Contrato</th>
                     <th scope="col">Estado</th>
-                    <th scope="col">Editar</th>
-                    <th scope="col">Informe de venta</th>
-                    <th scope="col">Seguimiento de Líneas</th>
-                    <th scope="col">Activación de Líneas</th>
-                    <th scope="col">Eliminación de Líneas</th>
-                    <th scope="col">Edición de Líneas</th>
+                    <th scope="col">Detalle</th>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -80,12 +76,15 @@
                     <td>{{ contrato.numeroContrato }}</td>
                     <td>{{ contrato.tipoContrato }}</td>
                     <td>{{ contrato.estado }}</td>
-                    <td>{{ contrato.editar }}</td>
-                    <td>{{ contrato.informeVenta }}</td>
-                    <td>{{ contrato.seguimientoLineas }}</td>
-                    <td>{{ contrato.activacionLineas }}</td>
-                    <td>{{ contrato.eliminacionLineas }}</td>
-                    <td>{{ contrato.edicionLineas }}</td>
+                    <td><a [routerLink]="['/detailproduct']" [queryParams]="{
+                        idAccount: this.customer.idAccount, 
+                        idContract: contrato.idContract,
+                        documentNumber: this.customer.documentNumber, 
+                        legalName: this.customer.legalName  }">Ver</a></td>
+                    
+
+                    
+
                 </tr>
                 <!-- Más filas según los datos -->
             </tbody>

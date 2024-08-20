@@ -1,11 +1,11 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef  } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { NewProductContract } from '../../models/new-product-contract';
 import { BillAccount } from '../../models/bill-account';
 import { Plan } from '../../models/plan';
 import { AddServices } from '../../models/add-services';
 import { Linea } from '../../models/linea';
 import { Device } from '../../models/device';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Tax } from '../../models/tax';
 import { CustomerConstractsService } from '../../services/customer-constracts.service';
 import { InventoryService } from '../../services/inventory.service';
@@ -47,12 +47,12 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     discount: {
       meses: [],
       motivoDescuento: "",
-      valorDescuento: 0, 
+      valorDescuento: 0,
       idContract: NaN
     },
     plans: [],
     lineas: [],
-    devices: []  
+    devices: []
 
   };
 
@@ -71,8 +71,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     idCuentaFacturacion: NaN,
     idPlan: 1,
     tipoEnvio: '',
-    vozAndSMS: null, 
-    cuentaFacturacion: null , 
+    vozAndSMS: null,
+    cuentaFacturacion: null,
     idContract: NaN
   };
 
@@ -90,8 +90,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     nombre: '',
     fechaExpedicion: NaN,
 
-    idPlan: NaN, 
-    addServices: [], 
+    idPlan: NaN,
+    addServices: [],
     idContract: NaN
   };
 
@@ -105,7 +105,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     porcentajeDescuento: 0,
     valorDescontado: 0,
     redencionEquipos: '',
-    id: NaN, 
+    id: NaN,
     idContract: NaN
 
   };
@@ -126,26 +126,26 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     tipo: 'VozAndSMS',
   };
 
-  aplicaVozAndSMS: boolean = true ; 
+  aplicaVozAndSMS: boolean = true;
 
   ivaTax: Tax = {
-    id : 0, 
-    name: 'IVA', 
-    value: 0.19 
+    id: 0,
+    name: 'IVA',
+    value: 0.19
   }
 
   selectedBillAccount: BillAccount = {
-    cicloFacturacion : NaN , 
-    cuentaFacturacion: NaN , 
-    fechaCreacion: '' , 
-    id: NaN , 
-    idContract : this.idContract, 
-    idBill : -1 , 
+    cicloFacturacion: NaN,
+    cuentaFacturacion: NaN,
+    fechaCreacion: '',
+    id: NaN,
+    idContract: this.idContract,
+    idBill: -1,
   }
 
   inventarios: Inventory[] = [];
   inventarioSeleccionado?: Inventory;
-  deviceSelected: string | null = null ; 
+  deviceSelected: string | null = null;
 
   selectedPlanId: number | null = null;
 
@@ -158,18 +158,23 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   entry!: ViewContainerRef;
   sub!: Subscription;
 
+  @ViewChild('sucessModal', { read: ViewContainerRef })
+  entrySucess!: ViewContainerRef;
+  subSucess!: Subscription;
+
   enabledPanels: any = {
-    billAccount: true , 
-    massiveLoad: true , 
-    product: true , 
-    devices: true ,
+    billAccount: true,
+    massiveLoad: true,
+    product: true,
+    devices: true,
 
-  }; 
+  };
 
-  constructor(private route: ActivatedRoute, 
-              private contractService: CustomerConstractsService, 
-              private inventarioService: InventoryService, 
-            private modalService: ModalService) {
+  constructor(private route: ActivatedRoute,
+    private contractService: CustomerConstractsService,
+    private inventarioService: InventoryService,
+    private modalService: ModalService,
+    private router: Router) {
 
   }
 
@@ -184,21 +189,27 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
       console.log("recieve: " + params.get('documentNumber'));
 
-      this.idAccountParam = params.get('idAccount') ;
+      this.idAccountParam = params.get('idAccount');
       this.idContractParam = params.get('idContract');
       this.documentNumberParam = params.get('documentNumber');
       this.legalNameParam = params.get('legalName');
 
     });
 
+    this.newContract.contract.estado = this.idContractParam == "-1" ? 'PENDIENTE' : '';
+
+    if(this.idContractParam != "-1"){
+      this.initContract(this.idContractParam);
+    }       
+
     this.idContract = this.idContractParam == "-1" ? (Math.floor(100000000 + Math.random() * 900000000)) : this.idContractParam;
 
-    this.newContract.contract.idContract = this.idContract ; 
-    
+    this.newContract.contract.idContract = this.idContract;
+
 
     this.adicionarServicioAdicionalDefault();
 
-    this.inventarios = this.inventarioService.getInventarios(); 
+    this.inventarios = this.inventarioService.getInventarios();
 
 
 
@@ -220,8 +231,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       idContract: this.idContract,
       cuentaFacturacion: NaN,
       cicloFacturacion: NaN,
-      fechaCreacion: '', 
-      idBill : -1 
+      fechaCreacion: '',
+      idBill: -1
     };
 
     this.newContract.billAccounts.push({ ...newBillAccount });
@@ -234,7 +245,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   selectAccount(id: BillAccount) {
     let selectedAccountId = id.id;
-    this.selectedBillAccount = id ; 
+    this.selectedBillAccount = id;
     this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === selectedAccountId);
   }
 
@@ -256,17 +267,17 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   agregarPlan() {
 
     let idCuentaFacturacion = this.selectedBillAccount.id;
-    let cuentaFacturacionValue = this.selectedBillAccount.cuentaFacturacion ; 
+    let cuentaFacturacionValue = this.selectedBillAccount.cuentaFacturacion;
 
     this.newPlan.idCuentaFacturacion = idCuentaFacturacion ? idCuentaFacturacion : NaN;
     this.newPlan.valorUnitario += this.calcularTotalCargosServiciosAdicionales();
-    this.newPlan.vozAndSMS = this.aplicaVozAndSMS ? this.vozAndSMSService : null ; 
-    this.newPlan.cuentaFacturacion = cuentaFacturacionValue ; 
-    this.newPlan.idContract = this.idContract ; 
+    this.newPlan.vozAndSMS = this.aplicaVozAndSMS ? this.vozAndSMSService : null;
+    this.newPlan.cuentaFacturacion = cuentaFacturacionValue;
+    this.newPlan.idContract = this.idContract;
 
     this.newContract.plans.push({ ...this.newPlan });
 
-    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === idCuentaFacturacion );
+    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === idCuentaFacturacion);
 
     let newIdPlan = this.newContract.plans[this.newContract.plans.length - 1].idPlan + 1;
 
@@ -284,18 +295,18 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       valorTotal: 0,
       idCuentaFacturacion: NaN,
       idPlan: newIdPlan,
-      tipoEnvio: '', 
-      vozAndSMS: null, 
-      cuentaFacturacion: null, 
+      tipoEnvio: '',
+      vozAndSMS: null,
+      cuentaFacturacion: null,
       idContract: NaN
-       
+
     };
   }
 
   eliminarPlan(index: number) {
 
     this.newContract.plans.splice(index, 1);
-    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === this.selectedBillAccount.id );
+    this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === this.selectedBillAccount.id);
   }
 
   adicionarServicioAdicional() {
@@ -314,9 +325,9 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   adicionarServicioAdicionalDefault() {
 
-    
 
-    
+
+
   }
 
   eliminarServicioAdicional(index: number) {
@@ -331,7 +342,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     let mySelectedPlan = results[0];
 
     this.newLinea.familia = mySelectedPlan.familia;
-    
+
     this.newLinea.idCuentaFacturacion = mySelectedPlan.idCuentaFacturacion;
     this.newLinea.idPromocion = mySelectedPlan.idPromocion;
     this.newLinea.motivoDescuento = mySelectedPlan.motivoDescuento;
@@ -340,7 +351,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.newLinea.tipoEnvio = mySelectedPlan.tipoEnvio;
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
-    this.newLinea.idContract = this.idContract ; 
+    this.newLinea.idContract = this.idContract;
 
     this.newContract.lineas.push({ ...this.newLinea });
 
@@ -359,8 +370,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       numeroDocumento: NaN,
       nombre: '',
       fechaExpedicion: NaN,
-      idPlan: NaN, 
-      addServices: [], 
+      idPlan: NaN,
+      addServices: [],
       idContract: NaN
     };
   }
@@ -370,22 +381,22 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   adicionarEquipo() {
-    this.nuevoEquipo.idContract = this.idContract ; 
-    this.nuevoEquipo.id = (Math.floor(100000000 + Math.random() * 900000000)); 
+    this.nuevoEquipo.idContract = this.idContract;
+    this.nuevoEquipo.id = (Math.floor(100000000 + Math.random() * 900000000));
 
-    this.nuevoEquipo.equipo = this.inventarioSeleccionado?.name ? this.inventarioSeleccionado?.name : ''; 
-    this.nuevoEquipo.valorEquipo = this.inventarioSeleccionado?.precioUnitario ? this.inventarioSeleccionado?.precioUnitario : 0 ; 
+    this.nuevoEquipo.equipo = this.inventarioSeleccionado?.name ? this.inventarioSeleccionado?.name : '';
+    this.nuevoEquipo.valorEquipo = this.inventarioSeleccionado?.precioUnitario ? this.inventarioSeleccionado?.precioUnitario : 0;
 
-    this.nuevoEquipo.valorDescontado = (this.nuevoEquipo.cantidad * this.nuevoEquipo.valorEquipo * (this.nuevoEquipo.porcentajeDescuento / 100)); 
+    this.nuevoEquipo.valorDescontado = (this.nuevoEquipo.cantidad * this.nuevoEquipo.valorEquipo * (this.nuevoEquipo.porcentajeDescuento / 100));
 
     this.newContract.devices.push({ ...this.nuevoEquipo });
 
-    this.newContract.contract.saldo = this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos() ; 
-    this.newContract.contract.valorNoRedimible = this.calcularTotalValorEquiposNoRedimible() ; 
+    this.newContract.contract.saldo = this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos();
+    this.newContract.contract.valorNoRedimible = this.calcularTotalValorEquiposNoRedimible();
 
-    this.deviceSelected = '' ; 
+    this.deviceSelected = '';
 
-    this.inventarioSeleccionado = {cantidad: 0, name: '', precioTotal: 0 , precioUnitario: 0 } ; 
+    this.inventarioSeleccionado = { cantidad: 0, name: '', precioTotal: 0, precioUnitario: 0 };
 
     this.nuevoEquipo = {
       equipo: '',
@@ -395,7 +406,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       porcentajeDescuento: 0,
       valorDescontado: 0,
       redencionEquipos: '',
-      id: NaN, 
+      id: NaN,
       idContract: NaN
     };
   }
@@ -427,7 +438,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       return 0;
     }
 
-    return this.vozAndSMSService.cargoBasico ; 
+    return this.vozAndSMSService.cargoBasico;
 
     /** return this.newContract
       .addServices
@@ -437,211 +448,247 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  calcularTotalValorEquipos(): number{
+  calcularTotalValorEquipos(): number {
 
     return this.newContract
       .devices
-      .map(a => { 
-          
-        return a.redencionEquipos === 'SI' ? a.cantidad * a.valorEquipo * (1 - (a.porcentajeDescuento / 100 ) ) : 0 ; 
-        } ) 
+      .map(a => {
+
+        return a.redencionEquipos === 'SI' ? a.cantidad * a.valorEquipo * (1 - (a.porcentajeDescuento / 100)) : 0;
+      })
       .reduce((a, b) => a + b);
   }
 
-  calcularTotalValorEquiposNoRedimible(): number{
+  calcularTotalValorEquiposNoRedimible(): number {
 
     return this.newContract
       .devices
-      .map(a => { 
-          
-        return a.redencionEquipos === 'SI' ? a.cantidad * a.valorEquipo * ((a.porcentajeDescuento / 100 ) ) : (a.cantidad * a.valorEquipo) ; 
-        } ) 
+      .map(a => {
+
+        return a.redencionEquipos === 'SI' ? a.cantidad * a.valorEquipo * ((a.porcentajeDescuento / 100)) : (a.cantidad * a.valorEquipo);
+      })
       .reduce((a, b) => a + b);
   }
 
-  activarVozAndSMS(){
+  activarVozAndSMS() {
 
   }
 
-  crearContrato(){
-    console.log("crearContrato "); 
+  crearContrato() {
+    console.log("crearContrato ");
 
     console.log(this.newContract);
 
-    this.newContract.contract.idAccount = this.idAccountParam ? this.idAccountParam : "-1" ; 
+    this.newContract.contract.idAccount = this.idAccountParam ? this.idAccountParam : "-1";
 
-    if(this.newContract.discount.meses.length > 0){
-      this.newContract.discount.idContract = this.idContract ; 
+    if (this.newContract.discount.meses.length > 0) {
+      this.newContract.discount.idContract = this.idContract;
     }
-      
 
-    this.contractService.saveNewContract(this.newContract); 
 
-    this.contractService.printDatasource(); 
+    this.contractService.saveNewContract(this.newContract);
 
-    this.enabledPanels.billAccount = false ; 
+    this.contractService.printDatasource();
+
+    this.enabledPanels.billAccount = false;
 
   }
 
-  guardarContrato(){
-    console.log("GUARDAR"); 
+  guardarContrato() {
+    console.log("GUARDAR");
     console.log(this.newContract);
 
   }
 
-  uploadFile(){
+  uploadFile() {
 
   }
 
-  onFileChange(event: any){
+  onFileChange(event: any) {
 
   }
 
-  crearCuentasFacturacion(){
-    console.log("crearCuentasFacturacion "); 
+  crearCuentasFacturacion() {
+    console.log("crearCuentasFacturacion ");
 
-    this.contractService.saveNewContract(this.newContract); 
+    this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
 
-    this.newContract.billAccounts = this.contractService.getBillAccountsByIdContract(this.newContract.contract.idContract); 
-    
-    this.enabledPanels.massiveLoad = false ; 
+    this.newContract.billAccounts = this.contractService.getBillAccountsByIdContract(this.newContract.contract.idContract);
+
+    this.enabledPanels.massiveLoad = false;
 
   }
 
-  cargarRegistrosMasivos(){
-    this.enabledPanels.product = false ; 
-    
+  cargarRegistrosMasivos() {
+    this.enabledPanels.product = false;
+
   }
 
-  guardarProducto(){
-    console.log("crear productos y lineas  "); 
+  guardarProducto() {
+    console.log("crear productos y lineas  ");
 
-    this.contractService.saveNewContract(this.newContract); 
+    this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
 
-    this.enabledPanels.devices = false ;
+    this.enabledPanels.devices = false;
 
   }
 
   onSeleccionarEquipo(event: Event): void {
     // const nombreEquipo = (event.target as HTMLSelectElement).value;
-    console.log(this.deviceSelected); 
+    console.log(this.deviceSelected);
     // console.log(nombreEquipo); 
     this.inventarioSeleccionado = this.inventarios.find(inventario => inventario.name === this.deviceSelected);
-    console.log(this.inventarioSeleccionado); 
+    console.log(this.inventarioSeleccionado);
   }
 
-  guardarEquipos(){
-    this.contractService.saveNewContract(this.newContract); 
+  guardarEquipos() {
+    this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
   }
 
-  activarContrato(){
+  activarContrato() {
 
-    this.newContract.contract.estado = "EN ALISTAMIENTO" ; 
-    this.contractService.saveNewContract(this.newContract); 
+    this.newContract.contract.estado = "EN ALISTAMIENTO";
+    this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
 
-    
+    this.subSucess = this.modalService
+      .openSuccessModal(this.entrySucess,
+        'Activación Contrato',
+        'Se procede a activar la nueva oferta.')
 
-  }  
+      .subscribe((v) => {
+        //your logic   
+        this.router.navigate(['/']);
+      });
+
+  }
 
   createModal(option: number) {
 
     let functionMapper = [
       {
-        id: 1, 
-        title: 'Creación de contrato', 
+        id: 1,
+        title: 'Creación de contrato',
         body: 'A continuación, se guardara la información asociada al contrato. \nEsta usted seguro de continuar?',
 
-      }, 
+      },
       {
-        id: 2, 
-        title: 'Creación de cuentas de facturación', 
+        id: 2,
+        title: 'Creación de cuentas de facturación',
         body: 'A continuación, se crearán las cuentas de facturación ingresadas. \nEsta usted seguro de continuar?',
 
-      }, 
+      },
       {
-        id: 3, 
-        title: 'Cargue Masivo de líneas', 
+        id: 3,
+        title: 'Cargue Masivo de líneas',
         body: 'A continuación, se cargará un archivo Excel el cual contiene la configuración del producto y líneas. \nEsta usted seguro de continuar?',
 
-      }, 
+      },
       {
-        id: 4, 
-        title: 'Configuración del producto', 
+        id: 4,
+        title: 'Configuración del producto',
         body: 'A continuación, se guardará la información de la configuración del producto y líneas. \nEsta usted seguro de continuar?',
 
-      }, 
+      },
       {
-        id: 5, 
-        title: 'Redención de equipos', 
+        id: 5,
+        title: 'Redención de equipos',
         body: 'A continuación, se guardará la información de los equipos a redimir y a comprar. \nEsta usted seguro de continuar?',
 
-      }, 
+      },
       {
-        id: 6, 
-        title: 'Activación del producto.', 
+        id: 6,
+        title: 'Activación del producto.',
         body: 'A continuación, se iniciará el proceso de activación de productos y líneas. \nEsta usted seguro de continuar?',
 
       }
-    ] ; 
+    ];
 
-    let myOptionObject = functionMapper.find(opt => opt.id === option); 
-       
+    let myOptionObject = functionMapper.find(opt => opt.id === option);
 
-    console.log("create modal"); 
+
+    console.log("create modal");
     this.sub = this.modalService
-      .openModal(this.entry, 
-              myOptionObject?.title ? myOptionObject?.title : 'Confirmación del proceso',
-              myOptionObject?.body ? myOptionObject.body : 'Desea continuar?')
+      .openModal(this.entry,
+        myOptionObject?.title ? myOptionObject?.title : 'Confirmación del proceso',
+        myOptionObject?.body ? myOptionObject.body : 'Desea continuar?')
 
       .subscribe((v) => {
         //your logic
 
-        if(v==='confirm'){
+        if (v === 'confirm') {
 
-          if(option===1){
-            this.crearContrato(); 
+          if (option === 1) {
+            this.crearContrato();
           }
 
-          if(option===2){
-            this.crearCuentasFacturacion(); 
+          if (option === 2) {
+            this.crearCuentasFacturacion();
           }
 
-          if(option===3){
-            this.cargarRegistrosMasivos(); 
+          if (option === 3) {
+            this.cargarRegistrosMasivos();
           }
 
-          if(option===4){
+          if (option === 4) {
             this.guardarProducto()
           }
 
-          if(option===5){            
+          if (option === 5) {
 
-            this.guardarEquipos(); 
+            this.guardarEquipos();
           }
 
-          if(option===6){
+          if (option === 6) {
             this.activarContrato()
-            
+
           }
 
-        } 
-        
+        }
+
       });
   }
 
   ngOnDestroy(): void {
-    if (this.sub) this.sub.unsubscribe();
+    if (this.sub)
+      this.sub.unsubscribe();
+
+    if (this.subSucess)
+      this.subSucess.unsubscribe();
   }
 
+
+  initContract(idContract : any ){
+
+    let contract = this.contractService.getContractsByIdContract(idContract)[0]; 
+    let billAccounts = this.contractService.getBillAccountsByIdContract(idContract);
+    let discount = this.contractService.getDiscountByIdContract(idContract)[0]; 
+    let plans = this.contractService.getProductsByIdContract(idContract); 
+    let lineas = this.contractService.getLinesByIdContract(idContract); 
+    let devices = this.contractService.getDevicesByIdContract(idContract); 
+
+
+    this.newContract = {
+      contract: contract ,
+      billAccounts: billAccounts,
+      discount: discount,
+      plans: plans,
+      lineas: lineas,
+      devices: devices
   
+    };
+    
+
+  }
+
+
 
 
 
