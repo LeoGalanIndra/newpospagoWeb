@@ -275,7 +275,7 @@ export class DataService {
   }
 
   private getRandomEstado(): string {
-    const estados = ['Activo', 'Inactivo'];
+    const estados = ['ACTIVO', 'INACTIVO', 'PENDIENTE'];
     return estados[Math.floor(Math.random() * estados.length)];
   }
 

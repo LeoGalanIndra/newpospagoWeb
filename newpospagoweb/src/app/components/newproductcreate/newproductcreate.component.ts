@@ -45,6 +45,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     },
     billAccounts: [],
     discount: {
+      esContinuo: false, 
       meses: [],
       motivoDescuento: "",
       valorDescuento: 0,
@@ -92,7 +93,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     idPlan: NaN,
     addServices: [],
-    idContract: NaN
+    idContract: NaN, 
+    nuipValue: ''
   };
 
   portableLines: Linea[] = [];
@@ -343,14 +345,16 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.newLinea.familia = mySelectedPlan.familia;
 
-    this.newLinea.idCuentaFacturacion = mySelectedPlan.idCuentaFacturacion;
-    this.newLinea.idPromocion = mySelectedPlan.idPromocion;
+    this.newLinea.idCuentaFacturacion = mySelectedPlan.cuentaFacturacion ? mySelectedPlan.cuentaFacturacion : mySelectedPlan.idCuentaFacturacion;
+    this.newLinea.idPromocionContinuo = mySelectedPlan.idPromocion;
     this.newLinea.motivoDescuento = mySelectedPlan.motivoDescuento;
     this.newLinea.producto = mySelectedPlan.producto;
     this.newLinea.plan = mySelectedPlan.plan;
     this.newLinea.tipoEnvio = mySelectedPlan.tipoEnvio;
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
+    this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ; 
+    this.newLinea.mesesPersonalizados = this.newContract.discount.meses ; 
     this.newLinea.idContract = this.idContract;
 
     this.newContract.lineas.push({ ...this.newLinea });
@@ -372,7 +376,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       fechaExpedicion: NaN,
       idPlan: NaN,
       addServices: [],
-      idContract: NaN
+      idContract: NaN, 
+      nuipValue: ''
     };
   }
 
@@ -553,7 +558,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   activarContrato() {
 
-    this.newContract.contract.estado = "EN ALISTAMIENTO";
+    this.newContract.contract.estado = "EN EJECUCION";
     this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
@@ -684,7 +689,14 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       devices: devices
   
     };
-    
+
+    this.enabledPanels = {
+      billAccount: (!(billAccounts.length > 0 )),
+      massiveLoad: (!(plans.length > 0)),
+      product: (!(plans.length > 0)),
+      devices: (!(devices.length > 0 )),
+  
+    };
 
   }
 

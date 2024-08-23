@@ -14,6 +14,7 @@ import { ConfirmationModalComponent } from './components/modals/confirmation-mod
 import { ModalService } from './services/modal/modal.service';
 import { SucessModalComponent } from './components/modals/sucess-modal/sucess-modal.component';
 import { NewproductdetailComponent } from './components/newproductdetail/newproductdetail.component';
+import { CambiarCuentaFacturacionComponent } from './components/cambiar-cuenta-facturacion/cambiar-cuenta-facturacion.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { NewproductdetailComponent } from './components/newproductdetail/newprod
     NewproductcreateComponent,
     ConfirmationModalComponent,
     SucessModalComponent,
-    NewproductdetailComponent
+    NewproductdetailComponent,
+    CambiarCuentaFacturacionComponent
   ],
   imports: [
     BrowserModule,

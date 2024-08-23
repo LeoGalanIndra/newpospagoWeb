@@ -32,7 +32,8 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="cargue-masivo-tab" data-bs-toggle="tab"
                                     data-bs-target="#cargue-masivo" type="button" role="tab"
-                                    aria-controls="cargue-masivo" aria-selected="false" [disabled]="enabledPanels.massiveLoad" >Cargue Masivo</button>
+                                    aria-controls="cargue-masivo" aria-selected="false"
+                                    [disabled]="enabledPanels.massiveLoad">Cargue Masivo</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="producto-tab" data-bs-toggle="tab"
@@ -42,7 +43,8 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="registro-equipos-tab" data-bs-toggle="tab"
                                     data-bs-target="#registro-equipos" type="button" role="tab"
-                                    aria-controls="registro-equipos" aria-selected="false" [disabled]="enabledPanels.devices">Equipos</button>
+                                    aria-controls="registro-equipos" aria-selected="false"
+                                    [disabled]="enabledPanels.devices">Equipos</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link" id="resumen-venta-tab" data-bs-toggle="tab"
@@ -335,7 +337,7 @@
 
                                                 </div>
 
-                                                <div class="col-3">                                              
+                                                <div class="col-3">
 
                                                     <button type="submit" class="btn btn-success"
                                                         [disabled]="myCreateContractForm.invalid">SIGUIENTE</button>
@@ -811,6 +813,12 @@
                                             <div class="col-12">
                                                 <div class="p-3 border bg-light">
                                                     <div class="row g-3">
+                                                        <!-- NUIP -->
+                                                        <div class="col-md-3">
+                                                            <label for="nuipValue" class="form-label">NUIP</label>
+                                                            <input type="text" class="form-control" id="nuipValue"
+                                                                [(ngModel)]="newLinea.nuipValue" name="nuipValue">
+                                                        </div>
                                                         <!-- Operador -->
                                                         <div class="col-md-3">
                                                             <label for="operador" class="form-label">Operador</label>
@@ -1438,6 +1446,9 @@
                                                                                     </th>
                                                                                     <th>Campaña</th>
                                                                                     <th>Tipo de Envío</th>
+                                                                                    <th>Descuento Personalizado
+                                                                                        Discontinuo</th>
+                                                                                    <th>Meses</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
@@ -1512,6 +1523,11 @@
                                                                                         }}</td>
                                                                                     <td>{{ finalPlan.tipoEnvio
                                                                                         }}</td>
+                                                                                    <td>{{
+                                                                                        newContract.discount.valorDescuento
+                                                                                        }}</td>
+                                                                                    <td>{{ newContract.discount.meses }}
+                                                                                    </td>
                                                                                 </tr>
 
                                                                             </tbody>
@@ -1543,6 +1559,8 @@
                                                                                     <th>Precio Unitario con
                                                                                         Descuento + IVA</th>
                                                                                     <th>Campaña</th>
+                                                                                    <th>Personalizado Discontinuo</th>
+                                                                                    <th>Meses Aplicacion</th>
                                                                                     <th>Tipo Envio</th>
                                                                                     <th>Acciones</th>
                                                                                 </tr>
@@ -1576,7 +1594,14 @@
                                                                                         ))) * (1 + ivaTax.value)):
                                                                                         (linea.valorUnitario * (1 +
                                                                                         ivaTax.value))) : 0 }}</td>
-                                                                                    <td>{{ linea.idPromocion }}</td>
+                                                                                    <td>{{ linea.idPromocionContinuo }}
+                                                                                    </td>
+                                                                                    <td>{{
+                                                                                        linea.valorDescuentoDiscontinuo
+                                                                                        }}
+                                                                                    </td>
+                                                                                    <td>{{ linea.mesesPersonalizados }}
+                                                                                    </td>
                                                                                     <td>{{ linea.tipoEnvio }}</td>
 
                                                                                     <td>
@@ -1597,6 +1622,7 @@
                                                                         <table class="table table-striped">
                                                                             <thead>
                                                                                 <tr>
+                                                                                    <th>NUIP</th>
                                                                                     <th>MSISDN</th>
                                                                                     <th>Operador</th>
                                                                                     <th>Tipo Persona</th>
@@ -1609,6 +1635,7 @@
                                                                             <tbody>
                                                                                 <tr
                                                                                     *ngFor="let linea of portableLines; let i = index">
+                                                                                    <td>{{ linea.nuipValue }}</td>
                                                                                     <td>{{ linea.numeroLinea }}
                                                                                     </td>
                                                                                     <td>{{ linea.operador }}
@@ -1765,5 +1792,3 @@
 
 
     </div>
-
-    
