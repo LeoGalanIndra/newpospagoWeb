@@ -1,6 +1,6 @@
 export interface Customer {
 
-    idAccount : number ; 
+    idAccount : string ; 
     documentType: string ;  
     documentNumber: number ;
     legalName? : string ; 

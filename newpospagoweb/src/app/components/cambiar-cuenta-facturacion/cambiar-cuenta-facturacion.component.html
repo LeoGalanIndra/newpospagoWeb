@@ -1,0 +1,71 @@
+<div class="card mt-1">
+
+    <div #modal></div>
+    <div #sucessModal></div>
+
+    <form id="myMassiveLoadForm" (ngSubmit)="ejecutarProceso()" #myMassiveLoadForm="ngForm">
+
+
+
+        <div class="card-header">
+            Mover lineas entre cuentas
+        </div>
+        <div class="card-body">
+            <div class="row g-1 mt-1">
+                <div class="col-md-8">
+                    <input type="file" class="form-control" id="fileInput" (change)="onFileChange($event)">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary" type="button" (click)="uploadFile()"
+                        id="idCargueArchivoButton">Procesar Archivo</button>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        <div class="row">
+                            <div class="col-8"><b>Total de registros procesados:</b>
+                            </div>
+                            <div class="col-4">0</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8"><b>Registros cargados exitosamente:</b>
+                            </div>
+                            <div class="col-4">0</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8"><b>Registros con fallo:</b></div>
+                            <div class="col-4">0</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <div class="row">
+                <div class="col-3">
+                    <div *ngIf="myMassiveLoadForm.invalid" class="alert alert-warning">
+                        myMassiveLoadForm.errors
+
+                    </div>
+
+
+                </div>
+
+                <div class="col-6">
+                    <button type="button" class="btn btn-primary">Generar Reporte del Proceso</button>
+                </div>
+
+                <div class="col-3">
+                    <button type="submit" class="btn btn-success">Ejecutar Cambios</button>
+
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </form>
+</div>

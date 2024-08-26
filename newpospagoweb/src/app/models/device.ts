@@ -8,5 +8,6 @@ export interface Device {
     porcentajeDescuento: number;
     valorDescontado: number;
     redencionEquipos: string;
+    idContract: number ; 
 
 }

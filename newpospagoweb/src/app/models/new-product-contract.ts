@@ -10,10 +10,11 @@ export interface NewProductContract {
 
     contract : Contrato ; 
     billAccounts : BillAccount [] ; 
-    discount : Discount ; 
+    discount  : Discount ; 
     plans: Plan [] ; 
     lineas: Linea[] ;
     devices: Device[] ; 
-    addServices: AddServices[]; 
+    
+    
     
 }

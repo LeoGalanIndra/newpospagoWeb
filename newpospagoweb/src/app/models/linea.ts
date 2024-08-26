@@ -1,3 +1,5 @@
+import { AddServices } from "./add-services";
+
 export interface Linea {
 
     tipoLinea: string;
@@ -5,6 +7,7 @@ export interface Linea {
     imsi: number;
     imei: string;
     operador: string;
+    nuipValue : string ; 
     tipoPersona: string;
     tipoIdentificacion: string;
     numeroDocumento: number;
@@ -23,8 +26,29 @@ export interface Linea {
     valorDescuento?: number;
     motivoDescuento?: string;
     grupo?: string;
-    idPromocion?: string ; 
+
+    idPromocionContinuo?: string ; 
+    valorDescuentoPromocionContinuo?: number ; 
+
+    idPromocionDiscontinuo? : string ; 
+    valorDescuentoPromocionDiscontinuo?: number ;
+    mesesPromocion? : string [] ;
+
+    idDescuentoVolumenContinuo?: string ; 
+    valorDescuentoVolumenContinuo?: number ; 
+
+    idDescuentoVolumenDiscontinuo? : string ; 
+    valorDescuentoVolumenDiscontinuo?: number ;
+    mesesVolumen? : string [] ; 
+
+    valorDescuentoDiscontinuo? : number  ;
+    mesesPersonalizados? : string [] ;  
+
+
     valorTotal?: number ; 
 
-    tipoEnvio?: string ;
+    tipoEnvio?: string ; 
+    addServices: AddServices[]; 
+    idContract: number ; 
+    
 }

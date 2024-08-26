@@ -21,7 +21,7 @@ export class NewproductmasterComponent {
   customer: Customer = {
     documentNumber: NaN,
     documentType: "",
-    idAccount: NaN
+    idAccount: ''
   };
 
   contratos: Contrato[] = [];

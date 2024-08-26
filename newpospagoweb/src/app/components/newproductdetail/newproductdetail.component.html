@@ -1,0 +1,1007 @@
+<div class="card">
+
+    <div #modal></div>
+    <div #sucessModal></div>
+
+    <div class="card-body">
+        <h5 class="card-title  text-center">
+            Detalle - Nuevo Pospago B2B
+        </h5>
+
+        <div>
+
+            <div class="card">
+
+                <div class="card-body">
+                    <h5 class="card-title  text-center">Cliente: {{ this.documentNumberParam }} - {{
+                        this.legalNameParam }}</h5>
+
+                    <div class="container">
+
+
+                        <div class="row g-1">
+                            <div class="col-12">
+                                <div class="p-3 border bg-light">
+                                    <div class="row g-1">
+
+                                        <div class="col-md-4">
+                                            <p id="numeroContratoResume">Número Contrato: {{
+                                                newContract && newContract.contract ?
+                                                newContract.contract.numeroContrato : '' }}</p>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <p id="tipoContrato">Tipo Contrato: {{
+                                                newContract && newContract.contract ? newContract.contract.tipoContrato
+                                                : ''}}</p>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <p id="inicioVigencia">Inicio de Vigencia: {{
+                                                newContract && newContract.contract ?
+                                                (newContract.contract.inicioVigencia | date:
+                                                'dd/MM/yyyy') : '' }}
+                                            </p>
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <p id="mesesContrato">Meses de Contrato: {{
+                                                newContract && newContract.contract ?
+                                                (newContract.contract.mesesContrato > 0
+                                                ?newContract.contract.mesesContrato : '') : '' }}</p>
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <p id="finVigencia">Fin de Vigencia: {{
+                                                newContract && newContract.contract ? (newContract.contract.finVigencia
+                                                | date:
+                                                'dd/MM/yyyy') : '' }}</p>
+                                        </div>
+
+                                        <div class="col-md-4">
+
+                                            <p id="codigoVendedor">Identificación del KAM: {{
+                                                newContract && newContract.contract ?
+                                                (newContract.contract.codigoVendedor > 0 ?
+                                                newContract.contract.codigoVendedor : '') : '' }}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12"
+                                *ngIf="newContract && newContract.contract && newContract.billAccounts.length>0">
+                                <div class="p-3 border bg-light">
+
+                                    <div class="row g-1">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Id cuenta</th>
+                                                        <th scope="col"># Cuenta Facturación
+                                                        </th>
+                                                        <th scope="col">Ciclo de Facturación
+                                                        </th>
+                                                        <th scope="col">Fecha de creación</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let cuenta of newContract.billAccounts; let i = index">
+
+                                                        <td>{{ cuenta.cuentaFacturacion ?
+                                                            cuenta.cuentaFacturacion : "NUEVA " +
+                                                            cuenta.id }}</td>
+                                                        <td>{{ cuenta.cuentaFacturacion ?
+                                                            cuenta.cuentaFacturacion :
+                                                            "PENDIENTE" }}</td>
+                                                        <td>{{ cuenta.cicloFacturacion ?
+                                                            cuenta.cicloFacturacion :
+                                                            "PENDIENTE" }}</td>
+                                                        <td>{{ cuenta.fechaCreacion ?
+                                                            ( cuenta.fechaCreacion | date:
+                                                            'dd/MM/yyyy' ) :
+                                                            "PENDIENTE" }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="p-3 border bg-light">
+                                    <div class="row g-1">
+
+                                        <ul class="nav nav-tabs" id="myResumeTab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#planes_tab" type="button" role="tab"
+                                                    aria-controls="tab1" aria-selected="true">Detalle</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="tab2-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#lineas_tab" type="button" role="tab"
+                                                    aria-controls="tab2" aria-selected="false">Lineas</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="tab4-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#portabilidad_tab" type="button" role="tab"
+                                                    aria-controls="tab4" aria-selected="false">Detalle
+                                                    Portabilidad</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="tab3-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#devices_tab" type="button" role="tab"
+                                                    aria-controls="tab3" aria-selected="false">Equipos</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="tab5-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#reintentos_tab" type="button" role="tab"
+                                                    aria-controls="tab5" aria-selected="false">Reprocesar</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="tab6-tab" data-bs-toggle="tab"
+                                                    data-bs-target="#gestion_tab" type="button" role="tab"
+                                                    aria-controls="tab6" aria-selected="false" [hidden]="true">Gestión
+                                                    Lineas</button>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="planes_tab" role="tabpanel"
+                                                aria-labelledby="tab1-tab">
+
+                                                <div class="row mt-3">
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped table-hover">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Plan</th>
+                                                                    <th>Cantidad de líneas</th>
+                                                                    <th>Descuento Personalizado
+                                                                    </th>
+                                                                    <th>Motivo Descuento
+                                                                        Personalizado
+                                                                    </th>
+                                                                    <th>Tarifa unitaria Cargo
+                                                                        Básico
+                                                                    </th>
+                                                                    <th>Precio Unitario con
+                                                                        Descuento -
+                                                                        IVA
+                                                                    </th>
+                                                                    <th>Precio Unitario con
+                                                                        Descuento +
+                                                                        IVA
+                                                                    </th>
+                                                                    <th>Precio Total con
+                                                                        Descuento - IVA
+                                                                    </th>
+                                                                    <th>Precio Total con
+                                                                        Descuento + IVA
+                                                                    </th>
+                                                                    <th>Campaña</th>
+                                                                    <th>Tipo de Envío</th>
+                                                                    <th>Descuento Personalizado Discontinuo</th>
+                                                                    <th>Meses</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let finalPlan of plans; let i = index">
+
+                                                                    <td>{{ finalPlan.plan }}
+                                                                    </td>
+                                                                    <td>{{ finalPlan.cantidad }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        finalPlan.valorDescuento
+                                                                        }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        finalPlan.motivoDescuento
+                                                                        ?
+                                                                        finalPlan.motivoDescuento
+                                                                        : 'NO APLICA'
+                                                                        }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        finalPlan.valorUnitario
+                                                                        }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        finalPlan.valorUnitario
+                                                                        * (1
+                                                                        -
+                                                                        (finalPlan.valorDescuento
+                                                                        /
+                                                                        100)) }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        finalPlan.valorUnitario
+                                                                        * (1
+                                                                        -
+                                                                        (finalPlan.valorDescuento
+                                                                        /
+                                                                        100)) *
+                                                                        (1 + ivaTax.value) }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        finalPlan.valorUnitario
+                                                                        * (1
+                                                                        -
+                                                                        (finalPlan.valorDescuento
+                                                                        /
+                                                                        100)) *
+                                                                        finalPlan.cantidad
+                                                                        }}</td>
+                                                                    <td>{{
+                                                                        finalPlan.valorUnitario
+                                                                        * (1
+                                                                        -
+                                                                        (finalPlan.valorDescuento
+                                                                        /
+                                                                        100)) *
+                                                                        finalPlan.cantidad * (1
+                                                                        +
+                                                                        ivaTax.value)
+                                                                        }}</td>
+                                                                    <td>{{ finalPlan.idPromocion
+                                                                        }}</td>
+                                                                    <td>{{ finalPlan.tipoEnvio
+                                                                        }}</td>
+                                                                    <td>{{
+                                                                        discount.valorDescuento }}</td>
+                                                                    <td>{{ discount.meses }}</td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="tab-pane fade" id="lineas_tab" role="tabpanel"
+                                                aria-labelledby="tab2-tab">
+
+                                                <div class="row mt-1">
+
+                                                    <div class="col-9 alert alert-info">
+                                                        Se encontraron N lineas asociadas al contrato. Si desea
+                                                        conocer las lineas activas, genere el respectivo reporte con
+                                                        el siguiente boton.
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <button type="button" class="btn btn-primary">Generar
+                                                            Reporte</button>
+                                                    </div>
+                                                </div>
+
+
+                                                <form class="row mt-1" id="myLinesForm" (ngSubmit)="consultarLinea()"
+                                                    #myLinesForm="ngForm">
+
+                                                    <div class="col-md-5 text-end">
+                                                        MSISDN
+                                                    </div>
+                                                    <!--  #msisdn="ngModel"  -->
+                                                    <div class="col-md-4">
+                                                        <input type="number" class="form-control" id="msisdn"
+                                                            [(ngModel)]="msisdn" name="msisdn" placeholder="3XXXXXXXXX"
+                                                            required>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <button type="submit" class="btn btn-primary">Consultar
+                                                            Línea</button>
+
+                                                    </div>
+
+                                                </form>
+
+                                                <div class="row mt-1">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Cuenta Facturación</th>
+                                                                    <th>MSISDN</th>
+                                                                    <th>IMSI</th>
+                                                                    <th>IMEI</th>
+                                                                    <th>Grupo</th>
+                                                                    <th>Tipo Envio</th>
+                                                                    <th>Plan</th>
+                                                                    <th>Tarifa unitaria Cargo Básico</th>
+                                                                    <th>Descuento Personalizado</th>
+                                                                    <th>Motivo Descuento</th>
+                                                                    <th>Descuento por Campaña</th>
+                                                                    <th>Campaña</th>
+                                                                    <th>Descuento Masivo</th>
+                                                                    <th>Total Descuento</th>
+                                                                    <th>Precio Unitario con
+                                                                        Descuento - IVA</th>
+                                                                    <th>Precio Unitario con
+                                                                        Descuento + IVA</th>
+                                                                    <th>Personalizado Discontinuo</th>
+                                                                    <th>Meses Aplicacion</th>
+                                                                    <th>Campaña Discontinuo</th>
+                                                                    <th>Meses Campaña</th>
+
+
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let linea of selectedLinea; let i = index">
+                                                                    <td>{{ linea.idCuentaFacturacion }}</td>
+                                                                    <td>{{ linea.numeroLinea }}</td>
+                                                                    <td>{{ linea.imsi }}</td>
+                                                                    <td>{{ linea.imei }}</td>
+                                                                    <td>{{ linea.grupo }}</td>
+                                                                    <td>{{ linea.tipoEnvio }}</td>
+                                                                    <td>{{ linea.plan }}</td>
+                                                                    <td>{{ linea.valorUnitario }}</td>
+                                                                    <td>{{ linea.valorDescuento }}</td>
+                                                                    <td>{{ linea.motivoDescuento ? linea.motivoDescuento
+                                                                        : 'NO APLICA'}}</td>
+
+                                                                    <td>{{ linea.valorDescuentoPromocionContinuo }}</td>
+                                                                    <td>{{ linea.idPromocionContinuo }}</td>
+                                                                    <td>{{ linea.valorDescuentoVolumenContinuo }}</td>
+                                                                    <td>{{ linea.valorTotal }}</td>
+
+                                                                    <td>{{ linea.valorUnitario ?
+                                                                        (linea.valorDescuento ?
+                                                                        (linea.valorUnitario * (1 -
+                                                                        (linea.valorDescuento / 100
+                                                                        ))) : linea.valorUnitario) :
+                                                                        0 }}</td>
+                                                                    <td>{{ linea.valorUnitario ?
+                                                                        (linea.valorDescuento ?
+                                                                        ((linea.valorUnitario * (1 -
+                                                                        (linea.valorDescuento / 100
+                                                                        ))) * (1 + ivaTax.value)):
+                                                                        (linea.valorUnitario * (1 +
+                                                                        ivaTax.value))) : 0 }}</td>
+                                                                    
+
+                                                                    <td>{{ linea.valorDescuentoDiscontinuo }}
+                                                                    </td>
+                                                                    <td>{{ linea.mesesPersonalizados }} </td>
+                                                                    <td>{{ linea.valorDescuentoPromocionDiscontinuo }}
+                                                                    </td>
+                                                                    <td>{{ linea.mesesPromocion }}</td>
+
+
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="portabilidad_tab" role="tabpanel"
+                                                aria-labelledby="tab4-tab">
+
+                                                <div class="row mt-1">
+
+                                                    <div class="col-9 alert alert-info">
+                                                        Se encontraron N lineas portadas al contrato. Si desea
+                                                        conocer las lineas activas, genere el respectivo reporte con
+                                                        el siguiente boton.
+                                                    </div>
+
+                                                    <div class="col-3">
+                                                        <button type="button" class="btn btn-primary">Generar
+                                                            Reporte</button>
+                                                    </div>
+                                                </div>
+
+                                                <form class="row mt-1" id="myPortabilidadForm"
+                                                    (ngSubmit)="consultarPortabilidad()" #myPortabilidadForm="ngForm">
+
+                                                    <div class="col-md-5 text-end">
+                                                        Ingrese la línea a consultar
+                                                    </div>
+                                                    <!-- #msisdnPortability="ngModel" -->
+                                                    <div class="col-md-4">
+                                                        <input type="number" required class="form-control"
+                                                            id="msisdnPortability" placeholder="3XXXXXXXXX"
+                                                            [(ngModel)]="msisdnPortability" name="msisdnPortability">
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <button type="submit" class="btn btn-primary">Consultar
+                                                            Línea</button>
+
+                                                    </div>
+
+                                                </form>
+
+                                                <div class="row mt-1">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>NUIP</th>
+                                                                    <th>MSISDN</th>
+                                                                    <th>Operador</th>
+                                                                    <th>Tipo Persona</th>
+                                                                    <th>Tipo Identificación</th>
+                                                                    <th>Número Documento</th>
+                                                                    <th>Nombre</th>
+                                                                    <th>Fecha Expedición</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let linea of portableLines; let i = index">
+                                                                    <td>{{ linea.nuipValue }}</td>
+                                                                    <td>{{ linea.numeroLinea }}</td>
+                                                                    <td>{{ linea.operador }}
+                                                                    </td>
+                                                                    <td>{{ linea.tipoPersona }}
+                                                                    </td>
+                                                                    <td>{{
+                                                                        linea.tipoIdentificacion
+                                                                        }}
+                                                                    </td>
+                                                                    <td>{{ linea.numeroDocumento
+                                                                        }}</td>
+                                                                    <td>{{ linea.nombre }}</td>
+                                                                    <td>{{ linea.fechaExpedicion
+                                                                        }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="devices_tab" role="tabpanel"
+                                                aria-labelledby="tab3-tab">
+
+                                                <div class="container"
+                                                    *ngIf="newContract && newContract.contract && newContract.devices.length > 0">
+
+
+
+                                                    <div class="row">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-hover">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Equipo</th>
+                                                                        <th>Cantidad</th>
+                                                                        <th>Valor total</th>
+                                                                        <th>Redención de Equipos</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr
+                                                                        *ngFor="let equipo of newContract.devices; let i = index">
+                                                                        <td>{{ equipo.equipo }}
+                                                                        </td>
+                                                                        <td>{{ equipo.cantidad
+                                                                            }}</td>
+
+                                                                        <td>{{
+                                                                            (equipo.cantidad *
+                                                                            equipo.valorEquipo * (1 -
+                                                                            (equipo.porcentajeDescuento
+                                                                            / 100))) | currency
+
+                                                                            }}</td>
+                                                                        <td>{{
+                                                                            equipo.redencionEquipos
+                                                                            }}
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="alert alert-info">
+                                                            <div class="row">
+                                                                <div class="col-8"><b>Valor Bolsa: </b>
+                                                                </div>
+                                                                <div class="col-4">{{
+                                                                    newContract.contract.valorBolsa |
+                                                                    currency }} </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-8"><b>Saldo:</b>
+                                                                </div>
+                                                                <div class="col-4">{{
+                                                                    newContract.contract.saldo < 0 ? 0 :
+                                                                        newContract.contract.saldo.toFixed(2) | currency
+                                                                        }} </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-8"><b>Valor NO
+                                                                            Redimible:</b></div>
+                                                                    <div class="col-4">{{
+                                                                        newContract.contract.saldo > 0 ?
+                                                                        newContract.contract.valorNoRedimible.toFixed(2)
+                                                                        :
+                                                                        (newContract.contract.valorNoRedimible
+                                                                        + (-1 *
+                                                                        newContract.contract.saldo)).toFixed(2)
+                                                                        | currency }}</div>
+                                                                </div>
+
+                                                            </div>
+
+
+
+
+
+                                                        </div>
+
+
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="tab-pane fade" id="reintentos_tab" role="tabpanel"
+                                                    aria-labelledby="tab5-tab">
+
+
+                                                    <div class="card">
+
+                                                        <div class="card-body">
+                                                            <div class="row mt-1 alert alert-danger">
+                                                                Se encontraron N lineas asociadas al contrato con fallas
+                                                                en
+                                                                el activación de servicios.
+                                                            </div>
+
+                                                            <div class="row mt-1 alert alert-warning">
+                                                                Se encontraron N lineas asociadas al contrato con fallas
+                                                                en
+                                                                la aplicación de descuentos.
+                                                            </div>
+
+                                                            <div class="row mt-1 alert alert-danger">
+                                                                Se encontraron N lineas asociadas al contrato con fallas
+                                                                en
+                                                                el proceso de portabilidad.
+                                                            </div>
+
+
+
+                                                        </div>
+
+                                                        <div class="card-footer text-end">
+
+                                                            <form class="row mt-1" id="myManageForm"
+                                                                (ngSubmit)="consultarFallos()" #myManageForm="ngForm">
+
+                                                                <div class="col-md-3">
+                                                                    Tipo de fallo
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <select id="failedType" class="form-control"
+                                                                        [(ngModel)]="failedType" name="failedType">
+                                                                        <option value="activacion">Activación</option>
+                                                                        <option value="descuentos">Descuentos</option>
+                                                                        <option value="portabilidad">Portabilidad
+                                                                        </option>
+                                                                        <option value="portabilidadCesion">Portabilidad
+                                                                            con Cesion</option>
+                                                                    </select>
+
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <button type="submit" class="btn btn-danger">Generar
+                                                                        Reporte
+                                                                    </button>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <button type="button"
+                                                                        class="btn btn-primary">Reintentos</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="tab-pane fade" id="gestion_tab" role="tabpanel"
+                                                    aria-labelledby="tab6-tab">
+                                                    <div class="card">
+
+                                                        <div class="card-body">
+
+                                                            <div class="col-12">
+                                                                <div class="p-3 border bg-light">
+                                                                    <div class="row g-1">
+                                                                        <form class="row mt-1" id="myLineManagementForm"
+                                                                            (ngSubmit)="consultarGestionLinea()"
+                                                                            #myLineManagementForm="ngForm">
+
+                                                                            <div class="col-md-6">
+                                                                                MSISDN
+                                                                            </div>
+                                                                            <!-- #msisdnManagement="ngModel" -->
+                                                                            <div class="col-md-3">
+                                                                                <input type="number"
+                                                                                    class="form-control"
+                                                                                    id="msisdnManagement"
+                                                                                    placeholder="3XXXXXXXXX"
+                                                                                    [(ngModel)]="msisdnManagement"
+                                                                                    name="msisdnManagement" required>
+
+
+                                                                            </div>
+                                                                            <div class="col-md-3">
+                                                                                <button type="submit"
+                                                                                    class="btn btn-primary">Consultar
+                                                                                </button>
+                                                                            </div>
+
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-12">
+                                                                <div class="p-3 border bg-light">
+                                                                    <div class="row g-3">
+                                                                        <div class="col-md-4">
+                                                                            <label for="cuentaFacturacion"
+                                                                                class="form-label">Cuenta
+                                                                                Facturación</label>
+                                                                            <select class="form-select"
+                                                                                id="cuentaFacturacion"
+                                                                                name="cuentaFacturacion"
+                                                                                [(ngModel)]="newPlan.cuentaFacturacion">
+
+                                                                                <option
+                                                                                    *ngFor="let cuentas of newContract?.billAccounts"
+                                                                                    [value]="cuentas.cuentaFacturacion">
+                                                                                    {{ cuentas.cuentaFacturacion }}
+                                                                                </option>
+
+
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <label for="tipoProducto"
+                                                                                class="form-label">Tipo de
+                                                                                Línea</label>
+                                                                            <select class="form-select"
+                                                                                id="tipoProducto"
+                                                                                [(ngModel)]="newPlan.tipoProducto"
+                                                                                name="tipoProducto">
+                                                                                <option selected disabled value="">
+                                                                                    Seleccione...
+                                                                                </option>
+                                                                                <option value="tipo1">Estandar</option>
+                                                                                <option value="tipo2">Avanzado</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <label for="familia"
+                                                                                class="form-label">Familia</label>
+                                                                            <select class="form-select" id="familia"
+                                                                                [(ngModel)]="newPlan.familia"
+                                                                                name="familia">
+                                                                                <option selected disabled value="">
+                                                                                    Seleccione...
+                                                                                </option>
+                                                                                <option value="familia1">Movil</option>
+                                                                                <option value="familia2">IoT</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <label for="producto"
+                                                                                class="form-label">Tipo de
+                                                                                Producto</label>
+                                                                            <select class="form-select" id="producto"
+                                                                                [(ngModel)]="newPlan.producto"
+                                                                                name="producto">
+                                                                                <option selected disabled value="">
+                                                                                    Seleccione...
+                                                                                </option>
+                                                                                <option value="producto1">Pospago
+                                                                                    Empresarial
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <label for="plan"
+                                                                                class="form-label">Plan</label>
+                                                                            <select class="form-select" id="plan"
+                                                                                [(ngModel)]="newPlan.plan" name="plan">
+                                                                                <option selected disabled value="">
+                                                                                    Seleccione...
+                                                                                </option>
+                                                                                <option value="plan1">Plan 1</option>
+                                                                                <option value="plan2">Plan 2</option>
+                                                                                <option value="plan3">Plan 3</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <div class="form-check">
+                                                                                <input class="form-check-input"
+                                                                                    type="checkbox"
+                                                                                    id="servicioVozAplica"
+                                                                                    [(ngModel)]="aplicaVozAndSMS"
+                                                                                    name="servicioVozAplica"
+                                                                                    (change)="activarVozAndSMS()">
+                                                                                <label for="servicioVozAplica"
+                                                                                    class="form-check-label">Aplica
+                                                                                    Servicio
+                                                                                    Voz/SMS</label>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <!--  [(ngModel)]="" -->
+                                                                        <div class="col-md-4">
+                                                                            <label for="grupo"
+                                                                                class="form-label">Grupo</label>
+                                                                            <input type="text" class="form-control"
+                                                                                id="grupo" name="grupo">
+                                                                        </div>
+
+                                                                        <!-- Tipo de Envío -->
+                                                                        <div class="col-md-4">
+                                                                            <label for="tipoEnvio"
+                                                                                class="form-label">Tipo
+                                                                                de
+                                                                                Envío</label>
+                                                                            <select class="form-select"
+                                                                                id="newLineaTipoEnvio"
+                                                                                [(ngModel)]="newPlan.tipoEnvio"
+                                                                                name="newLineaTipoEnvio">
+                                                                                <option selected disabled
+                                                                                    value="SIN OPERADOR">
+                                                                                    Seleccione...
+                                                                                </option>
+                                                                                <option value="OPERADOR LOGÍSTICO">
+                                                                                    OPERADOR
+                                                                                    LOGÍSTICO
+                                                                                </option>
+                                                                                <option value="ENTREGA POR COMERCIAL">
+                                                                                    ENTREGA POR
+                                                                                    COMERCIAL
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div class="col-md-3">
+                                                                            <label for="codigoPromocion"
+                                                                                class="form-label">Descuento
+                                                                                Campaña</label>
+                                                                            <select class="form-select"
+                                                                                id="codigoPromocion"
+                                                                                [(ngModel)]="newPlan.idPromocion"
+                                                                                name="codigoPromocion">
+                                                                                <option selected value="Sin campaña">Sin
+                                                                                    campaña
+                                                                                </option>
+                                                                                <option value="Campaña 1">Campaña 1
+                                                                                </option>
+                                                                                <option value="Campaña 2">Campaña 2
+                                                                                </option>
+                                                                                <option value="Campaña 3">Campaña 3
+                                                                                </option>
+                                                                            </select>
+
+                                                                        </div>
+
+
+
+                                                                        <div class="col-md-6"
+                                                                            *ngIf="newContract && newContract.contract.tipoContrato==='Negociado'">
+                                                                            <label for="valorDescuento"
+                                                                                class="form-label">Descuento
+                                                                                Personalizado</label>
+                                                                            <div class="input-group">
+                                                                                <input type="number"
+                                                                                    class="form-control"
+                                                                                    id="valorDescuento"
+                                                                                    [(ngModel)]="newPlan.valorDescuento"
+                                                                                    name="valorDescuento" step="0.01">
+                                                                                <span class="input-group-text">%</span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6"
+                                                                            *ngIf="newContract && newContract.contract.tipoContrato==='Negociado'">
+                                                                            <label for="motivoDescuento"
+                                                                                class="form-label">Motivo
+                                                                                del Descuento</label>
+                                                                            <select class="form-select"
+                                                                                id="motivoDescuento"
+                                                                                [(ngModel)]="newPlan.motivoDescuento"
+                                                                                name="motivoDescuento">
+                                                                                <option selected disabled value="">
+                                                                                    Seleccione...
+                                                                                </option>
+                                                                                <option value="motivo1">Descuento
+                                                                                    Comercial
+                                                                                </option>
+                                                                                <option value="motivo2">Descuento por
+                                                                                    Retención
+                                                                                </option>
+                                                                                <option value="motivo3">Descuento por
+                                                                                    renovacion
+                                                                                    comercial</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div *ngIf="newContract && newContract.contract.tipoContrato==='Estandar'"
+                                                                            class="col-md-12 alert alert-info">
+                                                                            La configuración de descuentos
+                                                                            personalizados
+                                                                            solo
+                                                                            corresponde a los
+                                                                            contratos negociados
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <div class="input-group">
+                                                                                <select class="form-select"
+                                                                                    [(ngModel)]="addService.tipo"
+                                                                                    name="addServiceTipo"
+                                                                                    id="addServiceTipo">
+                                                                                    <option selected disabled value="">
+                                                                                        Seleccione...
+                                                                                    </option>
+                                                                                    <option value="roaming1">
+                                                                                        Roaming 1</option>
+                                                                                    <option value="roaming2">
+                                                                                        Roaming 2</option>
+                                                                                    <option value="ldi">LDI
+                                                                                    </option>
+                                                                                    <option value="numeroPrivado">
+                                                                                        Número Privado</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+
+                                                                            <div class="input-group">
+                                                                                <input type="number"
+                                                                                    class="form-control"
+                                                                                    id="porcentajeDescuentoAddService"
+                                                                                    name="porcentajeDescuentoAddService"
+                                                                                    [(ngModel)]="addService.descuento">
+                                                                                <span class="input-group-text">%</span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-4">
+                                                                            <button class="btn btn-primary"
+                                                                                type="button"
+                                                                                id="adicionarServicioAdicionalButton"
+                                                                                (click)="adicionarServicioAdicional()">Adicionar
+                                                                                Servicio</button>
+
+                                                                        </div>
+
+
+
+                                                                        <div class="col-12">
+                                                                            <div class="table-responsive">
+                                                                                <table
+                                                                                    class="table table-striped table-hover"
+                                                                                    id="tablaServiciosAdicionales">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>Servicio Adicional</th>
+                                                                                            <th>Cargo Básico</th>
+                                                                                            <th>% Descuento</th>
+                                                                                            <th></th>
+
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr
+                                                                                            *ngFor="let servicio of editedLinea.addServices; let i = index">
+                                                                                            <td>{{ servicio.tipo }}</td>
+                                                                                            <td>{{ servicio.cargoBasico
+                                                                                                }}</td>
+                                                                                            <td>{{ servicio.descuento }}
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <button
+                                                                                                    class="btn btn-danger btn-sm"
+                                                                                                    type="button"
+                                                                                                    id="eliminarServicioAdicionalButton"
+                                                                                                    (click)="eliminarServicioAdicional(i)">Eliminar</button>
+                                                                                            </td>
+                                                                                            <td>
+
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+
+
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-12">
+                                                                <div class="p-3 border bg-light">
+                                                                    <div class="row g-1">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="card-footer text-end">
+
+                                                            <div class="btn-group" role="group"
+                                                                aria-label="Basic mixed styles example">
+                                                                <button type="button" class="btn btn-primary">Port
+                                                                    Out</button>
+                                                                <button type="button"
+                                                                    class="btn btn-light">Actualizar</button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-2"></div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <div class="row">
+                            <div class="col-3">
+                                Servicios:
+                            </div>
+                            <div class="col-3">
+                                <select id="actionType" class="form-control" [(ngModel)]="selectedAction"
+                                    name="actionType">
+                                    <option value="activacion">Activación</option>
+                                    <option value="eliminacion">Eliminación</option>
+                                    <option value="renovacion">Renovación</option>
+                                    <option value="changeBillAccount">Cambiar Cuentas Facturación</option>
+
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-primary"
+                                    (click)="ejecutarServicio()">Ejecutar</button>
+                            </div>
+
+                            <div class="col-3">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
