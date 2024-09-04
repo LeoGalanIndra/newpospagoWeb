@@ -315,9 +315,9 @@
 
                                                                 <div class="col-md-6">
                                                                     <label for="anioDescuento" class="form-label">Años descuento</label>
-                                                                    <select class="form-select" id="motivoDescuento"
-                                                                            (change)="toggleYears($event)"
-                                                                            name="anioDescuento" multiple>
+                                                                    <select class="form-select" id="anioDescuento"
+                                                                            [(ngModel)]="newContract.discount.anio"
+                                                                            name="anioDescuento">
                                                                       <option value="2024">2024</option>
                                                                       <option value="2025">2025</option>
                                                                       <option value="2026">2026</option>
@@ -328,11 +328,12 @@
                                                                     </select>
                                                                   </div>
                                                             
+                                                            <a *ngIf="newContract.discount.meses.length > 0 && newContract.discount.anio" 
+                                                                href="javascript:void(0);" class="btn btn-success" (click)="aceptarFechas()">Aceptar meses y año descuento</a>
 
-                                                            <div *ngIf="newContract.discount.meses.length > 0 || newContract.discount.anios">
-                                                                <h5>Selección de meses y años de descuento:</h5>
-                                                                <p><strong>Meses con descuento:</strong> {{ newContract.discount.meses.join(', ') }}</p>
-                                                                <p><strong>Año del descuento:</strong> {{ newContract.discount.anios!.join(', ') }}</p>
+                                                            <div *ngIf="newContract.discount.mesesAnio!.length > 0">
+                                                                <p><strong>Meses y años de descuento aplicados:<p></strong>
+                                                                <p>{{ newContract.discount.mesesAnio!.join(', ') }}</p>
                                                             </div>
                                                             
                                                         </div>
@@ -1494,8 +1495,7 @@
                                                                                     <th>Tipo de Envío</th>
                                                                                     <th>Descuento Personalizado
                                                                                         Discontinuo</th>
-                                                                                    <th>Años</th>
-                                                                                    <th>Meses</th>
+                                                                                    <th>Año-Meses</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
@@ -1573,9 +1573,7 @@
                                                                                     <td>{{
                                                                                         newContract.discount.valorDescuento
                                                                                         }}</td>
-                                                                                    <td>{{ newContract.discount.anios }}
-                                                                                    </td>
-                                                                                    <td>{{ newContract.discount.meses }}
+                                                                                    <td>{{ newContract.discount.mesesAnio }}
                                                                                     </td>
                                                                                 </tr>
 

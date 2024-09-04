@@ -113,6 +113,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     discount: {
       esContinuo: false,
       meses: [],
+      anio: "",
+      mesesAnio: [],
       motivoDescuento: "",
       valorDescuento: 0,
       idContract: NaN
@@ -284,16 +286,6 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-  toggleYears(event: Event): void {
-    const options = (event.target as HTMLSelectElement).options;
-    this.newContract.discount.anios = []; 
-    for (const option of Array.from(options)) {
-      if (option.selected) {
-        this.newContract.discount.anios.push(option.value);
-      }
-    }
-  }
-
   adicionarCuenta() {
 
     let index = 1;
@@ -456,7 +448,12 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   aceptarFechas(): void {
     // Aquí puedes realizar cualquier lógica adicional que necesites
     console.log('Meses seleccionados:', this.newContract.discount.meses);
-    console.log('Año seleccionado:', this.newContract.discount.anios);
+    console.log('Año seleccionado:', this.newContract.discount.anio);
+    for (let i = 0; i < this.newContract.discount.meses.length; i++) {
+      this.newContract.discount.mesesAnio?.push(this.newContract.discount.meses[i] + "-" + this.newContract.discount.anio);
+    }
+    this.newContract.discount.meses = [];
+    this.newContract.discount.anio = "";
   }
 
   eliminarLinea(index: number) {
@@ -564,7 +561,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.newContract.contract.idAccount = this.idAccountParam ? this.idAccountParam : "-1";
 
-    if (this.newContract.discount.meses.length > 0) {
+    if (this.newContract.discount.mesesAnio!.length > 0) {
       this.newContract.discount.idContract = this.idContract;
     }
 

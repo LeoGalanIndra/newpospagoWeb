@@ -181,7 +181,7 @@ export class DataService {
       .discounts
       .filter(d => d.idContract == discount.idContract)
       .forEach(d => {
-        d.meses = discount.meses ; 
+        d.mesesAnio = discount.mesesAnio ; 
         d.motivoDescuento = discount.motivoDescuento ; 
         d.valorDescuento = discount.valorDescuento ; 
       }); 
