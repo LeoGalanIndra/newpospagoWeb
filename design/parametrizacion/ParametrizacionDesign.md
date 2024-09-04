@@ -43,6 +43,8 @@ Al iniciar el diseño de la solución, se plantearon 3 formas de solucionar la c
 
 > El componente es completamente nuevo. Se implementaria una tabla en base de datos la cual detalla el comportamiento de cada parametro. 
 
+<b>Se selecciona la solucion Properties CRM, dado a que es un modelo basado en servicio, el cual se encuentra estable y se encuentra alineado a la arquitectura del proyecto.</b>
+
 ## Nuevo Pospago B2B / Parametrización
 
 Se hara uso del proyecto APP-PropiedadesCrm el cual contiene la estructura para gestionar las propiedades del sistema. 
@@ -375,16 +377,17 @@ SYSDATE, -- CREATION_DATE
 
 ### Diagrama E-R
 
-MODELO EXISTENTE 
++ MODELO EXISTENTE
+<br/>
 ![CRM_APPLICATION.png](CRM_APPLICATION.png)
-
+  <br/>
 ![CRMPROPERTIES.png](CRMPROPERTIES.png)
-
-MODELO NUEVO ADICIONAL 
+  <br/>
++ MODELO NUEVO ADICIONAL 
 ![GROUPS.png](GROUPS.png)
-
+  <br/>
 ![STATUS.png](STATUS.png)
-
+  <br/>
 
 ### Otros componentes (Índices / Procedimientos / Funciones / Paquetes)
 
@@ -395,7 +398,7 @@ MODELO NUEVO ADICIONAL
 ### Descripción detallada del cambio a nivel de integraciones
 
    < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones por la implementación de este requerimiento>
-
+![CRMPROPERTIES.png](CRMPROPERTIES.png)
 ### Diagrama de integraciones
 
    < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones presentando en un diagrama las relaciones, protocolos y sincronía entre los diferentes componentes de la solución>
