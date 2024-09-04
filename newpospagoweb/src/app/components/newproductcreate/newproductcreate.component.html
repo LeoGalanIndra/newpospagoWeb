@@ -176,7 +176,7 @@
 
                                                         <!-- Nueva sección de Descuentos -->
                                                         <div class="row g-3 mt-4">
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-6">
                                                                 <label for="valorDescuento" class="form-label">Descuento Discontinuo</label>
                                                                 <div class="input-group">
                                                                     <input type="number" class="form-control"
@@ -187,7 +187,7 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-6">
                                                                 <label for="motivoDescuento" class="form-label">Motivo
                                                                     del
                                                                     Descuento</label>
@@ -204,113 +204,137 @@
                                                                         comercial</option>
                                                                 </select>
                                                             </div>
+                                                        
+                                                                <div class="col-md-6">
+                                                                    <span>Meses descuento</span>
+                                                                    <ul class="list-group list-group-horizontal">
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox1"
+                                                                                (change)="toggleMonth('ENE')"
+                                                                                [checked]="newContract.discount.meses.includes('ENE')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox1">ENE</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox2"
+                                                                                (change)="toggleMonth('FEB')"
+                                                                                [checked]="newContract.discount.meses.includes('FEB')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox2">FEB</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox3"
+                                                                                (change)="toggleMonth('MAR')"
+                                                                                [checked]="newContract.discount.meses.includes('MAR')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox3">MAR</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox4"
+                                                                                (change)="toggleMonth('ABR')"
+                                                                                [checked]="newContract.discount.meses.includes('ABR')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox4">ABR</label>
+                                                                        </li>
+                                                                    </ul>
+    
+                                                                    <ul class="list-group list-group-horizontal">
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox5"
+                                                                                (change)="toggleMonth('MAY')"
+                                                                                [checked]="newContract.discount.meses.includes('MAY')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox5">MAY</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox6"
+                                                                                (change)="toggleMonth('JUN')"
+                                                                                [checked]="newContract.discount.meses.includes('JUN')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox6">JUN</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox7"
+                                                                                (change)="toggleMonth('JUL')"
+                                                                                [checked]="newContract.discount.meses.includes('JUL')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox7">JUL</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox8"
+                                                                                (change)="toggleMonth('AGO')"
+                                                                                [checked]="newContract.discount.meses.includes('AGO')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox8">AGO</label>
+                                                                        </li>
+                                                                    </ul>
+    
+                                                                    <ul class="list-group list-group-horizontal">
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox9"
+                                                                                (change)="toggleMonth('SEP')"
+                                                                                [checked]="newContract.discount.meses.includes('SEP')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox9">SEP</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox10"
+                                                                                (change)="toggleMonth('OCT')"
+                                                                                [checked]="newContract.discount.meses.includes('OCT')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox10">OCT</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox11"
+                                                                                (change)="toggleMonth('NOV')"
+                                                                                [checked]="newContract.discount.meses.includes('NOV')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox11">NOV</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox12"
+                                                                                (change)="toggleMonth('DIC')"
+                                                                                [checked]="newContract.discount.meses.includes('DIC')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox12">DIC</label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
 
-                                                            <div class="col-md-6">
-                                                                <ul class="list-group list-group-horizontal">
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox1"
-                                                                            (change)="toggleMonth('ENE')"
-                                                                            [checked]="newContract.discount.meses.includes('ENE')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox1">ENE</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox2"
-                                                                            (change)="toggleMonth('FEB')"
-                                                                            [checked]="newContract.discount.meses.includes('FEB')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox2">FEB</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox3"
-                                                                            (change)="toggleMonth('MAR')"
-                                                                            [checked]="newContract.discount.meses.includes('MAR')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox3">MAR</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox4"
-                                                                            (change)="toggleMonth('ABR')"
-                                                                            [checked]="newContract.discount.meses.includes('ABR')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox4">ABR</label>
-                                                                    </li>
-                                                                </ul>
+                                                                <div class="col-md-6">
+                                                                    <label for="anioDescuento" class="form-label">Años descuento</label>
+                                                                    <select class="form-select" id="motivoDescuento"
+                                                                            (change)="toggleYears($event)"
+                                                                            name="anioDescuento" multiple>
+                                                                      <option value="2024">2024</option>
+                                                                      <option value="2025">2025</option>
+                                                                      <option value="2026">2026</option>
+                                                                      <option value="2027">2027</option>
+                                                                      <option value="2028">2028</option>
+                                                                      <option value="2029">2029</option>
+                                                                      <option value="2030">2030</option>
+                                                                    </select>
+                                                                  </div>
+                                                            
 
-                                                                <ul class="list-group list-group-horizontal">
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox5"
-                                                                            (change)="toggleMonth('MAY')"
-                                                                            [checked]="newContract.discount.meses.includes('MAY')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox5">MAY</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox6"
-                                                                            (change)="toggleMonth('JUN')"
-                                                                            [checked]="newContract.discount.meses.includes('JUN')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox6">JUN</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox7"
-                                                                            (change)="toggleMonth('JUL')"
-                                                                            [checked]="newContract.discount.meses.includes('JUL')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox7">JUL</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox8"
-                                                                            (change)="toggleMonth('AGO')"
-                                                                            [checked]="newContract.discount.meses.includes('AGO')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox8">AGO</label>
-                                                                    </li>
-                                                                </ul>
-
-                                                                <ul class="list-group list-group-horizontal">
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox9"
-                                                                            (change)="toggleMonth('SEP')"
-                                                                            [checked]="newContract.discount.meses.includes('SEP')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox9">SEP</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox10"
-                                                                            (change)="toggleMonth('OCT')"
-                                                                            [checked]="newContract.discount.meses.includes('OCT')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox10">OCT</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox11"
-                                                                            (change)="toggleMonth('NOV')"
-                                                                            [checked]="newContract.discount.meses.includes('NOV')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox11">NOV</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox12"
-                                                                            (change)="toggleMonth('DIC')"
-                                                                            [checked]="newContract.discount.meses.includes('DIC')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox12">DIC</label>
-                                                                    </li>
-                                                                </ul>
+                                                            <div *ngIf="newContract.discount.meses.length > 0 || newContract.discount.anios">
+                                                                <h5>Selección de meses y años de descuento:</h5>
+                                                                <p><strong>Meses con descuento:</strong> {{ newContract.discount.meses.join(', ') }}</p>
+                                                                <p><strong>Año del descuento:</strong> {{ newContract.discount.anios!.join(', ') }}</p>
                                                             </div>
+                                                            
                                                         </div>
 
 
@@ -1470,6 +1494,7 @@
                                                                                     <th>Tipo de Envío</th>
                                                                                     <th>Descuento Personalizado
                                                                                         Discontinuo</th>
+                                                                                    <th>Años</th>
                                                                                     <th>Meses</th>
                                                                                 </tr>
                                                                             </thead>
@@ -1548,6 +1573,8 @@
                                                                                     <td>{{
                                                                                         newContract.discount.valorDescuento
                                                                                         }}</td>
+                                                                                    <td>{{ newContract.discount.anios }}
+                                                                                    </td>
                                                                                     <td>{{ newContract.discount.meses }}
                                                                                     </td>
                                                                                 </tr>

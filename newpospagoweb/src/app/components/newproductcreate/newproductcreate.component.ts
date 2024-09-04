@@ -284,6 +284,16 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+  toggleYears(event: Event): void {
+    const options = (event.target as HTMLSelectElement).options;
+    this.newContract.discount.anios = []; 
+    for (const option of Array.from(options)) {
+      if (option.selected) {
+        this.newContract.discount.anios.push(option.value);
+      }
+    }
+  }
+
   adicionarCuenta() {
 
     let index = 1;
@@ -441,6 +451,12 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       idContract: NaN,
       nuipValue: ''
     };
+  }
+
+  aceptarFechas(): void {
+    // Aquí puedes realizar cualquier lógica adicional que necesites
+    console.log('Meses seleccionados:', this.newContract.discount.meses);
+    console.log('Año seleccionado:', this.newContract.discount.anios);
   }
 
   eliminarLinea(index: number) {

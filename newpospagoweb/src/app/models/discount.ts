@@ -4,6 +4,7 @@ export interface Discount {
     valorDescuento: number;
     motivoDescuento: string;
     meses: string[];
+    anios?: string[];
     idContract: number ; 
 
 
