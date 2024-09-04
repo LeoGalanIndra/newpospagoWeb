@@ -19,35 +19,35 @@
                     <div class="container">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="info-contrato-tab" data-bs-toggle="tab"
+                                <button #infoContrato class="nav-link active" id="info-contrato-tab" data-bs-toggle="tab"
                                     data-bs-target="#info-contrato" type="button" role="tab"
                                     aria-controls="info-contrato" aria-selected="true">Contrato</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="cuenta-facturacion-tab" data-bs-toggle="tab"
+                                <button #infoCuentaFacturacion class="nav-link" id="cuenta-facturacion-tab" data-bs-toggle="tab"
                                     data-bs-target="#cuenta-facturacion" type="button" role="tab"
                                     aria-controls="cuenta-facturacion" [disabled]="enabledPanels.billAccount">Cuenta
                                     Facturación</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="cargue-masivo-tab" data-bs-toggle="tab"
+                                <button #infoCargueMasivo class="nav-link" id="cargue-masivo-tab" data-bs-toggle="tab"
                                     data-bs-target="#cargue-masivo" type="button" role="tab"
                                     aria-controls="cargue-masivo" aria-selected="false"
                                     [disabled]="enabledPanels.massiveLoad">Cargue Masivo</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="producto-tab" data-bs-toggle="tab"
+                                <button #infoProducto class="nav-link" id="producto-tab" data-bs-toggle="tab"
                                     data-bs-target="#producto" type="button" role="tab" aria-controls="producto"
                                     aria-selected="false" [disabled]="enabledPanels.product">Producto</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="registro-equipos-tab" data-bs-toggle="tab"
+                                <button #infoEquipos class="nav-link" id="registro-equipos-tab" data-bs-toggle="tab"
                                     data-bs-target="#registro-equipos" type="button" role="tab"
                                     aria-controls="registro-equipos" aria-selected="false"
                                     [disabled]="enabledPanels.devices">Equipos</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="resumen-venta-tab" data-bs-toggle="tab"
+                                <button #infoResumen class="nav-link" id="resumen-venta-tab" data-bs-toggle="tab"
                                     data-bs-target="#resumen-venta" type="button" role="tab"
                                     aria-controls="resumen-venta" aria-selected="false">Resumen</button>
                             </li>
@@ -143,11 +143,14 @@
                                                                 <label for="valorBolsa" class="form-label">Valor
                                                                     Bolsa</label>
                                                                 <div class="input-group">
-                                                                    <span class="input-group-text">$</span>
-                                                                    <input type="number" class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         id="valorBolsa"
                                                                         [(ngModel)]="newContract.contract.valorBolsa"
-                                                                        name="valorBolsa">
+                                                                        name="valorBolsa"
+                                                                        [value]="formatCurrency(newContract.contract.valorBolsa)"
+                                                                        (input)="onInput($event,'valorBolsa')"
+                                                                        (blur)="onBlur($event,'valorBolsa')"
+                                                                        >
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -155,8 +158,11 @@
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">$</span>
                                                                     <input type="text" class="form-control" id="saldo"
-                                                                        [value]="newContract.contract.saldo ? newContract.contract.saldo : newContract.contract.valorBolsa"
-                                                                        name="saldo" readonly>
+                                                                        [value]="newContract.contract.saldo ? formatCurrency(newContract.contract.saldo) : formatCurrency(newContract.contract.valorBolsa)"
+                                                                        name="saldo" readonly
+
+
+                                                                        >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -171,9 +177,7 @@
                                                         <!-- Nueva sección de Descuentos -->
                                                         <div class="row g-3 mt-4">
                                                             <div class="col-md-3">
-                                                                <label for="valorDescuento" class="form-label">Valor
-                                                                    del
-                                                                    Descuento</label>
+                                                                <label for="valorDescuento" class="form-label">Descuento Discontinuo</label>
                                                                 <div class="input-group">
                                                                     <input type="number" class="form-control"
                                                                         id="valorDescuento"
@@ -552,12 +556,12 @@
                                                         <div class="col-md-3">
                                                             <label for="plan" class="form-label">Plan</label>
                                                             <select class="form-select" id="plan"
-                                                                [(ngModel)]="newPlan.plan" name="plan">
+                                                                [(ngModel)]="newPlan.plan" name="plan"
+                                                                (change)="updateValorUnitario()"
+                                                                >
                                                                 <option selected disabled value="">Seleccione...
                                                                 </option>
-                                                                <option value="plan1">Plan 1</option>
-                                                                <option value="plan2">Plan 2</option>
-                                                                <option value="plan3">Plan 3</option>
+                                                                <option *ngFor="let plan of planKeys" [value]="plan">{{ plan }}</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-3">
@@ -569,11 +573,15 @@
                                                             <label for="valorUnitario" class="form-label">Valor
                                                                 Unitario</label>
                                                             <div class="input-group">
-                                                                <span class="input-group-text">$</span>
-                                                                <input type="number" class="form-control"
+
+                                                                <input type="text" class="form-control"
                                                                     id="valorUnitario"
                                                                     [(ngModel)]="newPlan.valorUnitario"
-                                                                    name="valorUnitario">
+                                                                    name="valorUnitario"
+                                                                    [value]="formatCurrency(newPlan.valorUnitario)"
+                                                                    (input)="onInput($event,'valorUnitario')"
+                                                                    (blur)="onBlur($event,'valorUnitario')"
+                                                                    >
                                                             </div>
                                                         </div>
 
@@ -633,11 +641,11 @@
                                                                 name="codigoPromocion">
                                                                 <option selected value="Sin campaña">Sin campaña
                                                                 </option>
-                                                                <option value="Campaña 1">Campaña 1
+                                                                <option value="Amor y Amistad">Amor y Amistad
                                                                 </option>
-                                                                <option value="Campaña 2">Campaña 2
+                                                                <option value="Navidad">Navidad
                                                                 </option>
-                                                                <option value="Campaña 3">Campaña 3</option>
+                                                                <option value="Mes de la madre">Mes de la madre</option>
                                                             </select>
 
                                                         </div>
@@ -697,8 +705,7 @@
                                                                 *ngIf="newPlan.cantidad >0 && newPlan.valorUnitario>0 ">
                                                                 Valor Total sin Impuesto $ {{
                                                                 newPlan.cantidad * ( newPlan.valorUnitario +
-                                                                calcularTotalCargosServiciosAdicionales() )
-                                                                }}</h5>
+                                                                calcularTotalCargosServiciosAdicionales() ) | number:'1.2-2' }}</h5>
                                                         </div>
 
                                                         <div class="col-md-3 text-end">
@@ -781,7 +788,8 @@
                                                             </select>
                                                         </div>
                                                         <!-- Línea -->
-                                                        <div class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea ==='Portabilidad'"
+                                                          class="col-md-3">
                                                             <label for="linea" class="form-label">MSISDN</label>
                                                             <input type="number" class="form-control"
                                                                 id="newLineaNumeroLinea"
@@ -795,23 +803,36 @@
                                                                 [(ngModel)]="newLinea.imsi" name="newLineaImsi">
                                                         </div>
                                                         <!-- IMEI -->
-                                                        <div class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea ==='Portabilidad'"
+                                                              class="col-md-3">
                                                             <label for="imei" class="form-label">IMEI</label>
                                                             <input type="text" class="form-control" id="newLineaImei"
                                                                 [(ngModel)]="newLinea.imei" name="newLineaImei">
                                                         </div>
 
-                                                        <div class="col-md-3">
-                                                            <label for="grupo" class="form-label">Grupo</label>
-                                                            <input type="text" class="form-control" id="grupo"
-                                                                [(ngModel)]="newLinea.grupo" name="grupo">
-                                                        </div>
+                                                        <div class="col-md-4">
+                                                          <label for="grupo" class="form-label">Grupo</label>
+                                                          <select class="form-select" id="grupo"
+                                                              [(ngModel)]="newLinea.grupo"
+                                                              name="grupo">
+                                                              <option selected value="Administración">Administración</option>
+                                                              <option value="Analistas de ventas">Analistas de ventas</option>
+                                                              <option value="Compras">Compras</option>
+                                                              <option value="Directores">Directores</option>
+                                                              <option value="Informática">Informática</option>
+                                                          </select>
+                                                      </div>
+
+
+
+
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div class="col-12">
-                                                <div class="p-3 border bg-light">
+                                                <div *ngIf="newLinea.tipoLinea ==='Portabilidad'"
+                                                    class="p-3 border bg-light">
                                                     <div class="row g-3">
                                                         <!-- NUIP -->
                                                         <div class="col-md-3">
@@ -876,7 +897,7 @@
                                                         </div>
                                                         <!-- Fecha de Expedición -->
                                                         <div class="col-md-3">
-                                                            <label for="fechaExpedicion" class="form-label">Fecha de
+                                                            <label for="fechaExpedicion" class="form-label">Año de
                                                                 Expedición</label>
                                                             <input type="number" class="form-control"
                                                                 id="newLineaFechaExpedicion"
@@ -1092,7 +1113,9 @@
                                                                     Equipos</label>
                                                                 <select class="form-select" id="redencionEquipos"
                                                                     name="redencionEquipos"
-                                                                    [(ngModel)]="nuevoEquipo.redencionEquipos">
+                                                                    [(ngModel)]="nuevoEquipo.redencionEquipos"
+                                                                    (change)="updateRedencionNO()"
+                                                                    >
                                                                     <option selected disabled value="">Seleccione...
                                                                     </option>
                                                                     <option value="SI">SI</option>
@@ -1106,8 +1129,7 @@
                                                                     name="cantidad" [(ngModel)]="nuevoEquipo.cantidad">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <label for="porcentajeDescuento" class="form-label">%
-                                                                    Descuento</label>
+                                                                <label for="porcentajeDescuento" class="form-label">% a redimir por equipo</label>
                                                                 <div class="input-group">
                                                                     <input type="number" class="form-control"
                                                                         id="porcentajeDescuento"
@@ -1185,7 +1207,7 @@
                                                             </div>
 
                                                             <div class="col-md-3">
-                                                                Valor NO redimible
+                                                                Valor pendiente por redimir
                                                             </div>
 
                                                             <div class="col-md-3">
@@ -1721,8 +1743,8 @@
                                                                                         | currency }} </div>
                                                                                 </div>
                                                                                 <div class="row">
-                                                                                    <div class="col-8"><b>Valor NO
-                                                                                            Redimible:</b></div>
+                                                                                    <div class="col-8"><b>Valor pendiente por redimir:
+                                                                                    </b></div>
                                                                                     <div class="col-4">{{
                                                                                         newContract.contract.saldo > 0 ?
                                                                                         newContract.contract.valorNoRedimible.toFixed(2)

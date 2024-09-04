@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, Renderer2, RendererFactory2,ElementRef  } from '@angular/core';
 import { NewProductContract } from '../../models/new-product-contract';
 import { BillAccount } from '../../models/bill-account';
 import { Plan } from '../../models/plan';
@@ -13,12 +13,78 @@ import { Inventory } from '../../models/inventory';
 import { ModalService } from '../../services/modal/modal.service';
 import { Subscription } from 'rxjs';
 
+declare let bootstrap: any;
+
 @Component({
   selector: 'app-newproductcreate',
   templateUrl: './newproductcreate.component.html',
   styleUrl: './newproductcreate.component.css'
 })
 export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
+
+
+ // @ViewChild('infoContrato', { static: false }) infoContratoTab!: ElementRef;
+  @ViewChild('infoCuentaFacturacion', { static: false }) infoCuentaFacturacion!: ElementRef;
+  @ViewChild('infoCargueMasivo', { static: false }) infoCargueMasivo!: ElementRef;
+  @ViewChild('infoProducto', { static: false }) infoProducto!: ElementRef;
+  @ViewChild('infoEquipos', { static: false }) infoEquipos!: ElementRef;
+  @ViewChild('infoResumen', { static: false }) infoResumen!: ElementRef;
+
+  preciosPlanes: { [key: string]: number } = {
+    'Plan Tigo Empresarial 6.0': 100,
+    'Plan Tigo Empresarial 6.1': 200,
+    'Plan Tigo Empresarial 6.2': 300,
+    'Plan Tigo Empresarial 6.3': 400,
+    'Plan Tigo Empresarial 6.4': 500
+  };
+
+
+   // Propiedades para el formulario
+   newPlan1 = {
+    plan: '',
+    valorUnitario: ''
+  };
+
+  get planKeys() {
+    return Object.keys(this.preciosPlanes);
+  }
+
+  updateValorUnitario() {
+
+    console.log(this.newPlan.plan)
+
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.0'){
+      this.newPlan.valorUnitario = 10084;
+    }
+
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.1'){
+      this.newPlan.valorUnitario = 15126;
+    }
+
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.2'){
+      this.newPlan.valorUnitario = 19328;
+    }
+
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.3'){
+      this.newPlan.valorUnitario = 25210;
+    }
+
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.4'){
+      this.newPlan.valorUnitario = 29412;
+    }
+  }
+
+  updateRedencionNO() {
+
+    console.log(this.newPlan.plan)
+
+    if (this.nuevoEquipo.redencionEquipos === 'NO'){
+      this.nuevoEquipo.porcentajeDescuento = 0;
+      this.nuevoEquipo.porcentajeDescuento = 0;
+    }
+
+  }
+
 
   idContract: number = NaN;
 
@@ -45,7 +111,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     },
     billAccounts: [],
     discount: {
-      esContinuo: false, 
+      esContinuo: false,
       meses: [],
       motivoDescuento: "",
       valorDescuento: 0,
@@ -93,7 +159,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     idPlan: NaN,
     addServices: [],
-    idContract: NaN, 
+    idContract: NaN,
     nuipValue: ''
   };
 
@@ -202,7 +268,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     if(this.idContractParam != "-1"){
       this.initContract(this.idContractParam);
-    }       
+    }
 
     this.idContract = this.idContractParam == "-1" ? (Math.floor(100000000 + Math.random() * 900000000)) : this.idContractParam;
 
@@ -326,10 +392,6 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   adicionarServicioAdicionalDefault() {
-
-
-
-
   }
 
   eliminarServicioAdicional(index: number) {
@@ -353,8 +415,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.newLinea.tipoEnvio = mySelectedPlan.tipoEnvio;
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
-    this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ; 
-    this.newLinea.mesesPersonalizados = this.newContract.discount.meses ; 
+    this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ;
+    this.newLinea.mesesPersonalizados = this.newContract.discount.meses ;
     this.newLinea.idContract = this.idContract;
 
     this.newContract.lineas.push({ ...this.newLinea });
@@ -376,7 +438,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       fechaExpedicion: NaN,
       idPlan: NaN,
       addServices: [],
-      idContract: NaN, 
+      idContract: NaN,
       nuipValue: ''
     };
   }
@@ -497,7 +559,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.enabledPanels.billAccount = false;
 
+
   }
+
+
 
   guardarContrato() {
     console.log("GUARDAR");
@@ -524,6 +589,9 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.enabledPanels.massiveLoad = false;
 
+      // Llama al método para mostrar la ventana modal informativa
+      //this.createModalInformativo(2);
+
   }
 
   cargarRegistrosMasivos() {
@@ -539,13 +607,14 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.contractService.printDatasource();
 
     this.enabledPanels.devices = false;
-
+    // Llama al método para mostrar la ventana modal informativa
+    //this.createModalInformativo(4);
   }
 
   onSeleccionarEquipo(event: Event): void {
     // const nombreEquipo = (event.target as HTMLSelectElement).value;
     console.log(this.deviceSelected);
-    // console.log(nombreEquipo); 
+    // console.log(nombreEquipo);
     this.inventarioSeleccionado = this.inventarios.find(inventario => inventario.name === this.deviceSelected);
     console.log(this.inventarioSeleccionado);
   }
@@ -554,6 +623,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
+          // Llama al método para mostrar la ventana modal informativa
+          //this.createModalInformativo(5);
   }
 
   activarContrato() {
@@ -569,7 +640,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
         'Se procede a activar la nueva oferta.')
 
       .subscribe((v) => {
-        //your logic   
+        //your logic
         this.router.navigate(['/']);
       });
 
@@ -605,7 +676,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       {
         id: 5,
         title: 'Redención de equipos',
-        body: 'A continuación, se guardará la información de los equipos a redimir y a comprar. \nEsta usted seguro de continuar?',
+        body: 'A continuación, se guardará la información de los equipos a redimir y/o a comprar. \nEsta usted seguro de continuar?',
 
       },
       {
@@ -632,23 +703,48 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
           if (option === 1) {
             this.crearContrato();
+            // Llama al método para mostrar la ventana modal informativa
+            this.createModalInformativo(1);
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
+            tabElement.show();
           }
 
           if (option === 2) {
             this.crearCuentasFacturacion();
+            this.createModalInformativo(2);
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoCargueMasivo.nativeElement);
+            tabElement.show();
           }
 
           if (option === 3) {
             this.cargarRegistrosMasivos();
+
+            //this.createModalInformativo(2);
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoProducto.nativeElement);
+            tabElement.show();
           }
 
           if (option === 4) {
             this.guardarProducto()
+
+            this.createModalInformativo(4);
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoEquipos.nativeElement);
+            tabElement.show();
+
           }
 
           if (option === 5) {
 
             this.guardarEquipos();
+
+            this.createModalInformativo(5);
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoResumen.nativeElement);
+            tabElement.show();
           }
 
           if (option === 6) {
@@ -669,15 +765,143 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       this.subSucess.unsubscribe();
   }
 
+    //mrmelor
+    formatCurrency(value: number): string {
+      return value.toLocaleString('en-US',
+        { style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+           maximumFractionDigits: 2 });
+    }
+
+  // Maneja la entrada del usuario
+  onInput(event: Event, campo: string): void{
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement) {
+      // Extrae solo los números del valor ingresado
+      let value = inputElement.value.replace(/[^0-9.]/g, '');
+      // Convierte el valor a número
+      const numberValue = parseFloat(value) || 0;
+      console.log("campo = " + campo);
+      console.log( numberValue );
+      console.log( "valor formateado" + this.formatCurrency(numberValue));
+
+      if (campo ==="valorUnitario"){
+        // Actualiza el modelo
+        this.newContract.contract.valorBolsa = numberValue;
+        inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
+      }
+      if (campo ==="valorBolsa"){
+          // Actualiza el modelo
+          this.newContract.contract.valorBolsa = numberValue;
+          inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+        }
+      if (campo ==="saldo"){
+          // Actualiza el modelo
+          this.newContract.contract.saldo = numberValue;
+          inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
+        }
+           }
+  }
+
+
+
+    // Opcional: formatea el valor al salir del campo
+    onBlur(event: Event,campo: string) {
+      const inputElement = event.target as HTMLInputElement;
+      if (inputElement) {
+        if (campo ==="ValorUnitario"){
+            inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
+          }
+        if (campo ==="valorBolsa"){
+          inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+        }
+        if (campo ==="saldo"){
+          inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
+        }
+      }
+    }
+
+    updateValue(value: string) {
+      const numericValue = value.replace(/[^0-9.]/g, '');
+      this.newPlan.valorUnitario = parseFloat(numericValue);
+    }
+
+  createModalInformativo(option: number) {
+
+    let functionMapper = [
+      {
+        id: 1,
+        title: 'Creación de contrato',
+        body: 'Contrato creado con éxito',
+
+      },
+      {
+        id: 2,
+        title: 'Creación de cuentas de facturación',
+        body: 'Cuenta de facturación creada con éxito',
+
+      },
+      {
+        id: 3,
+        title: 'Cargue Masivo de líneas',
+        body: 'A continuación, se cargará un archivo Excel el cual contiene la configuración del producto y líneas. \nEsta usted seguro de continuar?',
+
+      },
+      {
+        id: 4,
+        title: 'Configuración del producto',
+        body: 'Producto configurado con éxito',
+
+      },
+      {
+        id: 5,
+        title: 'Redención de equipos',
+        body: 'Equipos redimidos con éxito',
+
+      },
+      {
+        id: 6,
+        title: 'Activación del producto.',
+        body: 'Proceso de Activación Iniciado con éxito',
+
+      }
+    ];
+
+    let myOptionObject = functionMapper.find(opt => opt.id === option);
+
+
+    console.log("create modal informativo");
+    this.sub = this.modalService
+      .openAcceptModal(this.entry,
+        myOptionObject?.title ? myOptionObject?.title : 'Confirmación del proceso',
+        myOptionObject?.body ? myOptionObject.body : 'Desea continuar?')
+      .subscribe((v1) => {
+        //your logic
+        console.log("your logic");
+        console.log(v1);
+        if (v1 === 'accept') {
+
+          if (option === 10) {
+            //this.crearContrato();
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
+            tabElement.show();
+          }
+
+        }
+
+      });
+  }
 
   initContract(idContract : any ){
 
-    let contract = this.contractService.getContractsByIdContract(idContract)[0]; 
+    let contract = this.contractService.getContractsByIdContract(idContract)[0];
     let billAccounts = this.contractService.getBillAccountsByIdContract(idContract);
-    let discount = this.contractService.getDiscountByIdContract(idContract)[0]; 
-    let plans = this.contractService.getProductsByIdContract(idContract); 
-    let lineas = this.contractService.getLinesByIdContract(idContract); 
-    let devices = this.contractService.getDevicesByIdContract(idContract); 
+    let discount = this.contractService.getDiscountByIdContract(idContract)[0];
+    let plans = this.contractService.getProductsByIdContract(idContract);
+    let lineas = this.contractService.getLinesByIdContract(idContract);
+    let devices = this.contractService.getDevicesByIdContract(idContract);
 
 
     this.newContract = {
@@ -687,7 +911,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       plans: plans,
       lineas: lineas,
       devices: devices
-  
+
     };
 
     this.enabledPanels = {
@@ -695,13 +919,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       massiveLoad: (!(plans.length > 0)),
       product: (!(plans.length > 0)),
       devices: (!(devices.length > 0 )),
-  
+
     };
-
   }
-
-
-
-
-
 }

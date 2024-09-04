@@ -15,22 +15,25 @@ import { ModalService } from './services/modal/modal.service';
 import { SucessModalComponent } from './components/modals/sucess-modal/sucess-modal.component';
 import { NewproductdetailComponent } from './components/newproductdetail/newproductdetail.component';
 import { CambiarCuentaFacturacionComponent } from './components/cambiar-cuenta-facturacion/cambiar-cuenta-facturacion.component';
+import { NumberFormatDirective } from './number-format.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
+    NumberFormatDirective, // mrmelor
     NewproductmasterComponent,
     DashboardComponent,
     NewproductcreateComponent,
     ConfirmationModalComponent,
     SucessModalComponent,
     NewproductdetailComponent,
-    CambiarCuentaFacturacionComponent
+    CambiarCuentaFacturacionComponent,
+    NumberFormatDirective
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule, 
-    
+    AppRoutingModule,
+
     FormsModule
   ],
   providers: [  ],
