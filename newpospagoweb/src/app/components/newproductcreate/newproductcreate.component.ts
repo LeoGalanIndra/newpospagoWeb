@@ -12,6 +12,8 @@ import { InventoryService } from '../../services/inventory.service';
 import { Inventory } from '../../models/inventory';
 import { ModalService } from '../../services/modal/modal.service';
 import { Subscription } from 'rxjs';
+import { Portabilidad } from '../../models/portabilidad';
+import { CesionContrato } from '../../models/cesion-contrato';
 
 @Component({
   selector: 'app-newproductcreate',
@@ -79,6 +81,38 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   showedPlans: Plan[] = [];
 
+  cesionContratoLinea : CesionContrato = {
+    tipoDocumento: '',
+    numeroDocumento: NaN,
+    nombre: '',
+    apellido: '',
+    email: '',
+    direccion: '',
+    departamento: '',
+    ciudad: '',
+  }
+
+  portabilidadLinea : Portabilidad = {
+      tipoDocumento: '',
+      numeroDocumento: NaN,
+      anioExpedicion: NaN,
+      fechaExpedicion: '',
+      digitoVerificacion: NaN,
+      tipoDocumentoRepresentanteLegal: '',
+      numeroDocumentoRepresentanteLegal: NaN,
+      fechaExpedicionRepresentanteLegal: '',
+      tipoTelefoniaActual : '',
+      tipoSolicitante : '',
+      operadorDonante : '',
+      nip : '',
+      esFechaCalendarizada : false,
+      fechaSugeridaPortacion: '',
+      lineaTemporal : '',
+      tipoVenta : '',
+      imei: '',
+      cesionContrato : this.cesionContratoLinea
+  }
+
   newLinea: Linea = {
     tipoLinea: '',
     numeroLinea: NaN,
@@ -94,7 +128,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     idPlan: NaN,
     addServices: [],
     idContract: NaN, 
-    nuipValue: ''
+    nuipValue: '',
+
+    portabilidadInfo: this.portabilidadLinea
+
   };
 
   portableLines: Linea[] = [];
@@ -363,6 +400,38 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     console.log(this.newContract.lineas);
 
+    this.cesionContratoLinea = {
+        tipoDocumento: '',
+        numeroDocumento: NaN,
+        nombre: '',
+        apellido: '',
+        email: '',
+        direccion: '',
+        departamento: '',
+        ciudad: '',
+    }
+
+    this.portabilidadLinea = {
+        tipoDocumento: '',
+        numeroDocumento: NaN,
+        anioExpedicion: NaN,
+        fechaExpedicion: '',
+        digitoVerificacion: NaN,
+        tipoDocumentoRepresentanteLegal: '',
+        numeroDocumentoRepresentanteLegal: NaN,
+        fechaExpedicionRepresentanteLegal: '',
+        tipoTelefoniaActual : '',
+        tipoSolicitante : '',
+        operadorDonante : '',
+        nip : '',
+        esFechaCalendarizada : false,
+        fechaSugeridaPortacion: '',
+        lineaTemporal : '',
+        tipoVenta : '',
+        imei: '',
+        cesionContrato : this.cesionContratoLinea
+    }
+
     this.newLinea = {
       tipoLinea: '',
       numeroLinea: NaN,
@@ -377,7 +446,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       idPlan: NaN,
       addServices: [],
       idContract: NaN, 
-      nuipValue: ''
+      nuipValue: '',
+      portabilidadInfo: this.portabilidadLinea
     };
   }
 
@@ -477,6 +547,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   activarVozAndSMS() {
 
+  }
+
+  changeEsFechaCalendarizada(){
+    
   }
 
   crearContrato() {

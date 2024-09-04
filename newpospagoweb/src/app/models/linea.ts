@@ -1,4 +1,5 @@
 import { AddServices } from "./add-services";
+import { Portabilidad } from "./portabilidad";
 
 export interface Linea {
 
@@ -8,7 +9,7 @@ export interface Linea {
     imei: string;
     operador: string;
     nuipValue : string ; 
-    tipoPersona: string;
+    tipoPersona?: string;
     tipoIdentificacion: string;
     numeroDocumento: number;
     nombre: string;
@@ -50,5 +51,7 @@ export interface Linea {
     tipoEnvio?: string ; 
     addServices: AddServices[]; 
     idContract: number ; 
+
+    portabilidadInfo? : Portabilidad;
     
 }
