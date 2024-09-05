@@ -246,15 +246,17 @@ INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (61, 5
 ### Diagrama E-R
 
 + MODELO EXISTENTE
-<br/>
-![CRM_APPLICATION.png](CRM_APPLICATION.png)
-  <br/>
-![CRMPROPERTIES.png](CRMPROPERTIES.png)
-  <br/>
+
+>![CRM_APPLICATION.jpg](CRM_APPLICATION.jpg)
+
+
+>![CRMPROPERTIES.jpg](CRMPROPERTIES.jpg)
+
+
 + MODELO NUEVO ADICIONAL 
-  <br/>
-![Classification.JPG](Classification.JPG)
-  <br/>
+
+> ![b2bClassification.JPG](b2bClassification.JPG)
+  
 
 ### Otros componentes (Índices / Procedimientos / Funciones / Paquetes)
 
