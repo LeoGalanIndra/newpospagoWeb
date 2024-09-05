@@ -99,7 +99,8 @@ Se implementará el modelo de CLASIFICADORES para parametrizar los valores de un
 
 ## Diagrama de clases
 
-    < Si hay cambios en la aplicación existente, descripción de las clases impactadas por la implementación del requerimiento. Queda abierta la decisión del nivel del detalle de acuerdo a las necesidades del requerimiento y su nivel de madurez, mínimamente se espera el nombre de la clase y sus relaciones.>
+> ![B2BPortabilidad-DiagramaClases-Parametrizacion.jpg](B2BPortabilidad-DiagramaClases-Parametrizacion.jpg)
+
 
 ## Descripción detallada del cambio a nivel de bases de datos
 
