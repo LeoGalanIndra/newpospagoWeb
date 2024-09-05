@@ -30,22 +30,20 @@
 
 #### Evaluar el funcionamiento de CRM Properties vs Base de Datos?
 
-Al iniciar el diseño de la solución, se plantearon 3 formas de solucionar la configuración de parametros 
+Cada componente tiene sus propias responsabilidades. Para la solución para la parametrización de atributos del Nuevo Postpago B2B se hará uso del CRM Properties y Modelo de Base de datos. 
 
 1. Properties CRM 
 
-> El componente gestiona las propiedades del portal CRM. Cada propiedad es accedida a traves de una clave y un Id. La solución se encuentra desplegada en el entorno de Sostenibilidad. 
-2. Modelo de parametros a traves de MAESTRO/DETALLE 
+> Será el encargado de gestionar las propiedades del Nuevo Pospago B2B. El componente gestiona las propiedades del portal CRM. Cada propiedad es accedida a traves de una clave y un Id. La solución se encuentra desplegada en el entorno de Sostenibilidad.
 
-> El componente es completamente nuevo. Se implementaria una solucion en base de datos, la cual contiene dos tablas. La tabla maestro tiene identificado la definicion del parametro. La tabla detalle contiene la definición de los valores que puede tener el parametro. 
+2. Modelo de Parametros Nuevo en Base de datos.  
 
-3. Modelo personalizado de parametros.
+> Será el encargado de gestionar de las clasificaciones. El componente es nuevo. Se implementaria una solucion en base de datos, en la cual se configura los valores que puede tener un parametro. 
 
-> El componente es completamente nuevo. Se implementaria una tabla en base de datos la cual detalla el comportamiento de cada parametro. 
-
-<b>Se selecciona la solucion Properties CRM, dado a que es un modelo basado en servicio, el cual se encuentra estable y se encuentra alineado a la arquitectura del proyecto.</b>
 
 ## Nuevo Pospago B2B / Parametrización
+
+### Properties CRM
 
 Se hara uso del proyecto APP-PropiedadesCrm el cual contiene la estructura para gestionar las propiedades del sistema. 
 
@@ -59,7 +57,7 @@ https://tigoco.atlassian.net/wiki/spaces/DI/pages/697991445/PropiedadesCRM-EJB
 
 Dentro de la documentación se indica como se debe incluir el proyecto como dependencia. A continuación se cita dicha información: 
 
-### PropiedadesCRM-EJB.jar: 
+#### PropiedadesCRM-EJB.jar: 
 
 Para hacer uso del jar se debe incluir la siguiente dependencia en el proyecto maven con un scope provided. Esto para compilar proyectos en tiempo de ejecución se despliega componente en los EAP Back de Sostenibilidad
 
@@ -68,6 +66,9 @@ Para hacer uso del jar se debe incluir la siguiente dependencia en el proyecto m
 <b>version:</b>1.0.0<br/>
 <b>scope:</b>provided<br/>
 
+### Modelo de Clasificaciones 
+
+Se implementará el modelo de CLASIFICADORES para parametrizar los valores de un parametro. 
 
 ## Casos de uso(opcional)
     
@@ -90,11 +91,11 @@ Para hacer uso del jar se debe incluir la siguiente dependencia en el proyecto m
 
 ## Diagrama de componentes
 
-    <Si hay cambios en la aplicación existente, presentar los componentes del sistema y el impacto sobre estos por la implementación del requerimiento. Se debe dar una descripción completa de este impacto.>
+![Componentes.JPG](Componentes.JPG)
 
 ## Diagrama de paquetes
 
-    < Si hay cambios en la aplicación existente, Diagrama de paquetes, es preferible que en el diagrama de clases se identifique los paquetes, si se hace en el diagrama de clases no es necesario hacer este diagrama>
+![Paquetes.jpg](Paquetes.jpg)
 
 ## Diagrama de clases
 
@@ -104,42 +105,22 @@ Para hacer uso del jar se debe incluir la siguiente dependencia en el proyecto m
 
 ### DDL
 
-> - Para la mayoria de requisitos se utilizaran dos tablas existentes del schema CRMPORTAL. Las tablas son CRM_APPLICATIONS,CRM_PROPERTIES
-> - Se crearan 2 tablas: 
-
-#### RF-009
+> - Las propiedades quedaran registradas en la tabla CRM_PROPERTIES
+> - Las propiedades quedaran registradas en la tabla B2B_CLASSIFICATION
 
 -- Crear la tabla
-> CREATE TABLE B2B_GROUPS (
-ID INTEGER NOT NULL PRIMARY KEY,
-NAME VARCHAR2(50),  
-STATUS CHAR(1)
+> -- Crear la tabla B2B_CLASSIFICATION
+CREATE TABLE B2B_CLASSIFICATION (
+ID NUMBER NOT NULL PRIMARY KEY,  -- Usar NUMBER para la clave primaria
+ID_PARENT NUMBER NOT NULL,  -- Usar NUMBER también para claves foráneas o referencias
+VALUE VARCHAR2(255),  -- Especificar tamaño para el campo VALUE
+DESCRIPTION VARCHAR2(500) NOT NULL  -- Especificar tamaño para DESCRIPTION
 );
-
--- Añadir comentarios a las columnas
-> + COMMENT ON COLUMN B2B_GROUPS.ID IS 'Identificador único para el grupo, generado por la secuencia';
-> + COMMENT ON COLUMN B2B_GROUPS.NAME IS 'Nombre del grupo';
-> + COMMENT ON COLUMN B2B_GROUPS.STATUS IS 'Estado del grupo: puede ser activo (A) o inactivo (I)';
-
-
-#### RF-010
-
--- Crear la tabla B2B_LINE_STATUS
-> CREATE TABLE B2B_LINE_STATUS (
-NAME VARCHAR2(255) NOT NULL PRIMARY KEY,  -- Clave primaria
-DESCRIPTION VARCHAR2(500),  -- Descripción del estado de la línea
-STATUS CHAR(1)  -- Estado del registro: activo (A) o inactivo (I)
-);
-
--- Añadir comentarios a las columnas
-> COMMENT ON COLUMN B2B_LINE_STATUS.NAME IS 'Nombre único que identifica el estado de la línea';
-COMMENT ON COLUMN B2B_LINE_STATUS.DESCRIPTION IS 'Descripción detallada del estado de la línea';
-COMMENT ON COLUMN B2B_LINE_STATUS.STATUS IS 'Estado del registro: activo (A) o inactivo (I)';
 
 
 ### DML 
 
-Para la configuración de las parametrizaciones se consideraran 2 tablas del schema CRM_PORTAL
+Para la configuración de las parametrizaciones se consideraran 3 tablas del schema CRM_PORTAL
 
 <b>CRM_APPLICATIONS</b>: Se creará un ID de la aplicación del Nuevo Pospago B2B
 
@@ -150,9 +131,6 @@ VALUES
 
 <b>CRM_PROPERTIES</b>: Se crearan registros para modelar el comportamientos de las parametricas definidas. A su vez, cada parametrica se encuentra asociada a un requisito.
 
-
-* RF-001
-
 > INSERT INTO CRM_PROPERTIES (
 ID,
 ID_DEVELOPER,
@@ -168,138 +146,12 @@ VERSION
 1, -- ID_DEVELOPER
 1, -- ID_ARCHITECT
 26, -- ID_APPLICATION
-'TIPOS_CONTRATO', -- NAME
-'Contrato Estándar=B2B_CESTANDAR ; Contrato Negociado=B2B_CNEGOCIADO', -- VALUE
-'Tipos de contrato definidos', -- DESCRIPTION
+'PLANES', -- NAME
+'Postpago Empresarial=B2B_POSP_EMP', -- VALUE
+'Planes Empresariales', -- DESCRIPTION
 SYSDATE, -- CREATION_DATE
 '1' -- VERSION
 );
-
-
-* RF-003
-
-> INSERT INTO CRM_PROPERTIES (
-  ID,
-  ID_DEVELOPER,
-  ID_ARCHITECT,
-  ID_APPLICATION,
-  NAME,
-  VALUE,
-  DESCRIPTION,
-  CREATION_DATE,
-  VERSION
-  ) VALUES (
-  ***** SEQUENCE_NAME *********, 
-  1, -- ID_DEVELOPER
-  1, -- ID_ARCHITECT
-  26, -- ID_APPLICATION
-  'PLANES', -- NAME
-  'Postpago Empresarial=B2B_POSP_EMP', -- VALUE
-  'Planes Empresariales', -- DESCRIPTION
-  SYSDATE, -- CREATION_DATE
-  '1' -- VERSION
-  );
-
-* RF-004
-
-> INSERT INTO CRM_PROPERTIES (
-ID,
-ID_DEVELOPER,
-ID_ARCHITECT,
-ID_APPLICATION,
-NAME,
-VALUE,
-DESCRIPTION,
-CREATION_DATE,
-VERSION
-) VALUES (
-***** SEQUENCE_NAME *********,
-1, -- ID_DEVELOPER
-1, -- ID_ARCHITECT
-26, -- ID_APPLICATION
-'LINEA_PRODUCTO', -- NAME
-'ESTÁNDAR=B2B_LPESTANDAR; AVANZADO=B2B_LPAVANZADO', -- VALUE
-'Línea de producto', -- DESCRIPTION
-SYSDATE, -- CREATION_DATE
-'1' -- VERSION
-);
-
-
-* RF-005
-
-> INSERT INTO CRM_PROPERTIES (
-ID,
-ID_DEVELOPER,
-ID_ARCHITECT,
-ID_APPLICATION,
-NAME,
-VALUE,
-DESCRIPTION,
-CREATION_DATE,
-VERSION
-) VALUES (
-***** SEQUENCE_NAME *********,
-1, -- ID_DEVELOPER
-1, -- ID_ARCHITECT
-26, -- ID_APPLICATION
-'TIPO_FAMILIA', -- NAME
-'MÓVIL=B2B_TFMOVIL; IoT=B2B_TFIOT', -- VALUE
-'Tipos de familia', -- DESCRIPTION
-SYSDATE, -- CREATION_DATE
-'1' -- VERSION
-);
-
-* RF-006
-
-> INSERT INTO CRM_PROPERTIES (
-ID,
-ID_DEVELOPER,
-ID_ARCHITECT,
-ID_APPLICATION,
-NAME,
-VALUE,
-DESCRIPTION,
-CREATION_DATE,
-VERSION
-) VALUES (
-***** SEQUENCE_NAME *********,
-1, -- ID_DEVELOPER
-1, -- ID_ARCHITECT
-26, -- ID_APPLICATION
-'TIPO_PRODUCTO', -- NAME
-'B2B_TFMOVIL=[NUEVO PRODUCTO POSTPAGO=B2B_TPNUEVOPOSTPAGO]', -- VALUE
-'TIPOS DE PRODUCTO', -- DESCRIPTION
-SYSDATE, -- CREATION_DATE
-'1' -- VERSION
-);
-
-* RF-008
-
-> INSERT INTO CRM_PROPERTIES (
-ID,
-ID_DEVELOPER,
-ID_ARCHITECT,
-ID_APPLICATION,
-NAME,
-VALUE,
-DESCRIPTION,
-CREATION_DATE,
-VERSION
-) VALUES (
-***** SEQUENCE_NAME *********,
-1, -- ID_DEVELOPER
-1, -- ID_ARCHITECT
-26, -- ID_APPLICATION
-'TIPOS_ENVIO', -- NAME
-'OPERADOR LOGÍSTICO=B2B_TELOGISTICO; ENTREGA POR COMERCIAL=B2B_TECOMERCIAL', -- VALUE
-'TIPOS DE ENVÍO', -- DESCRIPTION
-SYSDATE, -- CREATION_DATE
-'1' -- VERSION
-);
-
-
-
-* RF-011
 
 > INSERT INTO CRM_PROPERTIES (
 ID,
@@ -324,55 +176,71 @@ SYSDATE, -- CREATION_DATE
 );
 
 
-* RF-009
 
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (1, 'GRUPO 1', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (2, 'GRUPO 2', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (3, 'GRUPO 3', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (4, 'GRUPO 4', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (5, 'ADMINITRACION', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (6, 'ADMINITRADORES DE VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (7, 'ANALISTAS DE VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (8, 'ASESORES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (9, 'ASESORES COMERCIALES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (10, 'AUDITORIA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (11, 'COMPRAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (12, 'CONTAC CENTER', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (13, 'COORDINADORES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (14, 'COORDINADORES DE VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (15, 'DIRECTORES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (16, 'DIRECTORES DE VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (17, 'EJECUTIVOS DE VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (18, 'FINANZAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (19, 'GERENTES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (20, 'INFORMATICA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (21, 'LIDERES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (22, 'LOGISTICA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (23, 'MARKETING', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (24, 'MENSAJEROS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (25, 'MERCADEO', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (26, 'OPERACIONES', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (27, 'OPERARIOS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (28, 'PRESIDENCIA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (29, 'PRODUCCIÓN', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (30, 'PUNTOS DE VENTA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (31, 'RECEPCION', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (32, 'RECURSOS HUMANOS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (33, 'SECRETARIA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (34, 'SERVICIOS AL CLIENTE', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (35, 'SUBGERENTES VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (36, 'TECNOLOGIA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (37, 'TESORERIA', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (38, 'VENTAS', 'A');
->+ INSERT INTO B2B_GROUPS (ID, NAME, STATUS) VALUES (39, 'VICEPRESIDENTES', 'A');
+<b>B2B_CLASSIFICATION</b>: Tabla para parametrizar las clasificaciones por tipo
 
-
-* RF-010
-
-> INSERT INTO B2B_LINE_STATUS (NAME, DESCRIPTION, STATUS) VALUES ('PENDIENTE', 'La configuración de la oferta se encuentra en proceso de registro.', 'A');
-> INSERT INTO B2B_LINE_STATUS (NAME, DESCRIPTION, STATUS) VALUES ('EN EJECUCIÓN', 'Se envió la oferta completa al proceso de aprovisionamiento y aún se encuentran líneas pendientes por activar.', 'A');
-> INSERT INTO B2B_LINE_STATUS (NAME, DESCRIPTION, STATUS) VALUES ('PROCESADA', 'Cuando todas las líneas de la oferta se encuentran activas.', 'A');
-> INSERT INTO B2B_LINE_STATUS (NAME, DESCRIPTION, STATUS) VALUES ('FALLIDO', 'Se muestra este estado si alguna línea no fue procesada correctamente.', 'A');
+-- Inserts para la tabla B2B_CLASSIFICATION
+> INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (1, NULL, 'TIPOS CONTRATO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (2, 1, 'ESTANDAR', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (3, 1, 'NEGOCIADO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (4, NULL, 'PLANES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (5, 4, 'POSTPAGO EMPRESARIAL', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (6, NULL, 'LINEA PRODUCTO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (7, 6, 'ESTÁNDAR', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (8, 6, 'AVANZADO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (9, NULL, 'TIPO FAMILIA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (10, 9, 'MÓVIL', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (11, 9, 'IOT', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (12, NULL, 'TIPO PRODUCTO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (13, 11, 'NUEVO PRODUCTO POSTPAGO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (14, NULL, 'TIPOS ENVIO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (15, 13, 'OPERADOR LOGÍSTICO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (16, 13, 'ENTREGA POR COMERCIAL', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (17, NULL, 'GRUPOS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (18, 17, 'GRUPO 1', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (19, 17, 'GRUPO 2', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (20, 17, 'GRUPO 3', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (21, 17, 'GRUPO 4', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (22, 17, 'ADMINITRACION', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (23, 17, 'ADMINITRADORES DE VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (24, 17, 'ANALISTAS DE VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (25, 17, 'ASESORES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (26, 17, 'ASESORES COMERCIALES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (27, 17, 'AUDITORIA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (28, 17, 'COMPRAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (29, 17, 'CONTAC CENTER', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (30, 17, 'COORDINADORES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (31, 17, 'COORDINADORES DE VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (32, 17, 'DIRECTORES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (33, 17, 'DIRECTORES DE VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (34, 17, 'EJECUTIVOS DE VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (35, 17, 'FINANZAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (36, 17, 'GERENTES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (37, 17, 'INFORMATICA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (38, 17, 'LIDERES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (39, 17, 'LOGISTICA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (40, 17, 'MARKETING', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (41, 17, 'MENSAJEROS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (42, 17, 'MERCADEO', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (43, 17, 'OPERACIONES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (44, 17, 'OPERARIOS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (45, 17, 'PRESIDENCIA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (46, 17, 'PRODUCCIÓN', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (47, 17, 'PUNTOS DE VENTA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (48, 17, 'RECEPCION', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (49, 17, 'RECURSOS HUMANOS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (50, 17, 'SECRETARIA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (51, 17, 'SERVICIOS AL CLIENTE', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (52, 17, 'SUBGERENTES VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (53, 17, 'TECNOLOGIA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (54, 17, 'TESORERIA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (55, 17, 'VENTAS', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (56, 17, 'VICEPRESIDENTES', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (57, NULL, 'ESTADOS DE LINEA', NULL);
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (58, 57, 'PENDIENTE', 'La configuración de la oferta se encuentra en proceso de registro');
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (59, 57, 'EN EJECUCIÓN', 'Se envió la oferta completa al proceso de aprovisionamiento y aún se encuentran líneas pendientes por activar.');
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (60, 57, 'PROCESADA', 'Cuando todas las líneas de la oferta se encuentran activas.');
+INSERT INTO B2B_CLASSIFICATION (ID, ID_PARENT, VALUE, DESCRIPTION) VALUES (61, 57, 'FALLIDO', 'Se muestra este
 
 
 ### Diagrama E-R
@@ -384,21 +252,33 @@ SYSDATE, -- CREATION_DATE
 ![CRMPROPERTIES.png](CRMPROPERTIES.png)
   <br/>
 + MODELO NUEVO ADICIONAL 
-![GROUPS.png](GROUPS.png)
   <br/>
-![STATUS.png](STATUS.png)
+![Classification.JPG](Classification.JPG)
   <br/>
 
 ### Otros componentes (Índices / Procedimientos / Funciones / Paquetes)
 
--- Crear el índice único
-> CREATE UNIQUE INDEX IDX_B2B_GROUPS_NAME ON B2B_GROUPS (NAME);
+-- Comentarios para la tabla B2B_CLASSIFICATION
+> COMMENT ON TABLE B2B_CLASSIFICATION IS 'Tabla que contiene la clasificación jerárquica de elementos.';
 
+-- Comentarios para las columnas
+> COMMENT ON COLUMN B2B_CLASSIFICATION.ID IS 'Identificador único de la clasificación.';
+COMMENT ON COLUMN B2B_CLASSIFICATION.ID_PARENT IS 'Identificador de la clasificación padre (jerarquía).';
+COMMENT ON COLUMN B2B_CLASSIFICATION.VALUE IS 'Valor asociado a la clasificación.';
+COMMENT ON COLUMN B2B_CLASSIFICATION.DESCRIPTION IS 'Descripción de la clasificación.';
+
+-- Crear el índice
+> CREATE INDEX B2B_INDX_CLASS_1 ON B2B_CLASSIFICATION (ID_PARENT, VALUE);
+
+-- ID_PARENT está relacionado con ID de la misma tabla, se añade clave foránea:
+> ALTER TABLE B2B_CLASSIFICATION
+ADD CONSTRAINT fk_b2b_classification_parent
+FOREIGN KEY (ID_PARENT) REFERENCES B2B_CLASSIFICATION(ID);
 
 ### Descripción detallada del cambio a nivel de integraciones
 
    < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones por la implementación de este requerimiento>
-![CRMPROPERTIES.png](CRMPROPERTIES.png)
+
 ### Diagrama de integraciones
 
    < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones presentando en un diagrama las relaciones, protocolos y sincronía entre los diferentes componentes de la solución>
