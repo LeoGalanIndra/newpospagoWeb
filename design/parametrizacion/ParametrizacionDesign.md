@@ -278,40 +278,92 @@ COMMENT ON COLUMN B2B_CLASSIFICATION.DESCRIPTION IS 'Descripción de la clasific
 ADD CONSTRAINT fk_b2b_classification_parent
 FOREIGN KEY (ID_PARENT) REFERENCES B2B_CLASSIFICATION(ID);
 
-### Descripción detallada del cambio a nivel de integraciones
+### Por validar: DATASOURCE en los servidores
+> Se configurará un nuevo datasource en los servidores de JBOSS de Sostenibilidad. 
 
-   < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones por la implementación de este requerimiento>
+> <datasource jta="false" 
+            jndi-name="java:/crmportal_DS" 
+            pool-name="crmportal_DS" 
+            enabled="true" 
+            use-ccm="false" 
+            statistics-enabled="false">
+> <connection-url>XXXXX</connection-url>
+> <driver-class>XXXXXX</driver-class>
+> <driver>XXXXX</driver>
+> </datasource>
+
+### Persistence Context 
+
+> Se definio que la contexto de integracion con la base de datos sera por JPA. 
+Para esto, es necesario realizar una definicion del persistence contexto que contiene el mappeo de cada una de las entidades. 
+A continuación, se plantea un ejemplo de como se debe parametrizar este archivo
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+	<persistence-unit name="PropiedadesCRM-PU" transaction-type="JTA">
+	<jta-data-source>java:/crmportal_DS</jta-data-source>
+		<class>co.com.colombiamovil.crm.entity.ItCompany</class>
+		<class>co.com.colombiamovil.crm.entity.Property</class>
+		<class>co.com.colombiamovil.crm.entity.ItPerson</class>
+	</persistence-unit></persistence>
+
+![PersistContext.JPG](PersistContext.JPG)
+
+### Descripción detallada del cambio a nivel de integraciones <b>NO APLICA</b>
 
 ### Diagrama de integraciones
 
-   < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones presentando en un diagrama las relaciones, protocolos y sincronía entre los diferentes componentes de la solución>
+> La integración entre B2BMovil y Properties CRM se realizará usando Beans Remotos
 
 ### Integraciones por servicios
 
-   < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones entre servicios, tales como: WS-SOAP, WS-REST, EJBs, CORBA, DCOM, etc.>
+> Para acceder a los servicios del Properties CRM se realizará a traves de lookup. 
 
-### Integraciones por ETLs
+![LookUp.jpg](LookUp.jpg)
 
-   < Si hay cambios en la aplicación existente, Descripción del impacto a nivel de integraciones realizadas por soluciones con ETLs creadas por scripts, SQLLDRs, SSIS, etc.>
+Se anexa el código respectivo. 
 
-### Detalle a nivel de red (Solo para nuevas aplicaciones)
+> public String getProperty(String propertyName) {
+String propValue = null;
+try {
+if (this.props == null)
+init();
+propValue = this.props.getProperty(propertyName);
+if (propValue == null) {
+this
+.propiedadesCRM = (PropertiesBeanRemote)RemoteEJBClient.getInstance().lookupJBoss6InCLuster("PropiedadesCRM-EJB/PropertiesBean!co.com.colombiamovil.crm.ejb.PropertiesBeanRemote");
+String prop = this.propiedadesCRM.getPropertyValue(
+Integer.valueOf(Integer.parseInt("6")), propertyName);
+if (prop != null)
+propValue = prop;
+}
+logger.info("[PropertiesLoader.getProperty] " + propertyName + " = " + propValue);
+} catch (Exception ex) {
+try {
+if (this.props != null)
+logger.error("[PropertiesLoader.getProperty] Error al obtener la propiedad " + propertyName);
+} catch (Exception exx) {
+logger.error("[PropertiesLoader.getProperty] Error inicializando variable estatica.");
+}
+throw new RuntimeException(ex);
+}
+return propValue;
+}
 
-   <  Descripción del impacto a nivel de red por la implementación de este requerimiento, diagramando y enumerando los componentes impactados tales como switches, routers, IPs, VLANs, etc.>
+### Integraciones por ETLs: <b>NO APLICA</b>
 
-### Detalle a nivel de infraestructura (Solo para nuevas aplicaciones)
 
-   <  Descripción del impacto a nivel de infraestructura por la implementación de este requerimiento, diagramando y enumerando los componentes impactados tales como CPU, memorias, storage, etc.>
+### Detalle a nivel de red (Solo para nuevas aplicaciones): <b>NO APLICA</b>
 
-### Descripción detallada del cambio a nivel de configuraciones / parametrizaciones
+
+
+### Detalle a nivel de infraestructura (Solo para nuevas aplicaciones): <b>NO APLICA</b>
+
+
+### Descripción detallada del cambio a nivel de configuraciones / parametrizaciones: <b>NO APLICA</b>
    
-   <  Descripción del impacto a nivel de configuraciones / parametrizaciones por la implementación de este requerimiento, listando y detallando los archivos de configuración, tablas paramétricas, variables de script, etc., que sirvan para configurar la solución tecnológica.>
 
-### Descripción Detallada del Cambio a Nivel de Seguridad
+### Descripción Detallada del Cambio a Nivel de Seguridad: <b>NO APLICA</b>
 
-   <  En este espacio se espera el diseño del tratamiento de riesgos y amenazas para ser mitigados en la solución.
-   (P6, P8, P10) vinculo a los Anexos entregado por seguridad.>
 
-### Modelo de Amenazas
+
+### Modelo de Amenazas: <b>NO APLICA</b>
    
-   < El diagrama debe quedar actualizado en Confluence y aca el vínculo al documento.>
-
