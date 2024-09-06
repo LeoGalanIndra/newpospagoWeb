@@ -12,6 +12,8 @@ import { InventoryService } from '../../services/inventory.service';
 import { Inventory } from '../../models/inventory';
 import { ModalService } from '../../services/modal/modal.service';
 import { Subscription } from 'rxjs';
+import { Portabilidad } from '../../models/portabilidad';
+import { CesionContrato } from '../../models/cesion-contrato';
 
 declare let bootstrap: any;
 
@@ -147,6 +149,38 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   showedPlans: Plan[] = [];
 
+  cesionContratoLinea : CesionContrato = {
+    tipoDocumento: '',
+    numeroDocumento: NaN,
+    nombre: '',
+    apellido: '',
+    email: '',
+    direccion: '',
+    departamento: '',
+    ciudad: '',
+  }
+
+  portabilidadLinea : Portabilidad = {
+      tipoDocumento: '',
+      numeroDocumento: NaN,
+      anioExpedicion: NaN,
+      fechaExpedicion: '',
+      digitoVerificacion: NaN,
+      tipoDocumentoRepresentanteLegal: '',
+      numeroDocumentoRepresentanteLegal: NaN,
+      fechaExpedicionRepresentanteLegal: '',
+      tipoTelefoniaActual : '',
+      tipoSolicitante : '',
+      operadorDonante : '',
+      nip : '',
+      esFechaCalendarizada : false,
+      fechaSugeridaPortacion: '',
+      lineaTemporal : '',
+      tipoVenta : '',
+      imei: '',
+      cesionContrato : this.cesionContratoLinea
+  }
+
   newLinea: Linea = {
     tipoLinea: '',
     numeroLinea: NaN,
@@ -161,8 +195,11 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     idPlan: NaN,
     addServices: [],
-    idContract: NaN,
-    nuipValue: ''
+    idContract: NaN, 
+    nuipValue: '',
+
+    portabilidadInfo: this.portabilidadLinea
+
   };
 
   portableLines: Linea[] = [];
@@ -418,7 +455,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
     this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ;
-    this.newLinea.mesesPersonalizados = this.newContract.discount.meses ;
+    this.newLinea.mesesPersonalizados = this.newContract.discount.mesesAnio ;
     this.newLinea.idContract = this.idContract;
 
     this.newContract.lineas.push({ ...this.newLinea });
@@ -426,6 +463,38 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.portableLines = this.newContract.lineas.filter(line => line.tipoLinea === 'Portabilidad' || line.tipoLinea === 'Portabilidad Con Cesión De Contrato');
 
     console.log(this.newContract.lineas);
+
+    this.cesionContratoLinea = {
+        tipoDocumento: '',
+        numeroDocumento: NaN,
+        nombre: '',
+        apellido: '',
+        email: '',
+        direccion: '',
+        departamento: '',
+        ciudad: '',
+    }
+
+    this.portabilidadLinea = {
+        tipoDocumento: '',
+        numeroDocumento: NaN,
+        anioExpedicion: NaN,
+        fechaExpedicion: '',
+        digitoVerificacion: NaN,
+        tipoDocumentoRepresentanteLegal: '',
+        numeroDocumentoRepresentanteLegal: NaN,
+        fechaExpedicionRepresentanteLegal: '',
+        tipoTelefoniaActual : '',
+        tipoSolicitante : '',
+        operadorDonante : '',
+        nip : '',
+        esFechaCalendarizada : false,
+        fechaSugeridaPortacion: '',
+        lineaTemporal : '',
+        tipoVenta : '',
+        imei: '',
+        cesionContrato : this.cesionContratoLinea
+    }
 
     this.newLinea = {
       tipoLinea: '',
@@ -440,8 +509,9 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       fechaExpedicion: NaN,
       idPlan: NaN,
       addServices: [],
-      idContract: NaN,
-      nuipValue: ''
+      idContract: NaN, 
+      nuipValue: '',
+      portabilidadInfo: this.portabilidadLinea
     };
   }
 
@@ -552,6 +622,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   activarVozAndSMS() {
 
+  }
+
+  changeEsFechaCalendarizada(){
+    
   }
 
   crearContrato() {
