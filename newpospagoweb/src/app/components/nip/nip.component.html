@@ -1,0 +1,369 @@
+<div class="card mb-4">
+    <form id="nipForm">
+        <div class="card-header">
+            Seleccionar flujo
+        </div>
+        <div class="card-body">
+
+            <div class="row mb-1">
+                <div class="col-md-6">
+                    <label for="flujo" class="form-label">Flujo</label>
+                    <select required #flujoInput="ngModel" class="form-select"
+                        [(ngModel)]="infoNip.flujo" id="flujo" name="flujo">
+                        <option selected enabled value="B2C">B2C</option>
+                        <option value="B2B">B2B</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="card-header">
+            Solicitud de NIP
+        </div>
+        <!-- Flujo B2C-->
+        <div *ngIf="infoNip.flujo==='B2C'" class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Numero</th>
+                        <th scope="col">Donante</th>
+                        <th scope="col">Receptor</th>
+                        <th scope="col"  colspan="2">Cancelar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="number" class="form-control" id="numero" placeholder="123456789" required
+                            #msisdnInput="ngModel" [ngModel]="infoNip.msisdn" name="numero">
+                        </td>
+                        <td>
+                            <select required #donanteInput="ngModel" class="form-select"
+                                [(ngModel)]="infoNip.operadorDonante" id="operadorDonante" name="operadorDonante">
+                                <option selected disabled value="">
+                                    Seleccione...</option>
+                                <option value="Claro">Claro</option>
+                                <option value="Movistar">Movistar</option>
+                                <option value="Wom">Wom</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select required #receptorInput="ngModel" class="form-control"
+                                [(ngModel)]="infoNip.receptor" id="receptor" name="receptor">
+                                <option selected disabled value="Tigo">Tigo</option>
+                            </select>
+                        </td>
+                        <td><button type="button" class="btn btn-danger">Cancelar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-light border" style="margin-right: 8px;" (click)="b2cReset()">Limpiar</button>
+                <button type="submit" class="btn btn-success">Solicitar</button>
+            </div> 
+        </div>
+
+        <!-- Flujo B2B-->
+        <div *ngIf="infoNip.flujo==='B2B'" class="card-body" style="font-size: small;">
+
+            <div class="row" style="margin-bottom: 30px; margin-left: 10px;">
+                <div class="form-check col-md-6" style="font-size: medium;">
+                    <input class="form-check-input" type="checkbox"
+                        id="cargaMasivaNaturales" [(ngModel)]="infoNip.cargaTXTNaturales"
+                        name="cargaMasivaNaturales">
+                    <label for="cargaMasivaNaturales"
+                        class="form-check-label">Carga masiva de clientes naturales</label>
+                </div>
+    
+                <div class="form-check col-md-6" style="font-size: medium;">
+                    <input class="form-check-input" type="checkbox"
+                        id="cargaMasivaJuridicos" [(ngModel)]="infoNip.cargaTXTJuridicos"
+                        name="cargaMasivaJuridicos">
+                    <label for="cargaMasivaJuridicos"
+                        class="form-check-label">Carga masiva de clientes juridicos</label>
+                </div>
+            </div>
+            
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Acción</th>
+                        <th *ngIf="infoNip.cargaTXTNaturales" scope="col">Carga TXT clientes naturales</th>
+                        <th *ngIf="!infoNip.cargaTXTNaturales"> Carga línea cliente natural </th>
+                        <th *ngIf="infoNip.cargaTXTJuridicos" scope="col">Carga TXT clientes juridicos</th>                        
+                        <th *ngIf="!infoNip.cargaTXTJuridicos"> Carga línea cliente juridico </th>
+                        <th scope="col"  colspan="2">Ejecutar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- Acción -->
+                        <td>
+                            <select required #accionInput="ngModel" class="form-control" style="font-size: small;"
+                                [(ngModel)]="infoNip.accion" id="accion" name="accion">
+                                <option selected value="Solicitar NIP">Solicitar NIP</option>
+                                <option value="Reenviar NIP">Reenviar NIP</option>
+                            </select>
+                        </td>
+                        <!-- Carga masiva de clientes naturales -->
+                        <td *ngIf="infoNip.cargaTXTNaturales">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="file" class="form-control" id="fileNatInput" style="font-size: small;"
+                                     (change)="onFileNatChange($event)">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary" style="font-size: small;" type="button" (click)="uploadNatFile()"
+                                        id="idCargueMasivoNatButton">Subir</button>
+                                </div>
+                            </div>
+                        </td>
+                        <!-- Carga individual de cliente natural -->
+                        <td *ngIf="!infoNip.cargaTXTNaturales"> 
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control" id="numberNat" placeholder="123456789"
+                                     #msisdnNatInput="ngModel" [(ngModel)]="infoNip.msisdnNat" name="numberNat">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary" type="button" (click)="uploadNatLine()"
+                                    style="font-size: small;" id="idCargueLineaNatButton">Cargar linea</button>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Carga masiva de clientes juridicos -->
+                        <td *ngIf="infoNip.cargaTXTJuridicos">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="file" class="form-control" id="fileJurInput" style="font-size: small;"
+                                         (change)="onFileJurChange($event)">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary" type="button" (click)="uploadJurFile()"
+                                    style="font-size: small;" id="idCargueMasivoJurButton">Subir</button>
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Carga individual de cliente juridico -->
+                        <td *ngIf="!infoNip.cargaTXTJuridicos"> 
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control" id="numberJur" placeholder="123456789" required
+                                     #msisdnNatInput="ngModel" [(ngModel)]="infoNip.msisdnJur" name="numberJur">
+                                </div>
+                                <div class="col-md-4">
+                                    <button class="btn btn-primary" type="button" (click)="uploadJurLine()"
+                                    style="font-size: small;" id="idCargueLineaJurButton">Cargar linea</button>
+                                </div>
+                            </div>
+                        </td>
+                        <!-- Ejecutar -->
+                        <td><button type="button" class="btn btn-success" style="font-size: small;" (click)="ejecutarSolicitudNip()">Ejecutar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="col-md-12 text-center" style="margin-bottom: 15px;">
+                <button type="button" class="btn btn-light border" style="margin-right: 8px;" (click)="b2bReset()">Limpiar</button>
+            </div> 
+            <!-- Informe carga linea natural individual-->
+            <div *ngIf="!infoNip.cargaTXTNaturales && showCargaLineaNatural" class="col-md-12 text-center alert alert-success">
+                <p class="font-size-medium"><strong>Línea natural cargada</strong></p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Línea</th>
+                            <th scope="col">Operador donante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <!-- Línea natural -->
+                            <td>
+                                {{ infoNip.msisdnNat }}
+                            </td>
+                            <!-- operador donante natural -->
+                            <td>
+                                {{ infoNip.operadorDonanteNat }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Informe carga linea juridica individual-->
+            <div *ngIf="!infoNip.cargaTXTJuridicos && showCargaLineaJuridico" class="col-md-12 text-center alert alert-success">
+                <p class="font-size-medium"><strong>Línea juridica cargada</strong></p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Línea</th>
+                            <th scope="col">Operador donante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <!-- Línea juridica -->
+                            <td>
+                                {{ infoNip.msisdnJur }}
+                            </td>
+                            <!-- operador donante juridico -->
+                            <td>
+                                {{ infoNip.operadorDonanteJur }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Error informe carga masiva lineas naturales-->
+            <div *ngIf="infoNip.cargaTXTNaturales && showCargaTXTNaturales && !fileNatUploaded" class="col-md-12 text-center alert alert-danger">
+                <p class="font-size-medium"><strong>No se ha cargado archivo TXT</strong></p>
+            </div>
+
+            <!-- Informe carga masiva lineas naturales-->
+            <div *ngIf="infoNip.cargaTXTNaturales && showCargaTXTNaturales && fileNatUploaded" class="col-md-12 text-center alert alert-success">
+                <p class="font-size-medium"><strong>Líneas naturales cargadas del TXT</strong></p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Operador donante</th>
+                            <th scope="col">Linea</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let report of reportNipNat">
+                            <!-- Cliente natural -->
+                            <td>
+                                {{ report.cliente }}
+                            </td>
+                            <!-- operador donante natural -->
+                            <td>
+                                {{ report.operadorDonante }}
+                            </td>
+                            <!-- línea natural -->
+                            <td>
+                                {{ report.linea }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Error informe carga masiva lineas juridicas-->
+            <div *ngIf="infoNip.cargaTXTJuridicos && showCargaTXTJuridicos && !fileJurUploaded" class="col-md-12 text-center alert alert-danger">
+                <p class="font-size-medium"><strong>No se ha cargado archivo TXT</strong></p>
+            </div>
+
+            <!-- Informe carga masiva lineas juridicas-->
+            <div *ngIf="infoNip.cargaTXTJuridicos && showCargaTXTJuridicos && fileJurUploaded" class="col-md-12 text-center alert alert-success">
+                <p class="font-size-medium"><strong>Líneas juridicas cargadas del TXT</strong></p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Operador donante</th>
+                            <th scope="col">Linea</th>
+                            <th *ngIf="infoNip.accion === 'Solicitar NIP'" scope="col">Numero de lineas soportadas</th>
+                            <th *ngIf="infoNip.accion === 'Solicitar NIP'" scope="col">detalle lineas soportadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let report of reportNipJur">
+                            <!-- Cliente natural -->
+                            <td>
+                                {{ report.cliente }}
+                            </td>
+                            <!-- operador donante natural -->
+                            <td>
+                                {{ report.operadorDonante }}
+                            </td>
+                            <!-- línea natural -->
+                            <td>
+                                {{ report.linea }}
+                            </td>
+                            <!-- Numero de lineas soportadas -->
+                            <td *ngIf="infoNip.accion === 'Solicitar NIP'">
+                                {{ report.lineasSoportadas.length }}
+                            </td>
+                            <!-- Detalle lineas soportadas -->
+                            <td *ngIf="report.lineasSoportadas.length > 0 && infoNip.accion === 'Solicitar NIP'">
+                                {{ report.lineasSoportadas.join(', ') }}
+                            </td>
+                            <td *ngIf="report.lineasSoportadas.length === 0 && infoNip.accion === 'Solicitar NIP'">
+                                N/A
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Informe final de solicitud NIP-->
+            <div *ngIf="ejecutarNip" class="col-md-12 text-center alert alert-success">
+                <p *ngIf="infoNip.accion === 'Solicitar NIP'" class="font-size-medium"><strong>Reporte resultado solicitudes NIP</strong></p>
+                <p *ngIf="infoNip.accion === 'Reenviar NIP'" class="font-size-medium"><strong>Reporte resultado Reenvio de NIP</strong></p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tipo de solicitud</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Operador donante</th>
+                            <th scope="col">Linea</th>
+                            <th scope="col">Fecha de solicitud</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Causa error</th>
+                            <th *ngIf="infoNip.accion === 'Solicitar NIP'" scope="col">detalle lineas soportadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let report of reporteNipFinal">
+                            <!-- Tipo de solicitud -->
+                            <td>
+                                {{ report.tipoSolicitud }}
+                            </td>
+                            <!-- Cliente natural -->
+                            <td>
+                                {{ report.cliente }}
+                            </td>
+                            <!-- operador donante natural -->
+                            <td>
+                                {{ report.operadorDonante }}
+                            </td>
+                            <!-- línea natural -->
+                            <td>
+                                {{ report.linea }}
+                            </td>
+                            <!-- Fecha de solicitud -->
+                            <td>
+                                {{ report.fechaSolicitud }}
+                            </td>
+                            <!-- Estado -->
+                            <td>
+                                {{ report.estado }}
+                            </td>
+                            <!-- Causa error -->
+                            <td *ngIf="report.estado === 'Denegado'">
+                                {{ report.causaError }}
+                            </td>
+                            <td *ngIf="report.estado !== 'Denegado'">
+                                N/A
+                            </td>
+                            <!-- Detalle lineas soportadas -->
+                            <td *ngIf="report.lineasSoportadas.length > 0 && infoNip.accion === 'Solicitar NIP'">
+                                {{ report.lineasSoportadas.join(', ') }}
+                            </td>
+                            <td *ngIf="report.lineasSoportadas.length === 0 && infoNip.accion === 'Solicitar NIP'">
+                                N/A
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="col-md-12 text-center" style="margin-bottom: 15px;">
+                    <button type="button" class="btn btn-primary border"(click)="descargarReporte()">Descargar reporte</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -15,6 +15,7 @@ import { ModalService } from './services/modal/modal.service';
 import { SucessModalComponent } from './components/modals/sucess-modal/sucess-modal.component';
 import { NewproductdetailComponent } from './components/newproductdetail/newproductdetail.component';
 import { CambiarCuentaFacturacionComponent } from './components/cambiar-cuenta-facturacion/cambiar-cuenta-facturacion.component';
+import { NipComponent } from './components/nip/nip.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { CambiarCuentaFacturacionComponent } from './components/cambiar-cuenta-f
     ConfirmationModalComponent,
     SucessModalComponent,
     NewproductdetailComponent,
-    CambiarCuentaFacturacionComponent
+    CambiarCuentaFacturacionComponent,
+    NipComponent
   ],
   imports: [
     BrowserModule,
