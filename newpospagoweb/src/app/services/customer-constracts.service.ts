@@ -69,7 +69,7 @@ export class CustomerConstractsService {
       this.dataService.saveBillAccounts(newContract.billAccounts); 
     }
 
-    if(newContract.discount.meses.length > 0){
+    if(newContract.discount.mesesAnio!.length > 0){
       this.dataService.saveDiscounts(newContract.discount); 
     }
 

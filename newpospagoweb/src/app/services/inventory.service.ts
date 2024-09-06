@@ -17,7 +17,7 @@ export class InventoryService {
 
     for (let i = 0; i < 10; i++) {
       const cantidad = Math.floor(Math.random() * 100) + 1;
-      const precioUnitario = parseFloat((Math.random() * 1000 + 500).toFixed(2));
+      const precioUnitario = parseFloat((Math.random() * 1000000 + 500).toFixed(2));
       const precioTotal = parseFloat((precioUnitario * cantidad * 1.19).toFixed(2)); // Asumiendo un IVA del 19%
 
       InventoryService.inventarios.push({

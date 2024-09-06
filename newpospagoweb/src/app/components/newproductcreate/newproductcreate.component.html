@@ -19,35 +19,35 @@
                     <div class="container">
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="info-contrato-tab" data-bs-toggle="tab"
+                                <button #infoContrato class="nav-link active" id="info-contrato-tab" data-bs-toggle="tab"
                                     data-bs-target="#info-contrato" type="button" role="tab"
                                     aria-controls="info-contrato" aria-selected="true">Contrato</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="cuenta-facturacion-tab" data-bs-toggle="tab"
+                                <button #infoCuentaFacturacion class="nav-link" id="cuenta-facturacion-tab" data-bs-toggle="tab"
                                     data-bs-target="#cuenta-facturacion" type="button" role="tab"
                                     aria-controls="cuenta-facturacion" [disabled]="enabledPanels.billAccount">Cuenta
                                     Facturación</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="cargue-masivo-tab" data-bs-toggle="tab"
+                                <button #infoCargueMasivo class="nav-link" id="cargue-masivo-tab" data-bs-toggle="tab"
                                     data-bs-target="#cargue-masivo" type="button" role="tab"
                                     aria-controls="cargue-masivo" aria-selected="false"
                                     [disabled]="enabledPanels.massiveLoad">Cargue Masivo</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="producto-tab" data-bs-toggle="tab"
+                                <button #infoProducto class="nav-link" id="producto-tab" data-bs-toggle="tab"
                                     data-bs-target="#producto" type="button" role="tab" aria-controls="producto"
                                     aria-selected="false" [disabled]="enabledPanels.product">Producto</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="registro-equipos-tab" data-bs-toggle="tab"
+                                <button #infoEquipos class="nav-link" id="registro-equipos-tab" data-bs-toggle="tab"
                                     data-bs-target="#registro-equipos" type="button" role="tab"
                                     aria-controls="registro-equipos" aria-selected="false"
                                     [disabled]="enabledPanels.devices">Equipos</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="resumen-venta-tab" data-bs-toggle="tab"
+                                <button #infoResumen class="nav-link" id="resumen-venta-tab" data-bs-toggle="tab"
                                     data-bs-target="#resumen-venta" type="button" role="tab"
                                     aria-controls="resumen-venta" aria-selected="false">Resumen</button>
                             </li>
@@ -143,11 +143,14 @@
                                                                 <label for="valorBolsa" class="form-label">Valor
                                                                     Bolsa</label>
                                                                 <div class="input-group">
-                                                                    <span class="input-group-text">$</span>
-                                                                    <input type="number" class="form-control"
+                                                                    <input type="text" class="form-control"
                                                                         id="valorBolsa"
                                                                         [(ngModel)]="newContract.contract.valorBolsa"
-                                                                        name="valorBolsa">
+                                                                        name="valorBolsa"
+                                                                        [value]="formatCurrency(newContract.contract.valorBolsa)"
+                                                                        (input)="onInput($event,'valorBolsa')"
+                                                                        (blur)="onBlur($event,'valorBolsa')"
+                                                                        >
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6">
@@ -155,8 +158,11 @@
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">$</span>
                                                                     <input type="text" class="form-control" id="saldo"
-                                                                        [value]="newContract.contract.saldo ? newContract.contract.saldo : newContract.contract.valorBolsa"
-                                                                        name="saldo" readonly>
+                                                                        [value]="newContract.contract.saldo ? formatCurrency(newContract.contract.saldo) : formatCurrency(newContract.contract.valorBolsa)"
+                                                                        name="saldo" readonly
+
+
+                                                                        >
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -170,20 +176,20 @@
 
                                                         <!-- Nueva sección de Descuentos -->
                                                         <div class="row g-3 mt-4">
-                                                            <div class="col-md-3">
-                                                                <label for="valorDescuento" class="form-label">Valor
-                                                                    del
-                                                                    Descuento</label>
+                                                            <div class="col-md-6">
+                                                                <label for="valorDescuento" class="form-label">Descuento Discontinuo</label>
                                                                 <div class="input-group">
                                                                     <input type="number" class="form-control"
                                                                         id="valorDescuento"
                                                                         [(ngModel)]="newContract.discount.valorDescuento"
-                                                                        name="valorDescuento">
+                                                                        name="valorDescuento"
+                                                                        min="0" max="100"
+                                                                        >
                                                                     <span class="input-group-text">%</span>
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-md-3">
+                                                            <div class="col-md-6">
                                                                 <label for="motivoDescuento" class="form-label">Motivo
                                                                     del
                                                                     Descuento</label>
@@ -201,112 +207,137 @@
                                                                 </select>
                                                             </div>
 
-                                                            <div class="col-md-6">
-                                                                <ul class="list-group list-group-horizontal">
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox1"
-                                                                            (change)="toggleMonth('ENE')"
-                                                                            [checked]="newContract.discount.meses.includes('ENE')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox1">ENE</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox2"
-                                                                            (change)="toggleMonth('FEB')"
-                                                                            [checked]="newContract.discount.meses.includes('FEB')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox2">FEB</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox3"
-                                                                            (change)="toggleMonth('MAR')"
-                                                                            [checked]="newContract.discount.meses.includes('MAR')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox3">MAR</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox4"
-                                                                            (change)="toggleMonth('ABR')"
-                                                                            [checked]="newContract.discount.meses.includes('ABR')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox4">ABR</label>
-                                                                    </li>
-                                                                </ul>
+                                                                <div class="col-md-6">
+                                                                    <span>Meses descuento</span>
+                                                                    <ul class="list-group list-group-horizontal">
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox1"
+                                                                                (change)="toggleMonth('ENE')"
+                                                                                [checked]="newContract.discount.meses.includes('ENE')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox1">ENE</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox2"
+                                                                                (change)="toggleMonth('FEB')"
+                                                                                [checked]="newContract.discount.meses.includes('FEB')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox2">FEB</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox3"
+                                                                                (change)="toggleMonth('MAR')"
+                                                                                [checked]="newContract.discount.meses.includes('MAR')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox3">MAR</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox4"
+                                                                                (change)="toggleMonth('ABR')"
+                                                                                [checked]="newContract.discount.meses.includes('ABR')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox4">ABR</label>
+                                                                        </li>
+                                                                    </ul>
 
-                                                                <ul class="list-group list-group-horizontal">
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox5"
-                                                                            (change)="toggleMonth('MAY')"
-                                                                            [checked]="newContract.discount.meses.includes('MAY')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox5">MAY</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox6"
-                                                                            (change)="toggleMonth('JUN')"
-                                                                            [checked]="newContract.discount.meses.includes('JUN')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox6">JUN</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox7"
-                                                                            (change)="toggleMonth('JUL')"
-                                                                            [checked]="newContract.discount.meses.includes('JUL')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox7">JUL</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox8"
-                                                                            (change)="toggleMonth('AGO')"
-                                                                            [checked]="newContract.discount.meses.includes('AGO')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox8">AGO</label>
-                                                                    </li>
-                                                                </ul>
+                                                                    <ul class="list-group list-group-horizontal">
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox5"
+                                                                                (change)="toggleMonth('MAY')"
+                                                                                [checked]="newContract.discount.meses.includes('MAY')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox5">MAY</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox6"
+                                                                                (change)="toggleMonth('JUN')"
+                                                                                [checked]="newContract.discount.meses.includes('JUN')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox6">JUN</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox7"
+                                                                                (change)="toggleMonth('JUL')"
+                                                                                [checked]="newContract.discount.meses.includes('JUL')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox7">JUL</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox8"
+                                                                                (change)="toggleMonth('AGO')"
+                                                                                [checked]="newContract.discount.meses.includes('AGO')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox8">AGO</label>
+                                                                        </li>
+                                                                    </ul>
 
-                                                                <ul class="list-group list-group-horizontal">
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox9"
-                                                                            (change)="toggleMonth('SEP')"
-                                                                            [checked]="newContract.discount.meses.includes('SEP')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox9">SEP</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox10"
-                                                                            (change)="toggleMonth('OCT')"
-                                                                            [checked]="newContract.discount.meses.includes('OCT')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox10">OCT</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox11"
-                                                                            (change)="toggleMonth('NOV')"
-                                                                            [checked]="newContract.discount.meses.includes('NOV')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox11">NOV</label>
-                                                                    </li>
-                                                                    <li class="list-group-item">
-                                                                        <input class="form-check-input" type="checkbox"
-                                                                            id="inlineCheckbox12"
-                                                                            (change)="toggleMonth('DIC')"
-                                                                            [checked]="newContract.discount.meses.includes('DIC')">
-                                                                        <label class="form-check-label"
-                                                                            for="inlineCheckbox12">DIC</label>
-                                                                    </li>
-                                                                </ul>
+                                                                    <ul class="list-group list-group-horizontal">
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox9"
+                                                                                (change)="toggleMonth('SEP')"
+                                                                                [checked]="newContract.discount.meses.includes('SEP')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox9">SEP</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox10"
+                                                                                (change)="toggleMonth('OCT')"
+                                                                                [checked]="newContract.discount.meses.includes('OCT')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox10">OCT</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox11"
+                                                                                (change)="toggleMonth('NOV')"
+                                                                                [checked]="newContract.discount.meses.includes('NOV')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox11">NOV</label>
+                                                                        </li>
+                                                                        <li class="list-group-item">
+                                                                            <input class="form-check-input" type="checkbox"
+                                                                                id="inlineCheckbox12"
+                                                                                (change)="toggleMonth('DIC')"
+                                                                                [checked]="newContract.discount.meses.includes('DIC')">
+                                                                            <label class="form-check-label"
+                                                                                for="inlineCheckbox12">DIC</label>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <label for="anioDescuento" class="form-label">Años descuento</label>
+                                                                    <select class="form-select" id="anioDescuento"
+                                                                            [(ngModel)]="newContract.discount.anio"
+                                                                            name="anioDescuento">
+                                                                      <option value="2024">2024</option>
+                                                                      <option value="2025">2025</option>
+                                                                      <option value="2026">2026</option>
+                                                                      <option value="2027">2027</option>
+                                                                      <option value="2028">2028</option>
+                                                                      <option value="2029">2029</option>
+                                                                      <option value="2030">2030</option>
+                                                                    </select>
+                                                                  </div>
+
+                                                            <a *ngIf="newContract.discount.meses.length > 0 && newContract.discount.anio"
+                                                                href="javascript:void(0);" class="btn btn-success" (click)="aceptarFechas()">Aceptar meses y año descuento</a>
+
+                                                            <div *ngIf="newContract.discount.mesesAnio!.length > 0">
+                                                                <p><strong>Meses y años de descuento aplicados:<p></strong>
+                                                                <p>{{ newContract.discount.mesesAnio!.join(', ') }}</p>
                                                             </div>
+
                                                         </div>
 
 
@@ -552,12 +583,12 @@
                                                         <div class="col-md-3">
                                                             <label for="plan" class="form-label">Plan</label>
                                                             <select class="form-select" id="plan"
-                                                                [(ngModel)]="newPlan.plan" name="plan">
+                                                                [(ngModel)]="newPlan.plan" name="plan"
+                                                                (change)="updateValorUnitario()"
+                                                                >
                                                                 <option selected disabled value="">Seleccione...
                                                                 </option>
-                                                                <option value="plan1">Plan 1</option>
-                                                                <option value="plan2">Plan 2</option>
-                                                                <option value="plan3">Plan 3</option>
+                                                                <option *ngFor="let plan of planKeys" [value]="plan">{{ plan }}</option>
                                                             </select>
                                                         </div>
                                                         <div class="col-md-3">
@@ -566,14 +597,17 @@
                                                                 [(ngModel)]="newPlan.cantidad" name="cantidad">
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <label for="valorUnitario" class="form-label">Valor
-                                                                Unitario</label>
+                                                            <label for="valorUnitario" class="form-label">Valor Unitario (Sin IVA)</label>
                                                             <div class="input-group">
-                                                                <span class="input-group-text">$</span>
-                                                                <input type="number" class="form-control"
+
+                                                                <input type="text" class="form-control"
                                                                     id="valorUnitario"
                                                                     [(ngModel)]="newPlan.valorUnitario"
-                                                                    name="valorUnitario">
+                                                                    name="valorUnitario"
+                                                                    [value]="formatCurrency(newPlan.valorUnitario)"
+                                                                    (input)="onInput($event,'valorUnitario')"
+                                                                    (blur)="onBlur($event,'valorUnitario')"
+                                                                    >
                                                             </div>
                                                         </div>
 
@@ -633,26 +667,28 @@
                                                                 name="codigoPromocion">
                                                                 <option selected value="Sin campaña">Sin campaña
                                                                 </option>
-                                                                <option value="Campaña 1">Campaña 1
+                                                                <option value="Amor y Amistad">Amor y Amistad
                                                                 </option>
-                                                                <option value="Campaña 2">Campaña 2
+                                                                <option value="Navidad">Navidad
                                                                 </option>
-                                                                <option value="Campaña 3">Campaña 3</option>
+                                                                <option value="Mes de la madre">Mes de la madre</option>
                                                             </select>
 
                                                         </div>
 
                                                         <div class="col-md-4"
                                                             *ngIf="newContract.contract.tipoContrato==='Negociado'">
-                                                            <label for="valorDescuento" class="form-label">Descuento
-                                                                Personalizado</label>
+                                                            <label for="valorDescuento" class="form-label">Descuento Personalizado</label>
                                                             <div class="input-group">
                                                                 <input type="number" class="form-control"
                                                                     id="valorDescuento"
                                                                     [(ngModel)]="newPlan.valorDescuento"
-                                                                    name="valorDescuento" step="0.01">
+                                                                    name="valorDescuento" step="0.01"
+                                                                   
+                                                                    >
                                                                 <span class="input-group-text">%</span>
                                                             </div>
+                                                           
                                                         </div>
                                                         <div class="col-md-4"
                                                             *ngIf="newContract.contract.tipoContrato==='Negociado'">
@@ -697,8 +733,7 @@
                                                                 *ngIf="newPlan.cantidad >0 && newPlan.valorUnitario>0 ">
                                                                 Valor Total sin Impuesto $ {{
                                                                 newPlan.cantidad * ( newPlan.valorUnitario +
-                                                                calcularTotalCargosServiciosAdicionales() )
-                                                                }}</h5>
+                                                                calcularTotalCargosServiciosAdicionales() ) | number:'1.2-2' }}</h5>
                                                         </div>
 
                                                         <div class="col-md-3 text-end">
@@ -788,41 +823,169 @@
                                                                 [(ngModel)]="newLinea.numeroLinea"
                                                                 name="newLineaNumeroLinea">
                                                         </div>
+
                                                         <!-- IMSI -->
                                                         <div class="col-md-3">
                                                             <label for="imsi" class="form-label">IMSI</label>
                                                             <input type="number" class="form-control" id="newLineaImsi"
                                                                 [(ngModel)]="newLinea.imsi" name="newLineaImsi">
                                                         </div>
+
                                                         <!-- IMEI -->
-                                                        <div class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Linea Nueva' || newLinea.tipoLinea === 'Prepago a Pospago'" class="col-md-3">
                                                             <label for="imei" class="form-label">IMEI</label>
-                                                            <input type="text" class="form-control" id="newLineaImei"
+                                                            <input type="number" class="form-control" id="newLineaImei"
                                                                 [(ngModel)]="newLinea.imei" name="newLineaImei">
                                                         </div>
 
-                                                        <div class="col-md-3">
-                                                            <label for="grupo" class="form-label">Grupo</label>
-                                                            <input type="text" class="form-control" id="grupo"
-                                                                [(ngModel)]="newLinea.grupo" name="grupo">
-                                                        </div>
+                                                        <div class="col-md-4">
+                                                          <label for="grupo" class="form-label">Grupo</label>
+                                                          <select class="form-select" id="grupo"
+                                                              [(ngModel)]="newLinea.grupo"
+                                                              name="grupo">
+                                                              <option selected value="Administración">Administración</option>
+                                                              <option value="Analistas de ventas">Analistas de ventas</option>
+                                                              <option value="Compras">Compras</option>
+                                                              <option value="Directores">Directores</option>
+                                                              <option value="Informática">Informática</option>
+                                                          </select>
+                                                      </div>
+
+
+
+
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            <div class="col-12">
+                                            <!-- Info tipo de linea portabilidad -->
+                                            <div *ngIf="newLinea.tipoLinea === 'Portabilidad' || newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato'" class="col-12">
                                                 <div class="p-3 border bg-light">
-                                                    <div class="row g-3">
-                                                        <!-- NUIP -->
+                                                    <label for="portabilidad" class="form-label" style="font-weight: bold;">Datos de Portabilidad</label>
+                                                    <div class="row g-3" style="font-size: 12px;">
+                                                        <!-- Tipo de Identificación -->
                                                         <div class="col-md-3">
-                                                            <label for="nuipValue" class="form-label">NUIP</label>
-                                                            <input type="text" class="form-control" id="nuipValue"
-                                                                [(ngModel)]="newLinea.nuipValue" name="nuipValue">
+                                                            <label for="tipoIdentificacion" class="form-label">Tipo
+                                                                de
+                                                                Identificación</label>
+                                                            <select class="form-select" id="newLineaTipoIdentificacion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.tipoDocumento"
+                                                                name="newLineaTipoIdentificacion">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option value="CC">CC</option>
+                                                                <option value="NIT">NIT</option>
+                                                                <option value="NE">NE</option>
+                                                                <option value="CE">CE</option>
+                                                                <option value="PP">PP</option>
+                                                                <option value="PEP">PEP</option>
+                                                            </select>
                                                         </div>
-                                                        <!-- Operador -->
+
+                                                        <!-- Número Documento -->
                                                         <div class="col-md-3">
-                                                            <label for="operador" class="form-label">Operador</label>
-                                                            <select class="form-select" [(ngModel)]="newLinea.operador"
+                                                            <label for="numeroDocumento" class="form-label">Número
+                                                                Documento</label>
+                                                            <input type="number" class="form-control"
+                                                                id="newLineanumeroDocumento"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.numeroDocumento"
+                                                                name="newLineanumeroDocumento">
+                                                        </div>
+
+                                                        <!-- Año de Expedición Documento -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento !== 'NIT' && newLinea.portabilidadInfo!.tipoDocumento !== 'NE'" class="col-md-3">
+                                                            <label for="anioFechaExpedicion" class="form-label">Año Expedición documento</label>
+                                                            <input type="number" class="form-control"
+                                                                id="newLineaAnioFechaExpedicion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.anioExpedicion"
+                                                                name="newLineaAnioFechaExpedicion">
+                                                        </div>
+
+                                                        <!-- Fecha de Expedición Documento -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento !== 'NIT' && newLinea.portabilidadInfo!.tipoDocumento !== 'NE'" class="col-md-3">
+                                                            <label for="fechaExpedicion" class="form-label">Fecha Expedición documento</label>
+                                                            <input type="date" class="form-control"
+                                                                id="newLineaFechaExpedicion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.fechaExpedicion"
+                                                                name="newLineaFechaExpedicion">
+                                                        </div>
+
+                                                        <!-- Digito de Verificación -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT'" class="col-md-3">
+                                                            <label for="anioFechaExpedicion" class="form-label">Digito Verificación</label>
+                                                            <input type="number" class="form-control"
+                                                                id="newLineaAnioFechaExpedicion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.digitoVerificacion"
+                                                                name="newLineaAnioFechaExpedicion">
+                                                        </div>
+
+                                                        <!-- Tipo de Identificación representante legal -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE'" class="col-md-3">
+                                                            <label for="tipoIdentificacionRepresentanteLegal" class="form-label">Tipo
+                                                                de
+                                                                Identificación
+                                                                Representante Legal</label>
+                                                            <select class="form-select" id="newLineaRepresentanteLegalTipoIdentificacion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.tipoDocumentoRepresentanteLegal"
+                                                                name="newLineaRepresentanteLegalTipoIdentificacion">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option value="CC">CC</option>
+                                                                <option value="NIT">NIT</option>
+                                                                <option value="NE">NE</option>
+                                                                <option value="CE">CE</option>
+                                                                <option value="PP">PP</option>
+                                                                <option value="PEP">PEP</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Número Documento representante legal -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE'" class="col-md-3">
+                                                            <label for="numeroDocumentoRepresentanteLegal" class="form-label">Número
+                                                                Documento
+                                                                Representante Legal</label>
+                                                            <input type="number" class="form-control"
+                                                                id="newLineanumeroDocumentoRepresentanteLegal"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.numeroDocumentoRepresentanteLegal"
+                                                                name="newLineanumeroDocumentoRepresentanteLegal">
+                                                        </div>
+
+                                                        <!-- Fecha de Expedición Documento representante legal -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE'" class="col-md-3">
+                                                            <label for="fechaExpedicionRepresentanteLegal" class="form-label">Fecha Expedición documento representante legal</label>
+                                                            <input type="date" class="form-control"
+                                                                id="fechaExpedicionRepresentanteLegal"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.fechaExpedicionRepresentanteLegal"
+                                                                name="fechaExpedicionRepresentanteLegal">
+                                                        </div>
+
+                                                        <!-- Telefonia Actual -->
+                                                        <div class="col-md-3">
+                                                            <label for="telefoniaActual" class="form-label">Telefonia Actual</label>
+                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.tipoTelefoniaActual"
+                                                                name="newLineaTelefoniaActual" id="newLineaTelefoniaActual">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option value="Prepago">Prepago</option>
+                                                                <option value="Pospago">Pospago</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Tipo solicitante -->
+                                                        <div class="col-md-3">
+                                                            <label for="tipoSolicitante" class="form-label">Tipo solicitante</label>
+                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.tipoSolicitante"
+                                                                name="newLineaTipoSolicitante" id="newLineaTipoSolicitante">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option value="SELF">SELF</option>
+                                                                <option *ngIf="newLinea.portabilidadInfo!.tipoTelefoniaActual === 'Pospago'"value="THIRDPARTY">THIRDPARTY</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Operador donante -->
+                                                        <div class="col-md-3">
+                                                            <label for="operador" class="form-label">Operador donante</label>
+                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.operadorDonante"
                                                                 name="newLineaOperador" id="newLineaOperador">
                                                                 <option selected disabled value="">Seleccione...
                                                                 </option>
@@ -831,59 +994,151 @@
                                                                 <option value="Wom">Wom</option>
                                                             </select>
                                                         </div>
-                                                        <!-- Tipo Persona -->
+
+                                                        <!-- NIP -->
                                                         <div class="col-md-3">
-                                                            <label for="tipoPersona" class="form-label">Tipo
-                                                                Persona</label>
-                                                            <select class="form-select" id="newLineaTipoPersona"
-                                                                [(ngModel)]="newLinea.tipoPersona"
-                                                                name="newLineaTipoPersona">
+                                                            <label for="nipValue" class="form-label">NIP</label>
+                                                            <input type="number" class="form-control" id="nipValue"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.nip" name="nipValue">
+                                                        </div>
+
+                                                        <!-- Linea temporal -->
+                                                        <div class="col-md-3">
+                                                            <label for="lineaTemporal" class="form-label">MSISDN temporal</label>
+                                                            <input type="number" class="form-control" id="lineaTemporal"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.lineaTemporal" name="lineaTemporal">
+                                                        </div>
+                                                        
+                                                        <!-- Tipo venta -->
+                                                        <div class="col-md-3">
+                                                            <label for="tipoVenta" class="form-label">Tipo venta</label>
+                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.tipoVenta"
+                                                                name="newLineaTipoVenta" id="newLineaTipoVenta">
                                                                 <option selected disabled value="">Seleccione...
                                                                 </option>
-                                                                <option value="NATURAL">NATURAL</option>
-                                                                <option value="JURÍDICO">JURÍDICO</option>
+                                                                <option value="Sim sola">Sim sola</option>
+                                                                <option value="Sim y telefono">Sim y teléfono</option>
                                                             </select>
                                                         </div>
+
+                                                        <!-- IMEI -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoVenta === 'Sim y telefono'" class="col-md-3">
+                                                            <label for="imeiPortabilidad" class="form-label">IMEI</label>
+                                                            <input type="text" class="form-control" id="newLineaImeiPortabilidad"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.imei" name="newLineaImeiPortabilidad">
+                                                        </div>
+
+                                                        <!-- fecha calendarizada?-->
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                id="esFechaCalendarizada" [(ngModel)]="newLinea.portabilidadInfo!.esFechaCalendarizada"
+                                                                name="esFechaCalendarizada"
+                                                                (change)="changeEsFechaCalendarizada()">
+                                                            <label for="esFechaCalendarizada"
+                                                                class="form-check-label">¿Es fecha calendarizada?</label>
+                                                        </div>
+
+                                                        <!-- Fecha sugerida de portación -->
+                                                        <div *ngIf="newLinea.portabilidadInfo!.esFechaCalendarizada">
+                                                            <label for="fechaSugeridaPortacion" class="form-label">Fecha sugerida de portación</label>
+                                                            <input type="date" class="form-control"
+                                                                id="fechaSugeridaPortacion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.fechaSugeridaPortacion"
+                                                                name="fechaSugeridaPortacion">
+                                                        </div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Información de cesión de contrato -->
+                                            <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato'" class="col-12">
+                                                <div class="p-3 border bg-light">
+                                                    <label for="portabilidad" class="form-label" style="font-weight: bold;">Datos de cesión de contrato</label>
+                                                    <div class="row g-3" style="font-size: 12px;">
                                                         <!-- Tipo de Identificación -->
                                                         <div class="col-md-3">
-                                                            <label for="tipoIdentificacion" class="form-label">Tipo
+                                                            <label for="tipoIdentificacionCesion" class="form-label">Tipo
                                                                 de
                                                                 Identificación</label>
-                                                            <select class="form-select" id="newLineaTipoIdentificacion"
-                                                                [(ngModel)]="newLinea.tipoIdentificacion"
-                                                                name="newLineaTipoIdentificacion">
+                                                            <select class="form-select" id="newLineaTipoIdentificacionCesion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.tipoDocumento"
+                                                                name="newLineaTipoIdentificacionCesion">
                                                                 <option selected disabled value="">Seleccione...
                                                                 </option>
                                                                 <option value="CC">CC</option>
                                                                 <option value="NIT">NIT</option>
+                                                                <option value="NE">NE</option>
                                                                 <option value="CE">CE</option>
+                                                                <option value="PP">PP</option>
+                                                                <option value="PEP">PEP</option>
                                                             </select>
                                                         </div>
+
                                                         <!-- Número Documento -->
                                                         <div class="col-md-3">
-                                                            <label for="numeroDocumento" class="form-label">Número
+                                                            <label for="numeroDocumentoCesion" class="form-label">Número
                                                                 Documento</label>
                                                             <input type="number" class="form-control"
-                                                                id="newLineanumeroDocumento"
-                                                                [(ngModel)]="newLinea.numeroDocumento"
-                                                                name="newLineanumeroDocumento">
-                                                        </div>
-                                                        <!-- Nombre -->
-                                                        <div class="col-md-3">
-                                                            <label for="nombre" class="form-label">Nombre</label>
-                                                            <input type="text" class="form-control" id="newLineaNombre"
-                                                                [(ngModel)]="newLinea.nombre" name="newLineaNombre">
-                                                        </div>
-                                                        <!-- Fecha de Expedición -->
-                                                        <div class="col-md-3">
-                                                            <label for="fechaExpedicion" class="form-label">Fecha de
-                                                                Expedición</label>
-                                                            <input type="number" class="form-control"
-                                                                id="newLineaFechaExpedicion"
-                                                                [(ngModel)]="newLinea.fechaExpedicion"
-                                                                name="newLineaFechaExpedicion">
+                                                                id="newLineanumeroDocumentoCesion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.numeroDocumento"
+                                                                name="newLineanumeroDocumentoCesion">
                                                         </div>
 
+
+                                                        <!-- Nombre -->
+                                                        <div class="col-md-3">
+                                                            <label for="nombreCesion" class="form-label">Nombre</label>
+                                                            <input type="text" class="form-control" id="nombreCesion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.nombre" name="nombreCesion">
+                                                        </div>
+
+                                                        <!-- Apellido -->
+                                                        <div class="col-md-3">
+                                                            <label for="apellidoCesion" class="form-label">Apellido</label>
+                                                            <input type="text" class="form-control" id="apellidoCesion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.apellido" name="apellidoCesion">
+                                                        </div>
+
+                                                        <!-- Email -->
+                                                        <div class="col-md-3">
+                                                            <label for="email" class="form-label">Correo electronico</label>
+                                                            <input type="email" class="form-control" id="email"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.email" name="email">
+                                                        </div>
+
+                                                        <!-- Direccion -->
+                                                        <div class="col-md-3">
+                                                            <label for="direccionCesion" class="form-label">Direccion</label>
+                                                            <input type="text" class="form-control" id="direccionCesion"
+                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.direccion" name="direccionCesion">
+                                                        </div>
+                                                        
+                                                        <!-- Departamento -->
+                                                        <div class="col-md-3">
+                                                            <label for="departamento" class="form-label">Departamento</label>
+                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.departamento"
+                                                                name="newLineaDeptoCesion" id="newLineaDeptoCesion">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option value="Valle del Cauca">Valle del Cauca</option>
+                                                                <option value="Nariño">Nariño</option>
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        <!-- Ciudad -->
+                                                        <div class="col-md-3">
+                                                            <label for="ciudad" class="form-label">Ciudad</label>
+                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.ciudad"
+                                                                name="newLineaCiudad" id="newLineaCiudad">
+                                                                <option selected disabled value="">Seleccione...
+                                                                </option>
+                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Nariño'" value="Ipiales">Ipiales</option>
+                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Nariño'" value="Pasto">Pasto</option>
+                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Valle del Cauca'" value="Cali">Cali</option>
+                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Valle del Cauca'" value="Buga">Buga</option>
+                                                            </select>
+                                                        </div>
 
                                                     </div>
                                                 </div>
@@ -1092,7 +1347,9 @@
                                                                     Equipos</label>
                                                                 <select class="form-select" id="redencionEquipos"
                                                                     name="redencionEquipos"
-                                                                    [(ngModel)]="nuevoEquipo.redencionEquipos">
+                                                                    [(ngModel)]="nuevoEquipo.redencionEquipos"
+                                                                    (change)="updateRedencionNO()"
+                                                                    >
                                                                     <option selected disabled value="">Seleccione...
                                                                     </option>
                                                                     <option value="SI">SI</option>
@@ -1106,8 +1363,7 @@
                                                                     name="cantidad" [(ngModel)]="nuevoEquipo.cantidad">
                                                             </div>
                                                             <div class="col-md-3">
-                                                                <label for="porcentajeDescuento" class="form-label">%
-                                                                    Descuento</label>
+                                                                <label for="porcentajeDescuento" class="form-label">% a redimir por equipo</label>
                                                                 <div class="input-group">
                                                                     <input type="number" class="form-control"
                                                                         id="porcentajeDescuento"
@@ -1185,7 +1441,7 @@
                                                             </div>
 
                                                             <div class="col-md-3">
-                                                                Valor NO redimible
+                                                                Valor pendiente por redimir
                                                             </div>
 
                                                             <div class="col-md-3">
@@ -1448,7 +1704,7 @@
                                                                                     <th>Tipo de Envío</th>
                                                                                     <th>Descuento Personalizado
                                                                                         Discontinuo</th>
-                                                                                    <th>Meses</th>
+                                                                                    <th>Año-Meses</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
@@ -1526,7 +1782,7 @@
                                                                                     <td>{{
                                                                                         newContract.discount.valorDescuento
                                                                                         }}</td>
-                                                                                    <td>{{ newContract.discount.meses }}
+                                                                                    <td>{{ newContract.discount.mesesAnio }}
                                                                                     </td>
                                                                                 </tr>
 
@@ -1562,6 +1818,7 @@
                                                                                     <th>Personalizado Discontinuo</th>
                                                                                     <th>Meses Aplicacion</th>
                                                                                     <th>Tipo Envio</th>
+                                                                                    <th>Servicios Adicionales</th>
                                                                                     <th>Acciones</th>
                                                                                 </tr>
                                                                             </thead>
@@ -1603,7 +1860,9 @@
                                                                                     <td>{{ linea.mesesPersonalizados }}
                                                                                     </td>
                                                                                     <td>{{ linea.tipoEnvio }}</td>
-
+                                                                                    <td><div *ngFor="let service of linea.addServices">
+                                                                                        {{ service.tipo }}</div>
+                                                                                    </td>
                                                                                     <td>
                                                                                         <button
                                                                                             class="btn btn-danger btn-sm"
@@ -1622,35 +1881,32 @@
                                                                         <table class="table table-striped">
                                                                             <thead>
                                                                                 <tr>
-                                                                                    <th>NUIP</th>
-                                                                                    <th>MSISDN</th>
-                                                                                    <th>Operador</th>
-                                                                                    <th>Tipo Persona</th>
+                                                                                    <th>MSISDN a portar</th>
+                                                                                    <th>NIP</th>
+                                                                                    <th>Operador donante</th>
                                                                                     <th>Tipo Identificación</th>
                                                                                     <th>Número Documento</th>
-                                                                                    <th>Nombre</th>
-                                                                                    <th>Fecha Expedición</th>
+                                                                                    <th>MSISDN temporal</th>
+                                                                                    <th>Tipo Identificación cesión contrato</th>
+                                                                                    <th>Número Documento cesión contrato</th>
+                                                                                    <th>Nombre cliente cesión contrato</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
                                                                                 <tr
                                                                                     *ngFor="let linea of portableLines; let i = index">
-                                                                                    <td>{{ linea.nuipValue }}</td>
-                                                                                    <td>{{ linea.numeroLinea }}
-                                                                                    </td>
-                                                                                    <td>{{ linea.operador }}
-                                                                                    </td>
-                                                                                    <td>{{ linea.tipoPersona }}
-                                                                                    </td>
-                                                                                    <td>{{
-                                                                                        linea.tipoIdentificacion
-                                                                                        }}
-                                                                                    </td>
-                                                                                    <td>{{ linea.numeroDocumento
-                                                                                        }}</td>
-                                                                                    <td>{{ linea.nombre }}</td>
-                                                                                    <td>{{ linea.fechaExpedicion
-                                                                                        }}</td>
+                                                                                    <td>{{ linea.numeroLinea }}</td>
+                                                                                    <td>{{ linea.portabilidadInfo!.nip }}</td>
+                                                                                    <td>{{ linea.portabilidadInfo!.operadorDonante }}</td>
+                                                                                    <td>{{ linea.portabilidadInfo!.tipoDocumento }}</td>
+                                                                                    <td>{{ linea.portabilidadInfo!.numeroDocumento }}</td>
+                                                                                    <td>{{ linea.portabilidadInfo!.lineaTemporal }}</td>
+                                                                                    <td *ngIf="linea.portabilidadInfo!.cesionContrato!.tipoDocumento">{{ linea.portabilidadInfo!.cesionContrato!.tipoDocumento }}</td>
+                                                                                    <td *ngIf="!linea.portabilidadInfo!.cesionContrato!.tipoDocumento">N/A</td>
+                                                                                    <td *ngIf="linea.portabilidadInfo!.cesionContrato!.numeroDocumento">{{ linea.portabilidadInfo!.cesionContrato!.numeroDocumento }}</td>
+                                                                                    <td *ngIf="!linea.portabilidadInfo!.cesionContrato!.numeroDocumento">N/A</td>
+                                                                                    <td *ngIf="linea.portabilidadInfo!.cesionContrato!.nombre">{{ linea.portabilidadInfo!.cesionContrato!.nombre }}</td>
+                                                                                    <td *ngIf="!linea.portabilidadInfo!.cesionContrato!.nombre">N/A</td>
                                                                                 </tr>
                                                                             </tbody>
                                                                         </table>
@@ -1721,8 +1977,8 @@
                                                                                         | currency }} </div>
                                                                                 </div>
                                                                                 <div class="row">
-                                                                                    <div class="col-8"><b>Valor NO
-                                                                                            Redimible:</b></div>
+                                                                                    <div class="col-8"><b>Valor pendiente por redimir:
+                                                                                    </b></div>
                                                                                     <div class="col-4">{{
                                                                                         newContract.contract.saldo > 0 ?
                                                                                         newContract.contract.valorNoRedimible.toFixed(2)
