@@ -28,9 +28,10 @@
 
 ## Decisiones de Arquitectura
 
-#### Evaluar el funcionamiento de CRM Properties vs Base de Datos?
+#### Evaluar la parametrizacion del Nuevo Pospago B2B usando CRM Properties vs Base de Datos?
 
-Cada componente tiene sus propias responsabilidades. Para la solución para la parametrización de atributos del Nuevo Postpago B2B se hará uso del CRM Properties y Modelo de Base de datos. 
+Es importante identificar las responsabilidad de cada modelo. El modelo CRM Properties esta encargado de gestionar las propiedades de un proyecto. Configurar unos valores que puede tomar un atributo seria complicado como propiedad. 
+Así, La solución planteada para la parametrización de atributos del Nuevo Postpago B2B se realizará con base a las capacidades del CRM Properties y un modelo en base de datos para nos permita configurar los valores de un atributo. 
 
 1. Properties CRM 
 
