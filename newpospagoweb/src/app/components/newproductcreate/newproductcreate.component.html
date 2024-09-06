@@ -182,7 +182,9 @@
                                                                     <input type="number" class="form-control"
                                                                         id="valorDescuento"
                                                                         [(ngModel)]="newContract.discount.valorDescuento"
-                                                                        name="valorDescuento">
+                                                                        name="valorDescuento"
+                                                                        min="0" max="100"
+                                                                        >
                                                                     <span class="input-group-text">%</span>
                                                                 </div>
                                                             </div>
@@ -204,7 +206,7 @@
                                                                         comercial</option>
                                                                 </select>
                                                             </div>
-                                                        
+
                                                                 <div class="col-md-6">
                                                                     <span>Meses descuento</span>
                                                                     <ul class="list-group list-group-horizontal">
@@ -241,7 +243,7 @@
                                                                                 for="inlineCheckbox4">ABR</label>
                                                                         </li>
                                                                     </ul>
-    
+
                                                                     <ul class="list-group list-group-horizontal">
                                                                         <li class="list-group-item">
                                                                             <input class="form-check-input" type="checkbox"
@@ -276,7 +278,7 @@
                                                                                 for="inlineCheckbox8">AGO</label>
                                                                         </li>
                                                                     </ul>
-    
+
                                                                     <ul class="list-group list-group-horizontal">
                                                                         <li class="list-group-item">
                                                                             <input class="form-check-input" type="checkbox"
@@ -315,9 +317,9 @@
 
                                                                 <div class="col-md-6">
                                                                     <label for="anioDescuento" class="form-label">Años descuento</label>
-                                                                    <select class="form-select" id="motivoDescuento"
-                                                                            (change)="toggleYears($event)"
-                                                                            name="anioDescuento" multiple>
+                                                                    <select class="form-select" id="anioDescuento"
+                                                                            [(ngModel)]="newContract.discount.anio"
+                                                                            name="anioDescuento">
                                                                       <option value="2024">2024</option>
                                                                       <option value="2025">2025</option>
                                                                       <option value="2026">2026</option>
@@ -327,14 +329,15 @@
                                                                       <option value="2030">2030</option>
                                                                     </select>
                                                                   </div>
-                                                            
 
-                                                            <div *ngIf="newContract.discount.meses.length > 0 || newContract.discount.anios">
-                                                                <h5>Selección de meses y años de descuento:</h5>
-                                                                <p><strong>Meses con descuento:</strong> {{ newContract.discount.meses.join(', ') }}</p>
-                                                                <p><strong>Año del descuento:</strong> {{ newContract.discount.anios!.join(', ') }}</p>
+                                                            <a *ngIf="newContract.discount.meses.length > 0 && newContract.discount.anio"
+                                                                href="javascript:void(0);" class="btn btn-success" (click)="aceptarFechas()">Aceptar meses y año descuento</a>
+
+                                                            <div *ngIf="newContract.discount.mesesAnio!.length > 0">
+                                                                <p><strong>Meses y años de descuento aplicados:<p></strong>
+                                                                <p>{{ newContract.discount.mesesAnio!.join(', ') }}</p>
                                                             </div>
-                                                            
+
                                                         </div>
 
 
@@ -594,8 +597,7 @@
                                                                 [(ngModel)]="newPlan.cantidad" name="cantidad">
                                                         </div>
                                                         <div class="col-md-3">
-                                                            <label for="valorUnitario" class="form-label">Valor
-                                                                Unitario</label>
+                                                            <label for="valorUnitario" class="form-label">Valor Unitario (Sin IVA)</label>
                                                             <div class="input-group">
 
                                                                 <input type="text" class="form-control"
@@ -676,15 +678,17 @@
 
                                                         <div class="col-md-4"
                                                             *ngIf="newContract.contract.tipoContrato==='Negociado'">
-                                                            <label for="valorDescuento" class="form-label">Descuento
-                                                                Personalizado</label>
+                                                            <label for="valorDescuento" class="form-label">Descuento Personalizado</label>
                                                             <div class="input-group">
                                                                 <input type="number" class="form-control"
                                                                     id="valorDescuento"
                                                                     [(ngModel)]="newPlan.valorDescuento"
-                                                                    name="valorDescuento" step="0.01">
+                                                                    name="valorDescuento" step="0.01"
+                                                                   
+                                                                    >
                                                                 <span class="input-group-text">%</span>
                                                             </div>
+                                                           
                                                         </div>
                                                         <div class="col-md-4"
                                                             *ngIf="newContract.contract.tipoContrato==='Negociado'">
@@ -1494,8 +1498,7 @@
                                                                                     <th>Tipo de Envío</th>
                                                                                     <th>Descuento Personalizado
                                                                                         Discontinuo</th>
-                                                                                    <th>Años</th>
-                                                                                    <th>Meses</th>
+                                                                                    <th>Año-Meses</th>
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
@@ -1573,9 +1576,7 @@
                                                                                     <td>{{
                                                                                         newContract.discount.valorDescuento
                                                                                         }}</td>
-                                                                                    <td>{{ newContract.discount.anios }}
-                                                                                    </td>
-                                                                                    <td>{{ newContract.discount.meses }}
+                                                                                    <td>{{ newContract.discount.mesesAnio }}
                                                                                     </td>
                                                                                 </tr>
 
@@ -1611,6 +1612,7 @@
                                                                                     <th>Personalizado Discontinuo</th>
                                                                                     <th>Meses Aplicacion</th>
                                                                                     <th>Tipo Envio</th>
+                                                                                    <th>Servicios Adicionales</th>
                                                                                     <th>Acciones</th>
                                                                                 </tr>
                                                                             </thead>
@@ -1652,7 +1654,9 @@
                                                                                     <td>{{ linea.mesesPersonalizados }}
                                                                                     </td>
                                                                                     <td>{{ linea.tipoEnvio }}</td>
-
+                                                                                    <td><div *ngFor="let service of linea.addServices">
+                                                                                        {{ service.tipo }}</div>
+                                                                                    </td>
                                                                                     <td>
                                                                                         <button
                                                                                             class="btn btn-danger btn-sm"
