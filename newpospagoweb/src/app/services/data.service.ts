@@ -35,7 +35,7 @@ export class DataService {
   private randomCustomer(): void {
     // Generación de 20 customers
     DataService.customers = [
-      { idAccount: "1", documentType: 'CC', documentNumber: 12345678, legalName: 'Empresa Uno' },
+      { idAccount: "1", documentType: 'NIT', documentNumber: 12345678, legalName: 'Empresa Uno' },
       { idAccount: "2", documentType: 'NIT', documentNumber: 87654321, legalName: 'Empresa Dos' },
       { idAccount: "3", documentType: 'CC', documentNumber: 23456789, legalName: 'Empresa Tres' },
       { idAccount: "4", documentType: 'NIT', documentNumber: 98765432, legalName: 'Empresa Cuatro' },
@@ -55,9 +55,7 @@ export class DataService {
       { idAccount: "18", documentType: 'CC', documentNumber: 66789012, legalName: 'Empresa Dieciocho' },
       { idAccount: "19", documentType: 'NIT', documentNumber: 77890123, legalName: 'Empresa Diecinueve' },
       { idAccount: "20", documentType: 'CE', documentNumber: 88901234, legalName: 'Empresa Veinte' }
-
     ];
-
   }
 
   public getCustomers(): Customer[] {
@@ -102,14 +100,14 @@ export class DataService {
   public saveContract(contract: Contrato) {
 
     if (this.getContractsByIdContract(contract.idContract).length == 0) {
-      DataService.contracts.push({ ...contract }); 
+      DataService.contracts.push({ ...contract });
     } else {
       DataService
         .contracts
         .filter(c => c.idContract === contract.idContract)
         .forEach(c => {
-          c.codigoVendedor = contract.codigoVendedor ;          
-          c.estado = contract.estado; 
+          c.codigoVendedor = contract.codigoVendedor ;
+          c.estado = contract.estado;
           c.editar= contract.editar;
           c.informeVenta= contract.informeVenta;
           c.seguimientoLineas= contract.seguimientoLineas;
@@ -128,9 +126,9 @@ export class DataService {
           c.valorNoRedimible= contract.valorNoRedimible;
 
 
-        }); 
+        });
 
-      
+
     }
 
   }
@@ -158,10 +156,10 @@ export class DataService {
         .billAccounts
         .filter(temp => temp.idBill === bill.idBill)
         .forEach(temp => {
-          temp.cicloFacturacion = bill.cicloFacturacion ; 
-          temp.cuentaFacturacion = bill.cuentaFacturacion ; 
-          temp.fechaCreacion = bill.fechaCreacion ; 
-        }) ; 
+          temp.cicloFacturacion = bill.cicloFacturacion ;
+          temp.cuentaFacturacion = bill.cuentaFacturacion ;
+          temp.fechaCreacion = bill.fechaCreacion ;
+        }) ;
 
 
       } else {
@@ -181,11 +179,11 @@ export class DataService {
       .discounts
       .filter(d => d.idContract == discount.idContract)
       .forEach(d => {
-        d.meses = discount.meses ; 
-        d.motivoDescuento = discount.motivoDescuento ; 
-        d.valorDescuento = discount.valorDescuento ; 
-      }); 
-      
+        d.mesesAnio = discount.mesesAnio ;
+        d.motivoDescuento = discount.motivoDescuento ;
+        d.valorDescuento = discount.valorDescuento ;
+      });
+
     }
 
   }
@@ -194,12 +192,12 @@ export class DataService {
     devices.forEach(
       device => {
         if(DataService.devices.filter(value => value.id === device.id ).length === 0){
-          DataService.devices.push({ ...device }); 
+          DataService.devices.push({ ...device });
         }else{
-          
+
         }
       }
-        
+
     );
 
   }
@@ -209,14 +207,14 @@ export class DataService {
     plans.forEach(plan => {
 
       if(DataService.plans.filter(value => value.cuentaFacturacion === plan.cuentaFacturacion).length === 0){
-        DataService.plans.push({ ... plan }); 
+        DataService.plans.push({ ... plan });
       }else{
 
       }
 
     }
 
-    ); 
+    );
 
 
   }
@@ -225,12 +223,12 @@ export class DataService {
     lineas.forEach(
       linea => {
         if(DataService.lineas.filter(value => value.numeroLinea === linea.numeroLinea).length === 0){
-          DataService.lineas.push({ ... linea }); 
+          DataService.lineas.push({ ... linea });
         }else{
 
         }
       }
-    ); 
+    );
 
 
   }

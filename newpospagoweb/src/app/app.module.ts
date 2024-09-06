@@ -16,10 +16,12 @@ import { SucessModalComponent } from './components/modals/sucess-modal/sucess-mo
 import { NewproductdetailComponent } from './components/newproductdetail/newproductdetail.component';
 import { CambiarCuentaFacturacionComponent } from './components/cambiar-cuenta-facturacion/cambiar-cuenta-facturacion.component';
 import { NipComponent } from './components/nip/nip.component';
+import { NumberFormatDirective } from './number-format.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
+    NumberFormatDirective, // mrmelor
     NewproductmasterComponent,
     DashboardComponent,
     NewproductcreateComponent,
@@ -27,12 +29,13 @@ import { NipComponent } from './components/nip/nip.component';
     SucessModalComponent,
     NewproductdetailComponent,
     CambiarCuentaFacturacionComponent,
-    NipComponent
+    NipComponent,
+    NumberFormatDirective
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule, 
-    
+    AppRoutingModule,
+
     FormsModule
   ],
   providers: [  ],

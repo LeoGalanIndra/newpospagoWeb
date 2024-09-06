@@ -14,7 +14,7 @@ export class ModalService {
   private componentRefSuccess!: ComponentRef<SucessModalComponent>;
   private componentSubscriberSucess!: Subject<string>;
 
-  constructor(private resolver: ComponentFactoryResolver, 
+  constructor(private resolver: ComponentFactoryResolver,
     private resolverSucess: ComponentFactoryResolver
   ) {}
 
@@ -29,16 +29,6 @@ export class ModalService {
     return this.componentSubscriber.asObservable();
   }
 
-  closeModal() {
-    this.componentSubscriber.complete();
-    this.componentRef.destroy();
-  }
-
-  confirm() {
-    this.componentSubscriber.next('confirm');
-    this.closeModal();
-  }
-
   openSuccessModal(entry: ViewContainerRef, modalTitle: string, modalBody: string) {
     let factory = this.resolverSucess.resolveComponentFactory(SucessModalComponent);
     this.componentRefSuccess = entry.createComponent(factory);
@@ -49,12 +39,44 @@ export class ModalService {
     return this.componentSubscriberSucess.asObservable();
   }
 
+  closeModal() {
+    this.componentSubscriber.complete();
+    this.componentRef.destroy();
+  }
+
+  confirm() {
+    this.componentSubscriber.next('confirm');
+    this.closeModal();
+  }
+
+
+
   closeSucessModal() {
     this.componentSubscriberSucess.next('confirm');
     this.componentSubscriberSucess.complete();
     this.componentRefSuccess.destroy();
   }
 
-  
-  
+
+  //mrmelor
+  // Método para abrir un modal con un único botón de "Aceptar"
+  openAcceptModal(entry: ViewContainerRef, modalTitle: string, modalBody: string) {
+    let factory = this.resolver.resolveComponentFactory(SucessModalComponent);
+    this.componentRefSuccess = entry.createComponent(factory);
+    this.componentRefSuccess.instance.title = modalTitle;
+    this.componentRefSuccess.instance.body = modalBody;
+    this.componentRefSuccess.instance.acceptButtonText = 'Aceptar'; // Establecemos el texto del botón como "Aceptar"
+    //this.componentRefSuccess.instance.acceptEvent.subscribe(() => this.closeAcceptModal());
+    this.componentRefSuccess.instance.closeMeEvent.subscribe(() => this.closeAcceptModal());
+    this.componentSubscriberSucess = new Subject<string>();
+    return this.componentSubscriberSucess.asObservable();
+  }
+
+  closeAcceptModal() {
+    console.log('Aceptación del modal solicitada');
+    this.componentSubscriberSucess.next('accept');
+    this.componentSubscriberSucess.complete();
+    this.componentRefSuccess.destroy();
+  }
+
 }

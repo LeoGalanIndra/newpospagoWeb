@@ -189,7 +189,7 @@
                                                                     <th>Campaña</th>
                                                                     <th>Tipo de Envío</th>
                                                                     <th>Descuento Personalizado Discontinuo</th>
-                                                                    <th>Meses</th>
+                                                                    <th>Meses-Año</th>
 
                                                                 </tr>
                                                             </thead>
@@ -256,9 +256,14 @@
                                                                         }}</td>
                                                                     <td>{{ finalPlan.tipoEnvio
                                                                         }}</td>
-                                                                    <td>{{
-                                                                        discount!.valorDescuento }}</td>
-                                                                    <td>{{ discount!.meses }}</td>
+                                                                    <td *nfIf="discount != null && disocunt?.valorDescuento">
+                                                                       {{ discount.valorDescuento }}</td>
+                                                                    <td *nfIf="discount == null || disocunt?.valorDescuento == null">
+                                                                        N/A</td>
+
+                                                                    <td *nfIf="discount != null && disocunt?.mesesAnio">{{ discount.mesesAnio }}</td>
+                                                                    <td *nfIf="discount == null || disocunt?.mesesAnio == null">
+                                                                        N/A</td>
                                                                 </tr>
 
                                                             </tbody>
