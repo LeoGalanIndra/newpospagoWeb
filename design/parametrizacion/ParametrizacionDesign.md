@@ -76,6 +76,12 @@ Se implementará el modelo de CLASIFICADORES para parametrizar los valores de un
 
 ## Diagrama de componentes
 
+El diagrama de componentes se encuentra soportado en la arquitectura expuesta en: 
+
+https://tigoco.atlassian.net/wiki/spaces/DI/pages/697991563/Manual+creaci+n+componente
+
+Al final, se encontraran los siguientes componentes: 
+
 ![Componentes.JPG](Componentes.JPG)
 
 ## Diagrama de paquetes
