@@ -13,7 +13,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    <h5 class="card-title  text-center">Cliente: {{ this.documentNumberParam }} - {{
+                    <h5 class="card-title  text-center">Cliente: {{ this.documentTypeParam }} - {{ this.documentNumberParam }} - {{
                         this.legalNameParam }}</h5>
 
                     <div class="container">
@@ -59,6 +59,76 @@
                                     <form id="myCreateContractForm" (ngSubmit)="createModal(1)"
                                         #myCreateContractForm="ngForm">
                                         <div class="card-header">
+                                            Información cliente asociado al contrato
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-1">
+                                                <div class="col-md-12">
+                                                    <div class="p-2 border bg-light">
+                                                        <div class="row g-1">
+                                                             <!-- Fecha de Expedición Documento -->
+                                                            <div *ngIf="this.documentTypeParam !== 'NIT' && documentTypeParam !== 'NE'" class="col-md-4">
+                                                                <label for="fechaExpedicion" class="form-label">Fecha Expedición documento</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="newLineaFechaExpedicion"
+                                                                    [(ngModel)]="newContract.contract.fechaExpedicion"
+                                                                    name="newLineaFechaExpedicion">
+                                                            </div>
+
+                                                            <!-- Digito de Verificación -->
+                                                            <div *ngIf="this.documentTypeParam === 'NIT'" class="col-md-4">
+                                                                <label for="anioFechaExpedicion" class="form-label">Digito Verificación</label>
+                                                                <input type="number" class="form-control"
+                                                                    id="newLineaAnioFechaExpedicion"
+                                                                    [(ngModel)]="newContract.contract.digitoVerificacion"
+                                                                    name="newLineaAnioFechaExpedicion">
+                                                            </div>
+
+                                                            <!-- Tipo de Identificación representante legal -->
+                                                            <div *ngIf="this.documentTypeParam === 'NIT' || this.documentTypeParam === 'NE'" class="col-md-4">
+                                                                <label for="tipoIdentificacionRepresentanteLegal" class="form-label" style="font-size: small;">Tipo
+                                                                    de
+                                                                    Identificación
+                                                                    Representante Legal</label>
+                                                                <select class="form-select"  id="newLineaRepresentanteLegalTipoIdentificacion"
+                                                                    [(ngModel)]="newContract.contract.tipoDocumentoRepresentanteLegal"
+                                                                    name="newLineaRepresentanteLegalTipoIdentificacion">
+                                                                    <option selected disabled value="">Seleccione...
+                                                                    </option>
+                                                                    <option value="CC">CC</option>
+                                                                    <option value="NIT">NIT</option>
+                                                                    <option value="NE">NE</option>
+                                                                    <option value="CE">CE</option>
+                                                                    <option value="PP">PP</option>
+                                                                    <option value="PEP">PEP</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- Número Documento representante legal -->
+                                                            <div *ngIf="this.documentTypeParam === 'NIT' || this.documentTypeParam === 'NE'" class="col-md-4">
+                                                                <label for="numeroDocumentoRepresentanteLegal" class="form-label" style="font-size: small;">Número
+                                                                    Documento
+                                                                    Representante Legal</label>
+                                                                <input type="number" class="form-control"
+                                                                    id="newLineanumeroDocumentoRepresentanteLegal"
+                                                                    [(ngModel)]="newContract.contract.numeroDocumentoRepresentanteLegal"
+                                                                    name="newLineanumeroDocumentoRepresentanteLegal">
+                                                            </div>
+
+                                                            <!-- Fecha de Expedición Documento representante legal -->
+                                                            <div *ngIf="this.documentTypeParam === 'NIT' || this.documentTypeParam === 'NE'" class="col-md-4">
+                                                                <label for="fechaExpedicionRepresentanteLegal" class="form-label" style="font-size: small;">Fecha Expedición documento representante legal</label>
+                                                                <input type="date" class="form-control"
+                                                                    id="fechaExpedicionRepresentanteLegal"
+                                                                    [(ngModel)]="newContract.contract.fechaExpedicionRepresentanteLegal"
+                                                                    name="fechaExpedicionRepresentanteLegal">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-header">
                                             Información de contrato
                                         </div>
                                         <div class="card-body">
@@ -75,7 +145,7 @@
                                                                     id="numeroContrato"
                                                                     [(ngModel)]="newContract.contract.numeroContrato"
                                                                     name="numeroContrato">
-                                                            </div>
+                                                            </div> 
                                                             <div class="col-md-4">
                                                                 <label for="tipoContrato" class="form-label">Tipo
                                                                     Contrato</label>
@@ -863,7 +933,7 @@
                                                     <label for="portabilidad" class="form-label" style="font-weight: bold;">Datos de Portabilidad</label>
                                                     <div class="row g-3" style="font-size: 12px;">
                                                         <!-- Tipo de Identificación -->
-                                                        <div class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato'" class="col-md-3">
                                                             <label for="tipoIdentificacion" class="form-label">Tipo
                                                                 de
                                                                 Identificación</label>
@@ -882,26 +952,17 @@
                                                         </div>
 
                                                         <!-- Número Documento -->
-                                                        <div class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato'" class="col-md-3">
                                                             <label for="numeroDocumento" class="form-label">Número
                                                                 Documento</label>
                                                             <input type="number" class="form-control"
                                                                 id="newLineanumeroDocumento"
                                                                 [(ngModel)]="newLinea.portabilidadInfo!.numeroDocumento"
                                                                 name="newLineanumeroDocumento">
-                                                        </div>
-
-                                                        <!-- Año de Expedición Documento -->
-                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento !== 'NIT' && newLinea.portabilidadInfo!.tipoDocumento !== 'NE'" class="col-md-3">
-                                                            <label for="anioFechaExpedicion" class="form-label">Año Expedición documento</label>
-                                                            <input type="number" class="form-control"
-                                                                id="newLineaAnioFechaExpedicion"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.anioExpedicion"
-                                                                name="newLineaAnioFechaExpedicion">
-                                                        </div>
+                                                        </div> 
 
                                                         <!-- Fecha de Expedición Documento -->
-                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento !== 'NIT' && newLinea.portabilidadInfo!.tipoDocumento !== 'NE'" class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato' && newLinea.portabilidadInfo!.tipoDocumento !== 'NIT' && newLinea.portabilidadInfo!.tipoDocumento !== 'NE'" class="col-md-3">
                                                             <label for="fechaExpedicion" class="form-label">Fecha Expedición documento</label>
                                                             <input type="date" class="form-control"
                                                                 id="newLineaFechaExpedicion"
@@ -910,7 +971,7 @@
                                                         </div>
 
                                                         <!-- Digito de Verificación -->
-                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT'" class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato' && newLinea.portabilidadInfo!.tipoDocumento === 'NIT'" class="col-md-3">
                                                             <label for="anioFechaExpedicion" class="form-label">Digito Verificación</label>
                                                             <input type="number" class="form-control"
                                                                 id="newLineaAnioFechaExpedicion"
@@ -919,7 +980,7 @@
                                                         </div>
 
                                                         <!-- Tipo de Identificación representante legal -->
-                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE'" class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato' && (newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE')" class="col-md-3">
                                                             <label for="tipoIdentificacionRepresentanteLegal" class="form-label">Tipo
                                                                 de
                                                                 Identificación
@@ -939,7 +1000,7 @@
                                                         </div>
 
                                                         <!-- Número Documento representante legal -->
-                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE'" class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato' && (newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE')" class="col-md-3">
                                                             <label for="numeroDocumentoRepresentanteLegal" class="form-label">Número
                                                                 Documento
                                                                 Representante Legal</label>
@@ -950,7 +1011,7 @@
                                                         </div>
 
                                                         <!-- Fecha de Expedición Documento representante legal -->
-                                                        <div *ngIf="newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE'" class="col-md-3">
+                                                        <div *ngIf="newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato' && (newLinea.portabilidadInfo!.tipoDocumento === 'NIT' || newLinea.portabilidadInfo!.tipoDocumento === 'NE')" class="col-md-3">
                                                             <label for="fechaExpedicionRepresentanteLegal" class="form-label">Fecha Expedición documento representante legal</label>
                                                             <input type="date" class="form-control"
                                                                 id="fechaExpedicionRepresentanteLegal"
@@ -1025,7 +1086,7 @@
                                                         <div *ngIf="newLinea.portabilidadInfo!.tipoVenta === 'Sim y telefono'" class="col-md-3">
                                                             <label for="imeiPortabilidad" class="form-label">IMEI</label>
                                                             <input type="text" class="form-control" id="newLineaImeiPortabilidad"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.imei" name="newLineaImeiPortabilidad">
+                                                                [(ngModel)]="newLinea.imei" name="newLineaImeiPortabilidad">
                                                         </div>
 
                                                         <!-- fecha calendarizada?-->
@@ -1056,88 +1117,26 @@
                                                 <div class="p-3 border bg-light">
                                                     <label for="portabilidad" class="form-label" style="font-weight: bold;">Datos de cesión de contrato</label>
                                                     <div class="row g-3" style="font-size: 12px;">
-                                                        <!-- Tipo de Identificación -->
-                                                        <div class="col-md-3">
-                                                            <label for="tipoIdentificacionCesion" class="form-label">Tipo
-                                                                de
-                                                                Identificación</label>
-                                                            <select class="form-select" id="newLineaTipoIdentificacionCesion"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.tipoDocumento"
-                                                                name="newLineaTipoIdentificacionCesion">
-                                                                <option selected disabled value="">Seleccione...
-                                                                </option>
-                                                                <option value="CC">CC</option>
-                                                                <option value="NIT">NIT</option>
-                                                                <option value="NE">NE</option>
-                                                                <option value="CE">CE</option>
-                                                                <option value="PP">PP</option>
-                                                                <option value="PEP">PEP</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <!-- Número Documento -->
-                                                        <div class="col-md-3">
-                                                            <label for="numeroDocumentoCesion" class="form-label">Número
-                                                                Documento</label>
-                                                            <input type="number" class="form-control"
-                                                                id="newLineanumeroDocumentoCesion"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.numeroDocumento"
-                                                                name="newLineanumeroDocumentoCesion">
-                                                        </div>
-
-
-                                                        <!-- Nombre -->
-                                                        <div class="col-md-3">
-                                                            <label for="nombreCesion" class="form-label">Nombre</label>
-                                                            <input type="text" class="form-control" id="nombreCesion"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.nombre" name="nombreCesion">
-                                                        </div>
-
-                                                        <!-- Apellido -->
-                                                        <div class="col-md-3">
-                                                            <label for="apellidoCesion" class="form-label">Apellido</label>
-                                                            <input type="text" class="form-control" id="apellidoCesion"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.apellido" name="apellidoCesion">
-                                                        </div>
-
-                                                        <!-- Email -->
-                                                        <div class="col-md-3">
-                                                            <label for="email" class="form-label">Correo electronico</label>
-                                                            <input type="email" class="form-control" id="email"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.email" name="email">
-                                                        </div>
-
-                                                        <!-- Direccion -->
-                                                        <div class="col-md-3">
-                                                            <label for="direccionCesion" class="form-label">Direccion</label>
-                                                            <input type="text" class="form-control" id="direccionCesion"
-                                                                [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.direccion" name="direccionCesion">
-                                                        </div>
-                                                        
-                                                        <!-- Departamento -->
-                                                        <div class="col-md-3">
-                                                            <label for="departamento" class="form-label">Departamento</label>
-                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.departamento"
-                                                                name="newLineaDeptoCesion" id="newLineaDeptoCesion">
-                                                                <option selected disabled value="">Seleccione...
-                                                                </option>
-                                                                <option value="Valle del Cauca">Valle del Cauca</option>
-                                                                <option value="Nariño">Nariño</option>
-                                                            </select>
-                                                        </div>
-                                                        
-                                                        <!-- Ciudad -->
-                                                        <div class="col-md-3">
-                                                            <label for="ciudad" class="form-label">Ciudad</label>
-                                                            <select class="form-select" [(ngModel)]="newLinea.portabilidadInfo!.cesionContrato!.ciudad"
-                                                                name="newLineaCiudad" id="newLineaCiudad">
-                                                                <option selected disabled value="">Seleccione...
-                                                                </option>
-                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Nariño'" value="Ipiales">Ipiales</option>
-                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Nariño'" value="Pasto">Pasto</option>
-                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Valle del Cauca'" value="Cali">Cali</option>
-                                                                <option *ngIf="newLinea.portabilidadInfo!.cesionContrato!.departamento === 'Valle del Cauca'" value="Buga">Buga</option>
-                                                            </select>
+                                                        <div class="col-md-12">
+                                                            <div class="alert alert-success">
+                                                                <div class="row">
+                                                                    <div class="col-8"><b>Los datos de la cesión de contrato se obtienen del cliente asociado al contrato</b>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-8"><b>Nombre cliente:</b>
+                                                                    </div>
+                                                                    <div class="col-4">{{this.legalNameParam}}</div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-8"><b>Número documento cliente:</b></div>
+                                                                    <div class="col-4">{{this.documentNumberParam}}</div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-8"><b>Tipo documento cliente:</b></div>
+                                                                    <div class="col-4">{{this.documentTypeParam}}</div>
+                                                                </div>
+                                                            </div>
                                                         </div>
 
                                                     </div>

@@ -78,6 +78,7 @@ export class NewproductmasterComponent {
         idAccount: this.customer.idAccount, 
         idContract: '-1',
         documentNumber: this.customer.documentNumber, 
+        documentType: this.customer.documentType,
         legalName: this.customer.legalName 
       }
     });
