@@ -25,8 +25,9 @@ La solución técnica para la configuración de los parametros del B2BMovil esta
 
 2. Tabla CLASIFICADORES.
 
-> Será el encargado de gestionar de las clasificaciones. Un clasificador es la configuración de valores que puede tener un parametro. 
+> Será el encargado de gestionar de las clasificaciones. Una clasificación es una lista de valores.  
 
+![Clasificadores.JPG](Clasificadores.JPG)
 
 ### Properties CRM
 
@@ -42,36 +43,6 @@ https://tigoco.atlassian.net/wiki/spaces/DI/pages/697991445/PropiedadesCRM-EJB
 
 Dentro de la documentación se indica como se debe incluir el proyecto como dependencia. A continuación se cita dicha información: 
 
-#### PropiedadesCRM-EJB.jar: 
-
-Para hacer uso del jar se debe incluir la siguiente dependencia en el proyecto maven con un scope provided. Esto para compilar proyectos en tiempo de ejecución se despliega componente en los EAP Back de Sostenibilidad
-
-> <b>groupId:</b>co.com.tigo.crm.PropiedadesCRM<br/>
-<b>artifactId:</b>PropiedadesCRM-EJB<br/>
-<b>version:</b>1.0.0<br/>
-<b>scope:</b>provided<br/>
-
-### Modelo de Clasificaciones 
-
-Se implementará el modelo de CLASIFICADORES para parametrizar los valores de un parametro. 
-
-## Casos de uso(opcional)
-    
-    <Describa los pasos o las actividades que deberán realizarse para solución a los requisitos especificados. Los casos de uso no son obligatorios, estos se realizan cuando se considere necesario dar claridad sobre las acciones a ejecutar en el sistema>
-
-* Nombre:	
-* Complejidad:
-* Alta
-* Descripción:
-* Actores:
-* Sistema	Documentos asociados:
-* Precondiciones:
-* Post-condiciones:
-* Reglas de Negocio
-* Flujo básico:
-* Flujos alternos:
-* Manejos de situaciones anormales:
-* Trazabilidad con requisitos
 
 
 ## Diagrama de componentes
@@ -121,9 +92,10 @@ Para la configuración de las parametrizaciones se consideraran 3 tablas del sch
 
 ### Datasource
 
-> El datasource de la aplicación es: 
-> + jndi-name="java:/crmportal_DS"
-> + pool-name="crmportal_DS" 
+El datasource de la aplicación es:
+
+        jndi-name="java:/crmportal_DS"
+        pool-name="crmportal_DS" 
 
 
 ### Persistence Context 
