@@ -18,6 +18,10 @@ export interface Contrato {
     valorBolsa: number;
     saldo: number;
     valorNoRedimible: number ; 
-
+    fechaExpedicion?: string;
+    digitoVerificacion?: number;
+    tipoDocumentoRepresentanteLegal?: string;
+    numeroDocumentoRepresentanteLegal?: number;
+    fechaExpedicionRepresentanteLegal?: string;
 
 }

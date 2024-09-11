@@ -110,6 +110,11 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       valorBolsa: NaN,
       saldo: NaN,
       valorNoRedimible: 0,
+      fechaExpedicion: '',
+      digitoVerificacion: NaN,
+      tipoDocumentoRepresentanteLegal: '',
+      numeroDocumentoRepresentanteLegal: NaN,
+      fechaExpedicionRepresentanteLegal: '',
     },
     billAccounts: [],
     discount: {
@@ -123,7 +128,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     },
     plans: [],
     lineas: [],
-    devices: []
+    devices: [],
 
   };
 
@@ -259,6 +264,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   idAccountParam: string | null = null;
   idContractParam: any | null = null;
   documentNumberParam: any | null = null;
+  documentTypeParam: any | null = null;
   legalNameParam: string | null = null;
 
   @ViewChild('modal', { read: ViewContainerRef })
@@ -299,6 +305,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       this.idAccountParam = params.get('idAccount');
       this.idContractParam = params.get('idContract');
       this.documentNumberParam = params.get('documentNumber');
+      this.documentTypeParam = params.get('documentType');
       this.legalNameParam = params.get('legalName');
 
     });
@@ -457,6 +464,30 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ;
     this.newLinea.mesesPersonalizados = this.newContract.discount.mesesAnio ;
     this.newLinea.idContract = this.idContract;
+
+    if (this.newLinea.tipoLinea === 'Portabilidad') {
+      this.newLinea.portabilidadInfo!.tipoDocumento = this.documentTypeParam;
+      this.newLinea.portabilidadInfo!.numeroDocumento = this.documentNumberParam;
+      this.newLinea.portabilidadInfo!.fechaExpedicion = this.newContract.contract.fechaExpedicion;
+      this.newLinea.portabilidadInfo!.digitoVerificacion = this.newContract.contract.digitoVerificacion;
+      this.newLinea.portabilidadInfo!.tipoDocumentoRepresentanteLegal = this.newContract.contract.tipoDocumentoRepresentanteLegal;
+      this.newLinea.portabilidadInfo!.numeroDocumentoRepresentanteLegal = this.newContract.contract.numeroDocumentoRepresentanteLegal;
+      this.newLinea.portabilidadInfo!.fechaExpedicionRepresentanteLegal = this.newContract.contract.fechaExpedicionRepresentanteLegal;
+    }
+
+    if (this.newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato') {
+      let cesionContrato: CesionContrato = {
+        tipoDocumento: this.documentTypeParam,
+        numeroDocumento: this.documentNumberParam,
+        nombre: this.legalNameParam ? this.legalNameParam : '',
+        apellido: 'prueba',
+        email: 'test@gmail.com',
+        direccion: 'Cra 7ma # 11 -1',
+        departamento: 'Valle del Cauca',
+        ciudad: 'Cali'
+      }
+      this.newLinea.portabilidadInfo!.cesionContrato = cesionContrato;
+    }
 
     this.newContract.lineas.push({ ...this.newLinea });
 
