@@ -8,6 +8,7 @@ import { Linea } from '../models/linea';
 import { Device } from '../models/device';
 import { Plan } from '../models/plan';
 
+import { ServiceOrder } from '../models/serviceOrder';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class DataService {
   private static lineas: Linea[] = [];
   private static devices: Device[] = [];
 
+  private static servicesOrders: ServiceOrder[] = [];
 
   constructor() {
     this.randomCustomer();
@@ -117,12 +119,12 @@ export class DataService {
           c.idAccount = contract.idAccount;
           c.numeroContrato = contract.numeroContrato;
           c.tipoContrato= contract.tipoContrato;
-          c.inicioVigencia= contract.inicioVigencia;
-          c.mesesContrato= contract.mesesContrato;
+
+
           c.finVigencia= contract.finVigencia;
           c.codigoVendedor= contract.codigoVendedor;
-          c.valorBolsa= contract.valorBolsa;
-          c.saldo= contract.saldo;
+
+
           c.valorNoRedimible= contract.valorNoRedimible;
 
 
@@ -251,12 +253,11 @@ export class DataService {
         edicionLineas: this.getRandomBoolean(),
         numeroContrato: '' + Math.floor(100 + Math.random() * 99),
         tipoContrato: this.getRandomTipoContrato(),
-        inicioVigencia: '',
-        mesesContrato: 0,
+
+
         finVigencia: null,
         codigoVendedor: 0,
-        valorBolsa: 0,
-        saldo: 0,
+        saldoBolsa: 0,
         valorNoRedimible: 0
       });
     }
@@ -289,6 +290,46 @@ export class DataService {
   private getRandomIdAccount(customers: Customer[]): string {
     return customers[Math.floor(Math.random() * customers.length)].idAccount;
   }
+
+
+  public getServicesOrders(): ServiceOrder[] {
+    return DataService.servicesOrders;
+  }
+
+  public setServicesOrders(servicesOrders: ServiceOrder[]): void {
+    DataService.servicesOrders = servicesOrders;
+  }
+
+  // Método para añadir una orden de servicio a la lista
+  public addServiceOrder(serviceOrder: ServiceOrder): void {
+    DataService.servicesOrders.push(serviceOrder);
+  }
+
+  // Método para obtener una orden de servicio por ID
+  public getServiceOrderById(id: number): ServiceOrder | undefined {
+    return DataService.servicesOrders.find(order => order.id === id);
+  }
+
+  // Método para eliminar una orden de servicio por ID
+  public removeServiceOrderById(id: number): void {
+    DataService.servicesOrders = DataService.servicesOrders.filter(order => order.id !== id);
+  }
+
+  // Nuevo método para obtener órdenes de servicio por idContract
+  public getServiceOrdersByIdContract(idContract: number): ServiceOrder[] {
+    return DataService.servicesOrders.filter(order => order.agreementId === idContract);
+  }
+
+  // Nuevo método para setear órdenes de servicio por idContract
+  public setServiceOrdersByIdContract(idContract: number, updatedOrders: ServiceOrder[]): void {
+    // Filtramos las órdenes que NO corresponden al idContract dado
+    const otherOrders = DataService.servicesOrders.filter(order => order.agreementId !== idContract);
+
+    // Reemplazamos las órdenes de servicio con el idContract por las nuevas actualizadas
+    DataService.servicesOrders = [...otherOrders, ...updatedOrders];
+  }
+
+
 
   public printDatasource() {
     console.log("Datasource: ");

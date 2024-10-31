@@ -8,13 +8,12 @@ export interface Contrato {
     activacionLineas: boolean;
     eliminacionLineas: boolean;
     edicionLineas: boolean;
-    idAccount : string ; 
+    idAccount : string ;
     numeroContrato : string;
     tipoContrato: string;
-    inicioVigencia: string;
-    mesesContrato: number;
     finVigencia: string | null;
     codigoVendedor: number;
+    saldoBolsa: number;
     valorBolsa: number;
     saldo: number;
     valorNoRedimible: number ; 

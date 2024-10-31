@@ -37,19 +37,13 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <p id="inicioVigencia">Inicio de Vigencia: {{
-                                                newContract && newContract.contract ?
-                                                (newContract.contract.inicioVigencia | date:
-                                                'dd/MM/yyyy') : '' }}
+                                            <p id="inicioVigencia">Inicio de Vigencia:
                                             </p>
                                         </div>
 
                                         <div class="col-md-4">
 
-                                            <p id="mesesContrato">Meses de Contrato: {{
-                                                newContract && newContract.contract ?
-                                                (newContract.contract.mesesContrato > 0
-                                                ?newContract.contract.mesesContrato : '') : '' }}</p>
+                                            <p id="mesesContrato">Meses de Contrato: </p>
                                         </div>
 
                                         <div class="col-md-4">
@@ -374,7 +368,7 @@
                                                                         ))) * (1 + ivaTax.value)):
                                                                         (linea.valorUnitario * (1 +
                                                                         ivaTax.value))) : 0 }}</td>
-                                                                    
+
 
                                                                     <td>{{ linea.valorDescuentoDiscontinuo }}
                                                                     </td>
@@ -427,6 +421,7 @@
 
                                                 </form>
                                                 <div *ngIf="portableLines == null || portableLines.length === 0">
+
                                                     <div class="table-responsive">
                                                         <table class="table table-striped">
                                                             <thead>
@@ -458,6 +453,7 @@
                                                      (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT' 
                                                      && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')" 
                                                      class="row mt-1">
+
                                                     <div class="table-responsive">
                                                         <table class="table table-striped">
                                                             <thead>
@@ -473,11 +469,47 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr *ngFor="let linea of portableLines; let i = index">
+
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!-- Info portabilidad de persona natural -->
+                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad' &&
+                                                     (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT'
+                                                     && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')"
+                                                     class="row mt-1">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tipo</th>
+                                                                    <th>MSISDN</th>
+                                                                    <th>Operador donante</th>
+                                                                    <th>NIP</th>
+                                                                    <th>Tipo Identificación</th>
+                                                                    <th>Número Documento</th>
+                                                                    <th>Fecha Expedición Documento</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let linea of portableLines; let i = index">
+
+
                                                                     <td>{{ linea.tipoLinea }}</td>
                                                                     <td>{{ linea.numeroLinea }}</td>
                                                                     <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                     </td>
+
                                                                     <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+
                                                                     <td>{{
                                                                         linea.portabilidadInfo!.tipoDocumento
                                                                         }}
@@ -493,8 +525,10 @@
                                                 </div>
                                                 <!-- Info portabilidad de persona juridica -->
                                                 <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad' &&
+
                                                     (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT' 
                                                     || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')" 
+
                                                     class="row mt-1">
                                                    <div class="table-responsive">
                                                        <table class="table table-striped">
@@ -517,7 +551,9 @@
                                                                    <td>{{ linea.numeroLinea }}</td>
                                                                    <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                    </td>
+
                                                                    <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+
                                                                    <td>{{
                                                                        linea.portabilidadInfo!.tipoDocumento
                                                                        }}
@@ -537,8 +573,10 @@
                                                </div>
                                                 <!-- Info portabilidad con cesión de contrato y persona natural -->
                                                 <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad Con Cesión De Contrato' &&
+
                                                     (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT' 
                                                     && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')" 
+
                                                     class="row mt-1">
                                                    <div class="table-responsive">
                                                        <table class="table table-striped">
@@ -562,7 +600,8 @@
                                                                    <td>{{ linea.numeroLinea }}</td>
                                                                    <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                    </td>
-                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                   
+
                                                                    <td>{{
                                                                        linea.portabilidadInfo!.tipoDocumento
                                                                        }}
@@ -584,8 +623,10 @@
                                                </div>
                                                <!-- Info portabilidad con cesión de contrato y persona juridica -->
                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad Con Cesión De Contrato' &&
+
                                                 (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT' 
                                                 || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')" 
+
                                                 class="row mt-1">
                                                <div class="table-responsive">
                                                    <table class="table table-striped">
@@ -611,7 +652,9 @@
                                                                <td>{{ linea.numeroLinea }}</td>
                                                                <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                </td>
+
                                                                <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+
                                                                <td>{{
                                                                    linea.portabilidadInfo!.tipoDocumento
                                                                    }}
@@ -686,30 +729,18 @@
                                                             <div class="row">
                                                                 <div class="col-8"><b>Valor Bolsa: </b>
                                                                 </div>
-                                                                <div class="col-4">{{
-                                                                    newContract.contract.valorBolsa |
-                                                                    currency }} </div>
+                                                                <div class="col-4"> </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-8"><b>Saldo:</b>
                                                                 </div>
-                                                                <div class="col-4">{{
-                                                                    newContract.contract.saldo < 0 ? 0 :
-                                                                        newContract.contract.saldo.toFixed(2) | currency
-                                                                        }} </div>
+                                                                <div class="col-4"></div>
                                                                 </div>
 
                                                                 <div class="row">
                                                                     <div class="col-8"><b>Valor NO
                                                                             Redimible:</b></div>
-                                                                    <div class="col-4">{{
-                                                                        newContract.contract.saldo > 0 ?
-                                                                        newContract.contract.valorNoRedimible.toFixed(2)
-                                                                        :
-                                                                        (newContract.contract.valorNoRedimible
-                                                                        + (-1 *
-                                                                        newContract.contract.saldo)).toFixed(2)
-                                                                        | currency }}</div>
+                                                                    <div class="col-4"></div>
                                                                 </div>
 
                                                             </div>
