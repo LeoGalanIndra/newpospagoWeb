@@ -300,13 +300,13 @@
                                   <option selected disabled value="">
                                     Seleccione...
                                   </option>
-                                  <option value="motivo1">
+                                  <option value="Descuento Comercial">
                                     Descuento Comercial
                                   </option>
-                                  <option value="motivo2">
+                                  <option value="Descuento por Retención">
                                     Descuento por Retención
                                   </option>
-                                  <option value="motivo3">
+                                  <option value="Descuento por renovación comercial">
                                     Descuento por renovación comercial
                                   </option>
                                 </select>
@@ -1905,10 +1905,6 @@
 
   </div>
 
-  <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#verDetalleModal">
-  Ver Detalles
-</button>
 
 <!-- Modal -->
 <div class="modal fade" id="verDetalleEquiposModal" tabindex="-1" aria-labelledby="verDetalleEquiposModalLabel" aria-hidden="true">
@@ -2010,9 +2006,9 @@
 
                   <tr *ngFor="let descuento of newContract.discount.mesesAnio">
                       <td>{{ "Descuento Discontinuo" }}</td>
-                      <td>{{ 3 }}%</td>
-                      <td>{{ " " }}</td>
-                      <td>{{ "mes" }}</td>
+                      <td>{{ newServiceOrder.discountValue }}%</td>
+                      <td>{{ newServiceOrder.discountReasonId }}</td>
+                      <td>{{ descuento.split(";") }}</td>
                   </tr>
               </tbody>
           </table>
