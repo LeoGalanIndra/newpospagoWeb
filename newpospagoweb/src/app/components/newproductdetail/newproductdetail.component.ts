@@ -42,6 +42,14 @@ export class NewproductdetailComponent implements OnInit {
 
       saldoBolsa: NaN,
       valorNoRedimible: 0,
+      saldo: 0 , 
+      valorBolsa: 0, 
+      digitoVerificacion: 0, 
+      fechaExpedicion: '', 
+      fechaExpedicionRepresentanteLegal: '', 
+      numeroDocumentoRepresentanteLegal: NaN, 
+      tipoDocumentoRepresentanteLegal: ''
+
     },
     billAccounts: [],
     discount: {

@@ -258,7 +258,15 @@ export class DataService {
         finVigencia: null,
         codigoVendedor: 0,
         saldoBolsa: 0,
-        valorNoRedimible: 0
+        valorNoRedimible: 0,
+        saldo: 0, 
+        valorBolsa: 0, 
+        digitoVerificacion: 0, 
+        fechaExpedicion: '', 
+        fechaExpedicionRepresentanteLegal: '', 
+        numeroDocumentoRepresentanteLegal: NaN, 
+        tipoDocumentoRepresentanteLegal: ''
+
       });
     }
 

@@ -131,6 +131,9 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       tipoDocumentoRepresentanteLegal: '',
       numeroDocumentoRepresentanteLegal: NaN,
       fechaExpedicionRepresentanteLegal: '',
+      saldo: 0, 
+      valorBolsa: NaN, 
+
     },
     billAccounts: [],
     discount: {
