@@ -22,10 +22,53 @@ identificar errores y mensajes
 + Catalogo de servicios 
 
 
+
 ## Requisitos Impactados
 
 * RF-012
 * RF-013
+
+
+### Solucion Tareas:
+
+- Consultar la capacidad que consulta la informacion de las empresas. Se definio que la BD será DATACREDIT (servicio de consulta)
+
+identificar Request
+identificar response
+identificar errores y mensajes
+
+El servicio de consulta de clientes se encuentra en: 
+
+http://10.69.60.136:8080/DataCreditoEAR-DataCreditoEJB/DataCredito?wsdl
+
+El proyecto se encuentra publicado en el repositorio: 
+
+https://gitlab2.tigoune.com/Accenture-T2/CRM-Portal/APP-Datacredito
+
+Capacidad
+
+      <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dat="http://datacre.colombiamovil.com.co/">
+      <soapenv:Header/>
+      <soapenv:Body>
+         <dat:doProcess>
+            <!--Optional:-->
+            <arg0>getInfoReconocer</arg0>
+            <arg1>clientId=189570512</arg1>
+            <arg1>docType=1</arg1>
+            <arg1>control=false</arg1>
+            <arg1>serializationType=JSON</arg1>
+         </dat:doProcess>
+      </soapenv:Body>
+      </soapenv:Envelope>
+
+
+- Indicar el modelo de datos propuesto.
+- Diseñar el servicio de creacion de contrato en el Front-End.
+
+- Diseñar el servicio de creacion de contrato en el Back-End.
+- 
+- Diseñar el servicio para las operaciones de Creacion, consulta, y Edicion.
+- Indicar las validaciones definidas en la matriz de requisitos.
 
 
 ## XXXXX (Sistema) / XXXXXXX (Subsistema	Descripción)
