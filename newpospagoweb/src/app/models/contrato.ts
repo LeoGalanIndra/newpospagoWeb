@@ -14,9 +14,11 @@ export interface Contrato {
     finVigencia: string | null;
     codigoVendedor: number;
     saldoBolsa: number;
-
-    valorNoRedimible: number ;
+    valorBolsa: number;
+    saldo: number;
+    valorNoRedimible: number ; 
     fechaExpedicion?: string;
+    digitoVerificacion?: number;
     tipoDocumentoRepresentanteLegal?: string;
     numeroDocumentoRepresentanteLegal?: number;
     fechaExpedicionRepresentanteLegal?: string;

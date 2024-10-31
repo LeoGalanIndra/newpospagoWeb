@@ -421,6 +421,7 @@
 
                                                 </form>
                                                 <div *ngIf="portableLines == null || portableLines.length === 0">
+
                                                     <div class="table-responsive">
                                                         <table class="table table-striped">
                                                             <thead>
@@ -436,6 +437,39 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr *ngFor="let linea of portableLines; let i = index">
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!-- Info portabilidad de persona natural -->
+                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad' &&
+                                                     (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT' 
+                                                     && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')" 
+                                                     class="row mt-1">
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tipo</th>
+                                                                    <th>MSISDN</th>
+                                                                    <th>Operador donante</th>
+                                                                    <th>NIP</th>
+                                                                    <th>Tipo Identificación</th>
+                                                                    <th>Número Documento</th>
+                                                                    <th>Fecha Expedición Documento</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let linea of portableLines; let i = index">
+
                                                                     <td></td>
                                                                     <td></td>
                                                                     <td></td>
@@ -467,11 +501,15 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr *ngFor="let linea of portableLines; let i = index">
+
+
                                                                     <td>{{ linea.tipoLinea }}</td>
                                                                     <td>{{ linea.numeroLinea }}</td>
                                                                     <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                     </td>
-                                                                    <td>{{ linea.portabilidadInfo!.nip }}</td>
+
+                                                                    <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+
                                                                     <td>{{
                                                                         linea.portabilidadInfo!.tipoDocumento
                                                                         }}
@@ -487,8 +525,10 @@
                                                 </div>
                                                 <!-- Info portabilidad de persona juridica -->
                                                 <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad' &&
-                                                    (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT'
-                                                    || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')"
+
+                                                    (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT' 
+                                                    || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')" 
+
                                                     class="row mt-1">
                                                    <div class="table-responsive">
                                                        <table class="table table-striped">
@@ -511,7 +551,9 @@
                                                                    <td>{{ linea.numeroLinea }}</td>
                                                                    <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                    </td>
-                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>
+
+                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+
                                                                    <td>{{
                                                                        linea.portabilidadInfo!.tipoDocumento
                                                                        }}
@@ -531,8 +573,10 @@
                                                </div>
                                                 <!-- Info portabilidad con cesión de contrato y persona natural -->
                                                 <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad Con Cesión De Contrato' &&
-                                                    (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT'
-                                                    && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')"
+
+                                                    (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT' 
+                                                    && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')" 
+
                                                     class="row mt-1">
                                                    <div class="table-responsive">
                                                        <table class="table table-striped">
@@ -556,7 +600,8 @@
                                                                    <td>{{ linea.numeroLinea }}</td>
                                                                    <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                    </td>
-                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>
+                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                   
+
                                                                    <td>{{
                                                                        linea.portabilidadInfo!.tipoDocumento
                                                                        }}
@@ -578,8 +623,10 @@
                                                </div>
                                                <!-- Info portabilidad con cesión de contrato y persona juridica -->
                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad Con Cesión De Contrato' &&
-                                                (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT'
-                                                || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')"
+
+                                                (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT' 
+                                                || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')" 
+
                                                 class="row mt-1">
                                                <div class="table-responsive">
                                                    <table class="table table-striped">
@@ -605,7 +652,9 @@
                                                                <td>{{ linea.numeroLinea }}</td>
                                                                <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                </td>
-                                                               <td>{{ linea.portabilidadInfo!.nip }}</td>
+
+                                                               <td>{{ linea.portabilidadInfo!.nip }}</td>                                                                    
+
                                                                <td>{{
                                                                    linea.portabilidadInfo!.tipoDocumento
                                                                    }}
