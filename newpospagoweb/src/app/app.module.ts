@@ -32,8 +32,8 @@ import { ResumenOfertaComponent } from './resumen-oferta/resumen-oferta.componen
     NewproductdetailComponent,
     CambiarCuentaFacturacionComponent,
     NipComponent,
-
-    ResumenOfertaComponent
+    ResumenOfertaComponent, 
+    NumberFormatDirective
   ],
   imports: [
     BrowserModule,

@@ -16,7 +16,6 @@ import { ModalService } from '../../services/modal/modal.service';
 import { Subscription } from 'rxjs';
 import { Portabilidad } from '../../models/portabilidad';
 import { CesionContrato } from '../../models/cesion-contrato';
-
 import { ServiceOrder } from '../../models/serviceOrder';
 
 declare let bootstrap: any;
@@ -128,6 +127,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       codigoVendedor: NaN,
       valorNoRedimible: 0,
       fechaExpedicion: '',
+      digitoVerificacion: NaN,
       tipoDocumentoRepresentanteLegal: '',
       numeroDocumentoRepresentanteLegal: NaN,
       fechaExpedicionRepresentanteLegal: '',
@@ -229,12 +229,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     numeroDocumento: NaN,
     nombre: '',
     fechaExpedicion: NaN,
-
     idPlan: NaN,
     addServices: [],
-    idContract: NaN,
+    idContract: NaN, 
     nuipValue: '',
-
     portabilidadInfo: this.portabilidadLinea
 
   };
@@ -577,7 +575,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       fechaExpedicion: NaN,
       idPlan: NaN,
       addServices: [],
-      idContract: NaN,
+      idContract: NaN, 
       nuipValue: '',
       portabilidadInfo: this.portabilidadLinea
     };
