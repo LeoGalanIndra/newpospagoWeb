@@ -2,6 +2,8 @@ import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, Vi
 import { NewProductContract } from '../../models/new-product-contract';
 import { BillAccount } from '../../models/bill-account';
 import { Plan } from '../../models/plan';
+import { Variables } from '../../models/variables';
+
 import { AddServices } from '../../models/add-services';
 import { Linea } from '../../models/linea';
 import { Device } from '../../models/device';
@@ -12,8 +14,14 @@ import { InventoryService } from '../../services/inventory.service';
 import { Inventory } from '../../models/inventory';
 import { ModalService } from '../../services/modal/modal.service';
 import { Subscription } from 'rxjs';
+import { Portabilidad } from '../../models/portabilidad';
+import { CesionContrato } from '../../models/cesion-contrato';
+
+import { ServiceOrder } from '../../models/serviceOrder';
 
 declare let bootstrap: any;
+
+
 
 @Component({
   selector: 'app-newproductcreate',
@@ -25,10 +33,15 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
  // @ViewChild('infoContrato', { static: false }) infoContratoTab!: ElementRef;
   @ViewChild('infoCuentaFacturacion', { static: false }) infoCuentaFacturacion!: ElementRef;
+  @ViewChild('infoOrdenServicio', { static: false }) infoOrdenServicio!: ElementRef;
   @ViewChild('infoCargueMasivo', { static: false }) infoCargueMasivo!: ElementRef;
   @ViewChild('infoProducto', { static: false }) infoProducto!: ElementRef;
   @ViewChild('infoEquipos', { static: false }) infoEquipos!: ElementRef;
   @ViewChild('infoResumen', { static: false }) infoResumen!: ElementRef;
+
+  selectedLinea: Linea | null = null; // Inicializa como null
+  descuentosAdicionales: { tipo: string; porcentaje: number; descripcion: string; mes: string []}[] = []; // Array para almacenar descuentos
+
 
   preciosPlanes: { [key: string]: number } = {
     'Plan Tigo Empresarial 6.0': 100,
@@ -45,9 +58,14 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     valorUnitario: ''
   };
 
+
+
+
   get planKeys() {
     return Object.keys(this.preciosPlanes);
   }
+
+
 
   updateValorUnitario() {
 
@@ -85,6 +103,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+  variables: Variables =  {
+    esCargueMasivo : false,
+    hayOrden: false
+  }
 
   idContract: number = NaN;
 
@@ -101,13 +123,14 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       edicionLineas: false,
       numeroContrato: '',
       tipoContrato: '',
-      inicioVigencia: '',
-      mesesContrato: NaN,
+      saldoBolsa: 0,
       finVigencia: null,
       codigoVendedor: NaN,
-      valorBolsa: NaN,
-      saldo: NaN,
       valorNoRedimible: 0,
+      fechaExpedicion: '',
+      tipoDocumentoRepresentanteLegal: '',
+      numeroDocumentoRepresentanteLegal: NaN,
+      fechaExpedicionRepresentanteLegal: '',
     },
     billAccounts: [],
     discount: {
@@ -121,9 +144,25 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     },
     plans: [],
     lineas: [],
-    devices: []
-
+    devices: [],
+    orders:[]
   };
+
+  newServiceOrder: ServiceOrder={
+      id: 0,
+      agreementId: 0,
+      billAccountId :0,
+      serviceOrder: '',
+      durationMonths: 0,
+      startDate: '',
+      finVigencia:'',
+      bagRedemption: 0,
+      bagValue: 0,
+      discountValue: 0,
+      discountReasonId: 0,
+      sellerId: '',
+      statusOrder:0
+     }
 
   newPlan: Plan = {
     tipoProducto: '',
@@ -147,6 +186,38 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   showedPlans: Plan[] = [];
 
+  cesionContratoLinea : CesionContrato = {
+    tipoDocumento: '',
+    numeroDocumento: NaN,
+    nombre: '',
+    apellido: '',
+    email: '',
+    direccion: '',
+    departamento: '',
+    ciudad: '',
+  }
+
+  portabilidadLinea : Portabilidad = {
+      tipoDocumento: '',
+      numeroDocumento: NaN,
+      anioExpedicion: NaN,
+      fechaExpedicion: '',
+      digitoVerificacion: NaN,
+      tipoDocumentoRepresentanteLegal: '',
+      numeroDocumentoRepresentanteLegal: NaN,
+      fechaExpedicionRepresentanteLegal: '',
+      tipoTelefoniaActual : '',
+      tipoSolicitante : '',
+      operadorDonante : '',
+      nip : '',
+      esFechaCalendarizada : false,
+      fechaSugeridaPortacion: '',
+      lineaTemporal : '',
+      tipoVenta : '',
+      imei: '',
+      cesionContrato : this.cesionContratoLinea
+  }
+
   newLinea: Linea = {
     tipoLinea: '',
     numeroLinea: NaN,
@@ -162,7 +233,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     idPlan: NaN,
     addServices: [],
     idContract: NaN,
-    nuipValue: ''
+    nuipValue: '',
+
+    portabilidadInfo: this.portabilidadLinea
+
   };
 
   portableLines: Linea[] = [];
@@ -185,8 +259,6 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     descuento: NaN,
     idPlan: NaN,
     tipo: '',
-
-
   };
 
   vozAndSMSService: AddServices = {
@@ -222,6 +294,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   idAccountParam: string | null = null;
   idContractParam: any | null = null;
   documentNumberParam: any | null = null;
+  documentTypeParam: any | null = null;
   legalNameParam: string | null = null;
 
   @ViewChild('modal', { read: ViewContainerRef })
@@ -233,11 +306,11 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   subSucess!: Subscription;
 
   enabledPanels: any = {
-    billAccount: true,
-    massiveLoad: true,
-    product: true,
-    devices: true,
-
+    billAccount: false,
+    massiveLoad: false,
+    product: false,
+    devices: false,
+    ordenServicio: false
   };
 
   constructor(private route: ActivatedRoute,
@@ -262,6 +335,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       this.idAccountParam = params.get('idAccount');
       this.idContractParam = params.get('idContract');
       this.documentNumberParam = params.get('documentNumber');
+      this.documentTypeParam = params.get('documentType');
       this.legalNameParam = params.get('legalName');
 
     });
@@ -316,6 +390,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   selectAccount(id: BillAccount) {
     let selectedAccountId = id.id;
     this.selectedBillAccount = id;
+    this.newServiceOrder.billAccountId = id.cuentaFacturacion;
+
     this.showedPlans = this.newContract.plans.filter(c => c.idCuentaFacturacion === selectedAccountId);
   }
 
@@ -373,6 +449,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
+
+
   eliminarPlan(index: number) {
 
     this.newContract.plans.splice(index, 1);
@@ -391,6 +469,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       tipo: '',
 
     };
+  }
+
+  nothing() {
+   this.variables.esCargueMasivo = true;
   }
 
   adicionarServicioAdicionalDefault() {
@@ -418,14 +500,69 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
     this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ;
-    this.newLinea.mesesPersonalizados = this.newContract.discount.meses ;
+    this.newLinea.mesesPersonalizados = this.newContract.discount.mesesAnio ;
     this.newLinea.idContract = this.idContract;
+
+    if (this.newLinea.tipoLinea === 'Portabilidad') {
+      this.newLinea.portabilidadInfo!.tipoDocumento = this.documentTypeParam;
+      this.newLinea.portabilidadInfo!.numeroDocumento = this.documentNumberParam;
+      this.newLinea.portabilidadInfo!.fechaExpedicion = this.newContract.contract.fechaExpedicion;
+      this.newLinea.portabilidadInfo!.tipoDocumentoRepresentanteLegal = this.newContract.contract.tipoDocumentoRepresentanteLegal;
+      this.newLinea.portabilidadInfo!.numeroDocumentoRepresentanteLegal = this.newContract.contract.numeroDocumentoRepresentanteLegal;
+      this.newLinea.portabilidadInfo!.fechaExpedicionRepresentanteLegal = this.newContract.contract.fechaExpedicionRepresentanteLegal;
+    }
+
+    if (this.newLinea.tipoLinea === 'Portabilidad Con Cesión De Contrato') {
+      let cesionContrato: CesionContrato = {
+        tipoDocumento: this.documentTypeParam,
+        numeroDocumento: this.documentNumberParam,
+        nombre: this.legalNameParam ? this.legalNameParam : '',
+        apellido: 'prueba',
+        email: 'test@gmail.com',
+        direccion: 'Cra 7ma # 11 -1',
+        departamento: 'Valle del Cauca',
+        ciudad: 'Cali'
+      }
+      this.newLinea.portabilidadInfo!.cesionContrato = cesionContrato;
+    }
 
     this.newContract.lineas.push({ ...this.newLinea });
 
     this.portableLines = this.newContract.lineas.filter(line => line.tipoLinea === 'Portabilidad' || line.tipoLinea === 'Portabilidad Con Cesión De Contrato');
 
     console.log(this.newContract.lineas);
+
+    this.cesionContratoLinea = {
+        tipoDocumento: '',
+        numeroDocumento: NaN,
+        nombre: '',
+        apellido: '',
+        email: '',
+        direccion: '',
+        departamento: '',
+        ciudad: '',
+    }
+
+    this.portabilidadLinea = {
+        tipoDocumento: '',
+        numeroDocumento: NaN,
+        anioExpedicion: NaN,
+        fechaExpedicion: '',
+        digitoVerificacion: NaN,
+        tipoDocumentoRepresentanteLegal: '',
+        numeroDocumentoRepresentanteLegal: NaN,
+        fechaExpedicionRepresentanteLegal: '',
+        tipoTelefoniaActual : '',
+        tipoSolicitante : '',
+        operadorDonante : '',
+        nip : '',
+        esFechaCalendarizada : false,
+        fechaSugeridaPortacion: '',
+        lineaTemporal : '',
+        tipoVenta : '',
+        imei: '',
+        cesionContrato : this.cesionContratoLinea
+    }
 
     this.newLinea = {
       tipoLinea: '',
@@ -441,7 +578,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       idPlan: NaN,
       addServices: [],
       idContract: NaN,
-      nuipValue: ''
+      nuipValue: '',
+      portabilidadInfo: this.portabilidadLinea
     };
   }
 
@@ -471,7 +609,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.newContract.devices.push({ ...this.nuevoEquipo });
 
-    this.newContract.contract.saldo = this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos();
+    //this.newContract.contract.saldoBolsa = this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos();
+    this.newContract.contract.saldoBolsa = -1; //Todo: Hacer cálculo nuevo de acuerdo a nuevo
     this.newContract.contract.valorNoRedimible = this.calcularTotalValorEquiposNoRedimible();
 
     this.deviceSelected = '';
@@ -496,21 +635,27 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   calcularMesFinContrato() {
-
-    if (this.newContract.contract.inicioVigencia && this.newContract.contract.mesesContrato > 0) {
-      // Convertir la fecha inicial a un objeto Date
-      const startDate = new Date(this.newContract.contract.inicioVigencia);
-
-      // Sumar los meses
-      const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newContract.contract.mesesContrato));
-
-
-      // Asignar la nueva fecha al atributo del componente
-      this.newContract.contract.finVigencia = newDate.toDateString();
+    // Verificar que el tipo de contrato sea 'Negociado'
+    if (this.newContract.contract.tipoContrato === 'Negociado') {
+        // Comprobar que se ha definido una fecha de inicio y una duración válida
+        if (this.newServiceOrder.startDate && this.newServiceOrder.durationMonths > 0) {
+            // Convertir la fecha de inicio a un objeto Date
+            const startDate = new Date(this.newServiceOrder.startDate);
+            // Sumar los meses de duración a la fecha de inicio
+            const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newServiceOrder.durationMonths));
+            // Asignar la fecha calculada a finVigencia
+            this.newServiceOrder.finVigencia = newDate.toDateString();
+          }
+        } else {
+            console.log("Duración no válida; se usa duración predeterminada de 12 meses");
+            // Asignar una duración predeterminada de 12 meses si no se especifica duración válida
+            this.newServiceOrder.durationMonths = 12;
+            const startDate = new Date(this.newServiceOrder.startDate);
+            const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newServiceOrder.durationMonths));
+            this.newServiceOrder.finVigencia = newDate.toDateString();
+        }
     }
 
-    this.newContract.contract.inicioVigencia
-  }
 
   calcularTotalCargosServiciosAdicionales() {
 
@@ -519,12 +664,6 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     return this.vozAndSMSService.cargoBasico;
-
-    /** return this.newContract
-      .addServices
-      .map(a => a.cargoBasico)
-      .reduce((a, b) => a + b);*/
-
 
   }
 
@@ -554,6 +693,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+  changeEsFechaCalendarizada(){
+
+  }
+
   crearContrato() {
     console.log("crearContrato ");
 
@@ -565,12 +708,19 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       this.newContract.discount.idContract = this.idContract;
     }
 
-
     this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
 
-    this.enabledPanels.billAccount = false;
+    //this.enabledPanels.billAccount = false;
+
+    if (this.newContract.contract.tipoContrato === 'Estandar' ){
+      this.enabledPanels.billAccount = false;
+    }
+
+    if (this.newContract.contract.tipoContrato === 'Negociado' ){
+      this.enabledPanels.serviceOrder = false;
+    }
 
 
   }
@@ -584,6 +734,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   uploadFile() {
+
+    this.variables.esCargueMasivo = true;
 
   }
 
@@ -659,6 +811,31 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
+//mrmelor
+orders: ServiceOrder [] = [];
+
+saveOrder(){
+
+  this.newServiceOrder.agreementId = this.newContract.contract.idContract;
+  this.newServiceOrder.id = this.newServiceOrder.id + 1;
+  this.newServiceOrder.billAccountId = this.selectedBillAccount.cuentaFacturacion; //se cambia orden de pestañas, ahora se debe actualizar cuando se seleccione la cuenta
+
+  console.log("this.selectedBillAccount");
+  console.log(this.selectedBillAccount);
+
+  if (this.newContract.contract.tipoContrato === 'Estandar'){
+    this.newServiceOrder.serviceOrder = this.newServiceOrder.id.toString();
+  }
+
+
+  this.orders.push({... this.newServiceOrder})
+  this.variables.hayOrden = false;
+
+    console.log(this.newServiceOrder);
+    console.log(this.orders);
+
+  }
+
   createModal(option: number) {
 
     let functionMapper = [
@@ -697,6 +874,12 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
         title: 'Activación del producto.',
         body: 'A continuación, se iniciará el proceso de activación de productos y líneas. \nEsta usted seguro de continuar?',
 
+      },
+      {
+        id: 7,
+        title: 'Ordenes de Servicio.',
+        body: 'A continuación, se guardará información de las órdenes de servicio \nEsta usted seguro de continuar?',
+
       }
     ];
 
@@ -716,10 +899,19 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
           if (option === 1) {
             this.crearContrato();
+            if (this.newContract.contract.tipoContrato==='Estandar'){
+              this.saveOrder();
+            }
             // Llama al método para mostrar la ventana modal informativa
             this.createModalInformativo(1);
             let tabElement: any;
-            tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
+            if (this.newContract.contract.tipoContrato==='Estandar'){
+
+              tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
+            }
+            if (this.newContract.contract.tipoContrato==='Negociado'){
+              tabElement = new bootstrap.Tab(this.infoOrdenServicio.nativeElement);
+            }
             tabElement.show();
           }
 
@@ -727,7 +919,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
             this.crearCuentasFacturacion();
             this.createModalInformativo(2);
             let tabElement: any;
-            tabElement = new bootstrap.Tab(this.infoCargueMasivo.nativeElement);
+
+            tabElement = new bootstrap.Tab(this.infoProducto.nativeElement);
             tabElement.show();
           }
 
@@ -736,7 +929,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
             //this.createModalInformativo(2);
             let tabElement: any;
-            tabElement = new bootstrap.Tab(this.infoProducto.nativeElement);
+            tabElement = new bootstrap.Tab(this.infoEquipos.nativeElement);
             tabElement.show();
           }
 
@@ -745,7 +938,14 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
             this.createModalInformativo(4);
             let tabElement: any;
-            tabElement = new bootstrap.Tab(this.infoEquipos.nativeElement);
+            if (this.newContract.billAccounts.length>0) {
+              tabElement = new bootstrap.Tab(this.infoEquipos .nativeElement);
+            }
+
+            if (this.newContract.billAccounts.length==0) {
+              tabElement = new bootstrap.Tab(this.infoCargueMasivo.nativeElement);
+            }
+
             tabElement.show();
 
           }
@@ -762,6 +962,14 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
           if (option === 6) {
             this.activarContrato()
+
+          }
+
+          if (option === 7) {
+            this.saveOrder();
+            let tabElement: any;
+            tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
+            tabElement.show();
 
           }
 
@@ -801,23 +1009,21 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
       if (campo ==="valorUnitario"){
         // Actualiza el modelo
-        this.newContract.contract.valorBolsa = numberValue;
+        //this.newContract.contract.valorBolsa = numberValue;
         inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
       }
       if (campo ==="valorBolsa"){
           // Actualiza el modelo
-          this.newContract.contract.valorBolsa = numberValue;
-          inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+          //this.newContract.contract.valorBolsa = numberValue;
+          //inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
         }
       if (campo ==="saldo"){
           // Actualiza el modelo
-          this.newContract.contract.saldo = numberValue;
-          inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
+          //this.newContract.contract.saldo = numberValue;
+          //inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
         }
            }
   }
-
-
 
     // Opcional: formatea el valor al salir del campo
     onBlur(event: Event,campo: string) {
@@ -827,10 +1033,12 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
             inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
           }
         if (campo ==="valorBolsa"){
-          inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+          //inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+          inputElement.value ="-1";
         }
         if (campo ==="saldo"){
-          inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
+          //inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
+          inputElement.value = "-1";
         }
       }
     }
@@ -898,7 +1106,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
           if (option === 10) {
             //this.crearContrato();
             let tabElement: any;
-            tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
+            tabElement = new bootstrap.Tab(this.infoOrdenServicio.nativeElement);
             tabElement.show();
           }
 
@@ -915,6 +1123,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     let plans = this.contractService.getProductsByIdContract(idContract);
     let lineas = this.contractService.getLinesByIdContract(idContract);
     let devices = this.contractService.getDevicesByIdContract(idContract);
+   // let orders = this.contractService.  .contractService.getServiceOrderByIdContract(idContract);
+    //this.contractService.getDevicesByIdContract(idContract);//temporal, mrmrlor se necesita corregir
 
 
     this.newContract = {
@@ -923,16 +1133,70 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       discount: discount,
       plans: plans,
       lineas: lineas,
-      devices: devices
-
+      devices: devices,
+      orders: []
     };
+
 
     this.enabledPanels = {
       billAccount: (!(billAccounts.length > 0 )),
       massiveLoad: (!(plans.length > 0)),
       product: (!(plans.length > 0)),
       devices: (!(devices.length > 0 )),
-
+      ordenServicio: !this.variables.hayOrden
     };
+
+
   }
+
+  isNewPlanEmpty(): boolean {
+
+    console.log("Entra a isNewPlanEmpty()");
+    console.log(this.newPlan);
+    console.log(this.newPlan.tipoProducto);
+
+    return this.newPlan.tipoProducto.trim() !== '';
+  }
+
+    // Método para seleccionar una línea basada en el imsi
+    selectLineaByImsi(imsi: number): void {
+      this.selectedLinea = this.newContract.lineas.find(linea => linea.imsi === imsi) || null;
+    }
+
+
+  openModal(): void {
+
+    const modalElement = document.getElementById('verDetalleLineaNegociadoModal');
+    if (modalElement) {
+
+        this.buscarDescuentosAdicionales();
+
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  // Método para obtener descuentos adicionales según el IMSI
+  buscarDescuentosAdicionales() {
+    console.log("buscarDescuentosAdicionales - Inicio");
+    const descuento = this.newContract;
+
+    if (descuento) {
+        // Obtener el valorDescuentoDiscontinuo y mesesPersonalizados
+        if (descuento.discount) {
+            const meses = descuento.discount.meses || [];
+            for (const mes of meses) {
+              console.log("Guardar descuento");
+                this.descuentosAdicionales.push({
+                    tipo:  'Descuento Discontinuo',
+                    porcentaje: descuento.discount.valorDescuento,
+                    descripcion: descuento.discount.motivoDescuento,
+                    mes: descuento.discount.meses
+                });
+            }
+        }
+    }
+    console.log("buscarDescuentosAdicionales - Fin");
+}
+
 }

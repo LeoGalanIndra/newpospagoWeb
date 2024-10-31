@@ -37,19 +37,13 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <p id="inicioVigencia">Inicio de Vigencia: {{
-                                                newContract && newContract.contract ?
-                                                (newContract.contract.inicioVigencia | date:
-                                                'dd/MM/yyyy') : '' }}
+                                            <p id="inicioVigencia">Inicio de Vigencia:
                                             </p>
                                         </div>
 
                                         <div class="col-md-4">
 
-                                            <p id="mesesContrato">Meses de Contrato: {{
-                                                newContract && newContract.contract ?
-                                                (newContract.contract.mesesContrato > 0
-                                                ?newContract.contract.mesesContrato : '') : '' }}</p>
+                                            <p id="mesesContrato">Meses de Contrato: </p>
                                         </div>
 
                                         <div class="col-md-4">
@@ -256,9 +250,14 @@
                                                                         }}</td>
                                                                     <td>{{ finalPlan.tipoEnvio
                                                                         }}</td>
-                                                                    <td>{{
-                                                                        discount.valorDescuento }}</td>
-                                                                    <td>{{ discount.mesesAnio }}</td>
+                                                                    <td *nfIf="discount != null && disocunt?.valorDescuento">
+                                                                       {{ discount.valorDescuento }}</td>
+                                                                    <td *nfIf="discount == null || disocunt?.valorDescuento == null">
+                                                                        N/A</td>
+
+                                                                    <td *nfIf="discount != null && disocunt?.mesesAnio">{{ discount.mesesAnio }}</td>
+                                                                    <td *nfIf="discount == null || disocunt?.mesesAnio == null">
+                                                                        N/A</td>
                                                                 </tr>
 
                                                             </tbody>
@@ -369,7 +368,7 @@
                                                                         ))) * (1 + ivaTax.value)):
                                                                         (linea.valorUnitario * (1 +
                                                                         ivaTax.value))) : 0 }}</td>
-                                                                    
+
 
                                                                     <td>{{ linea.valorDescuentoDiscontinuo }}
                                                                     </td>
@@ -421,44 +420,215 @@
                                                     </div>
 
                                                 </form>
-
-                                                <div class="row mt-1">
+                                                <div *ngIf="portableLines == null || portableLines.length === 0">
                                                     <div class="table-responsive">
                                                         <table class="table table-striped">
                                                             <thead>
                                                                 <tr>
-                                                                    <th>NUIP</th>
+                                                                    <th>Tipo</th>
                                                                     <th>MSISDN</th>
-                                                                    <th>Operador</th>
-                                                                    <th>Tipo Persona</th>
+                                                                    <th>Operador donante</th>
+                                                                    <th>NIP</th>
                                                                     <th>Tipo Identificación</th>
                                                                     <th>Número Documento</th>
-                                                                    <th>Nombre</th>
-                                                                    <th>Fecha Expedición</th>
+                                                                    <th>Fecha Expedición Documento</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <tr *ngFor="let linea of portableLines; let i = index">
-                                                                    <td>{{ linea.nuipValue }}</td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!-- Info portabilidad de persona natural -->
+                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad' &&
+                                                     (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT'
+                                                     && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')"
+                                                     class="row mt-1">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Tipo</th>
+                                                                    <th>MSISDN</th>
+                                                                    <th>Operador donante</th>
+                                                                    <th>NIP</th>
+                                                                    <th>Tipo Identificación</th>
+                                                                    <th>Número Documento</th>
+                                                                    <th>Fecha Expedición Documento</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let linea of portableLines; let i = index">
+                                                                    <td>{{ linea.tipoLinea }}</td>
                                                                     <td>{{ linea.numeroLinea }}</td>
-                                                                    <td>{{ linea.operador }}
+                                                                    <td>{{ linea.portabilidadInfo!.operadorDonante }}
                                                                     </td>
-                                                                    <td>{{ linea.tipoPersona }}
-                                                                    </td>
+                                                                    <td>{{ linea.portabilidadInfo!.nip }}</td>
                                                                     <td>{{
-                                                                        linea.tipoIdentificacion
+                                                                        linea.portabilidadInfo!.tipoDocumento
                                                                         }}
                                                                     </td>
-                                                                    <td>{{ linea.numeroDocumento
+                                                                    <td>{{ linea.portabilidadInfo!.numeroDocumento
                                                                         }}</td>
-                                                                    <td>{{ linea.nombre }}</td>
-                                                                    <td>{{ linea.fechaExpedicion
+                                                                    <td>{{ linea.portabilidadInfo!.fechaExpedicion
                                                                         }}</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
+                                                <!-- Info portabilidad de persona juridica -->
+                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad' &&
+                                                    (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT'
+                                                    || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')"
+                                                    class="row mt-1">
+                                                   <div class="table-responsive">
+                                                       <table class="table table-striped">
+                                                           <thead>
+                                                               <tr>
+                                                                   <th>Tipo</th>
+                                                                   <th>MSISDN</th>
+                                                                   <th>Operador donante</th>
+                                                                   <th>NIP</th>
+                                                                   <th>Tipo Identificación</th>
+                                                                   <th>Número Documento</th>
+                                                                   <th>Tipo Identificación representante legal</th>
+                                                                   <th>Número Documento representante legal</th>
+                                                                   <th>Fecha Expedición representante legal</th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody>
+                                                               <tr *ngFor="let linea of portableLines; let i = index">
+                                                                   <td>{{ linea.tipoLinea }}</td>
+                                                                   <td>{{ linea.numeroLinea }}</td>
+                                                                   <td>{{ linea.portabilidadInfo!.operadorDonante }}
+                                                                   </td>
+                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>
+                                                                   <td>{{
+                                                                       linea.portabilidadInfo!.tipoDocumento
+                                                                       }}
+                                                                   </td>
+                                                                   <td>{{ linea.portabilidadInfo!.numeroDocumento
+                                                                       }}</td>
+                                                                    <td>{{ linea.portabilidadInfo!.tipoDocumentoRepresentanteLegal
+                                                                    }}</td>
+                                                                    <td>{{ linea.portabilidadInfo!.numeroDocumentoRepresentanteLegal
+                                                                    }}</td>
+                                                                    <td>{{ linea.portabilidadInfo!.fechaExpedicionRepresentanteLegal
+                                                                    }}</td>
+                                                               </tr>
+                                                           </tbody>
+                                                       </table>
+                                                   </div>
+                                               </div>
+                                                <!-- Info portabilidad con cesión de contrato y persona natural -->
+                                                <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad Con Cesión De Contrato' &&
+                                                    (portableLines[0].portabilidadInfo!.tipoDocumento !== 'NIT'
+                                                    && portableLines[0].portabilidadInfo!.tipoDocumento !== 'NE')"
+                                                    class="row mt-1">
+                                                   <div class="table-responsive">
+                                                       <table class="table table-striped">
+                                                           <thead>
+                                                               <tr>
+                                                                   <th>Tipo</th>
+                                                                   <th>MSISDN</th>
+                                                                   <th>Operador donante</th>
+                                                                   <th>NIP</th>
+                                                                   <th>Tipo Identificación</th>
+                                                                   <th>Número Documento</th>
+                                                                   <th>Fecha Expedición Documento</th>
+                                                                   <th>Tipo Identificación cesión contrato</th>
+                                                                   <th>Número Documento cesión contrato</th>
+                                                                   <th>Nombre cliente cesión contrato</th>
+                                                               </tr>
+                                                           </thead>
+                                                           <tbody>
+                                                               <tr *ngFor="let linea of portableLines; let i = index">
+                                                                   <td>{{ linea.tipoLinea }}</td>
+                                                                   <td>{{ linea.numeroLinea }}</td>
+                                                                   <td>{{ linea.portabilidadInfo!.operadorDonante }}
+                                                                   </td>
+                                                                   <td>{{ linea.portabilidadInfo!.nip }}</td>
+                                                                   <td>{{
+                                                                       linea.portabilidadInfo!.tipoDocumento
+                                                                       }}
+                                                                   </td>
+                                                                   <td>{{ linea.portabilidadInfo!.numeroDocumento
+                                                                       }}</td>
+                                                                   <td>{{ linea.portabilidadInfo!.fechaExpedicion
+                                                                       }}</td>
+                                                                    <td>{{ linea.portabilidadInfo!.cesionContrato!.tipoDocumento
+                                                                    }}</td>
+                                                                    <td>{{ linea.portabilidadInfo!.cesionContrato!.numeroDocumento
+                                                                    }}</td>
+                                                                    <td>{{ linea.portabilidadInfo!.cesionContrato!.nombre
+                                                                    }}</td>
+                                                               </tr>
+                                                           </tbody>
+                                                       </table>
+                                                   </div>
+                                               </div>
+                                               <!-- Info portabilidad con cesión de contrato y persona juridica -->
+                                               <div *ngIf="portableLines.length > 0 && portableLines[0].tipoLinea === 'Portabilidad Con Cesión De Contrato' &&
+                                                (portableLines[0].portabilidadInfo!.tipoDocumento === 'NIT'
+                                                || portableLines[0].portabilidadInfo!.tipoDocumento === 'NE')"
+                                                class="row mt-1">
+                                               <div class="table-responsive">
+                                                   <table class="table table-striped">
+                                                       <thead>
+                                                           <tr>
+                                                               <th>Tipo</th>
+                                                               <th>MSISDN</th>
+                                                               <th>Operador donante</th>
+                                                               <th>NIP</th>
+                                                               <th>Tipo Identificación</th>
+                                                               <th>Número Documento</th>
+                                                               <th>Tipo Identificación representante legal</th>
+                                                               <th>Número Documento representante legal</th>
+                                                               <th>Fecha Expedición representante legal</th>
+                                                               <th>Tipo Identificación cesión contrato</th>
+                                                               <th>Número Documento cesión contrato</th>
+                                                               <th>Nombre cliente cesión contrato</th>
+                                                           </tr>
+                                                       </thead>
+                                                       <tbody>
+                                                           <tr *ngFor="let linea of portableLines; let i = index">
+                                                               <td>{{ linea.tipoLinea }}</td>
+                                                               <td>{{ linea.numeroLinea }}</td>
+                                                               <td>{{ linea.portabilidadInfo!.operadorDonante }}
+                                                               </td>
+                                                               <td>{{ linea.portabilidadInfo!.nip }}</td>
+                                                               <td>{{
+                                                                   linea.portabilidadInfo!.tipoDocumento
+                                                                   }}
+                                                               </td>
+                                                               <td>{{ linea.portabilidadInfo!.numeroDocumento
+                                                                   }}</td>
+                                                                <td>{{ linea.portabilidadInfo!.tipoDocumentoRepresentanteLegal
+                                                                }}</td>
+                                                                <td>{{ linea.portabilidadInfo!.numeroDocumentoRepresentanteLegal
+                                                                }}</td>
+                                                                <td>{{ linea.portabilidadInfo!.fechaExpedicionRepresentanteLegal
+                                                                }}</td>
+                                                                <td>{{ linea.portabilidadInfo!.cesionContrato!.tipoDocumento
+                                                                }}</td>
+                                                                <td>{{ linea.portabilidadInfo!.cesionContrato!.numeroDocumento
+                                                                }}</td>
+                                                                <td>{{ linea.portabilidadInfo!.cesionContrato!.nombre
+                                                                }}</td>
+                                                           </tr>
+                                                       </tbody>
+                                                   </table>
+                                               </div>
+                                           </div>
                                             </div>
                                             <div class="tab-pane fade" id="devices_tab" role="tabpanel"
                                                 aria-labelledby="tab3-tab">
@@ -510,30 +680,18 @@
                                                             <div class="row">
                                                                 <div class="col-8"><b>Valor Bolsa: </b>
                                                                 </div>
-                                                                <div class="col-4">{{
-                                                                    newContract.contract.valorBolsa |
-                                                                    currency }} </div>
+                                                                <div class="col-4"> </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-8"><b>Saldo:</b>
                                                                 </div>
-                                                                <div class="col-4">{{
-                                                                    newContract.contract.saldo < 0 ? 0 :
-                                                                        newContract.contract.saldo.toFixed(2) | currency
-                                                                        }} </div>
+                                                                <div class="col-4"></div>
                                                                 </div>
 
                                                                 <div class="row">
                                                                     <div class="col-8"><b>Valor NO
                                                                             Redimible:</b></div>
-                                                                    <div class="col-4">{{
-                                                                        newContract.contract.saldo > 0 ?
-                                                                        newContract.contract.valorNoRedimible.toFixed(2)
-                                                                        :
-                                                                        (newContract.contract.valorNoRedimible
-                                                                        + (-1 *
-                                                                        newContract.contract.saldo)).toFixed(2)
-                                                                        | currency }}</div>
+                                                                    <div class="col-4"></div>
                                                                 </div>
 
                                                             </div>

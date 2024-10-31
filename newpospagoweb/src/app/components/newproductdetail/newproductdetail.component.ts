@@ -35,17 +35,17 @@ export class NewproductdetailComponent implements OnInit {
       edicionLineas: false,
       numeroContrato: '',
       tipoContrato: '',
-      inicioVigencia: '',
-      mesesContrato: NaN,
+
+
       finVigencia: null,
       codigoVendedor: NaN,
-      valorBolsa: NaN,
-      saldo: NaN,
+
+      saldoBolsa: NaN,
       valorNoRedimible: 0,
     },
     billAccounts: [],
     discount: {
-      esContinuo: false , 
+      esContinuo: false ,
       meses: [],
       motivoDescuento: "",
       valorDescuento: 0,
@@ -53,7 +53,8 @@ export class NewproductdetailComponent implements OnInit {
     },
     plans: [],
     lineas: [],
-    devices: []
+    devices: [],
+    orders:[]
 
   };
 
@@ -85,9 +86,6 @@ export class NewproductdetailComponent implements OnInit {
     addServices: [],
     idContract: NaN,
     nuipValue: '' ,
-
-
-
   };
 
   selectedAction: string = '';
@@ -140,7 +138,7 @@ export class NewproductdetailComponent implements OnInit {
   aplicaVozAndSMS: boolean = true;
 
   discount: Discount = {
-    esContinuo: false , 
+    esContinuo: false ,
     meses: [],
     motivoDescuento: "",
     valorDescuento: 0,
@@ -148,7 +146,7 @@ export class NewproductdetailComponent implements OnInit {
   };
 
   massiveDiscount: Discount = {
-    esContinuo: true , 
+    esContinuo: true ,
     meses: [],
     motivoDescuento: "Descuento por volumen",
     valorDescuento: 8,
@@ -156,7 +154,7 @@ export class NewproductdetailComponent implements OnInit {
   };
 
   promotionDiscount: Discount = {
-    esContinuo: true , 
+    esContinuo: true ,
     meses: [],
     motivoDescuento: "Primer año del Nuevo Pospago B2B",
     valorDescuento: 9,
@@ -164,7 +162,7 @@ export class NewproductdetailComponent implements OnInit {
   };
 
   massiveDiscreteDiscount: Discount = {
-    esContinuo: false , 
+    esContinuo: false ,
     meses: ['ENE','JUN', 'AGO'],
     motivoDescuento: "",
     valorDescuento: 30,
@@ -172,7 +170,7 @@ export class NewproductdetailComponent implements OnInit {
   };
 
   promotionDiscreteDiscount: Discount = {
-    esContinuo: false , 
+    esContinuo: false ,
     meses: ['FEB','JUL', 'OCT'],
     motivoDescuento: "",
     valorDescuento: 5,
@@ -227,13 +225,13 @@ export class NewproductdetailComponent implements OnInit {
 
       lineas.forEach(
         c => {
-          c.valorDescuentoPromocionContinuo = this.promotionDiscount.valorDescuento ; 
-          c.valorDescuentoPromocionDiscontinuo = 0 ; 
-          c.valorDescuentoVolumenContinuo = 0 ; 
-          c.valorDescuentoVolumenDiscontinuo = 0 ; 
+          c.valorDescuentoPromocionContinuo = this.promotionDiscount.valorDescuento ;
+          c.valorDescuentoPromocionDiscontinuo = 0 ;
+          c.valorDescuentoVolumenContinuo = 0 ;
+          c.valorDescuentoVolumenDiscontinuo = 0 ;
           c.valorTotal = c.valorDescuentoPromocionContinuo + (c.valorDescuento ? c.valorDescuento : 0 );
         }
-      ); 
+      );
 
     }
 
@@ -241,14 +239,14 @@ export class NewproductdetailComponent implements OnInit {
 
       lineas.forEach(
         c => {
-          c.valorDescuentoPromocionContinuo = 0 ; 
-          c.valorDescuentoPromocionDiscontinuo = 0 ; 
-          c.valorDescuentoVolumenContinuo = this.massiveDiscount.valorDescuento ; 
-          c.valorDescuentoVolumenDiscontinuo = 0 ; 
+          c.valorDescuentoPromocionContinuo = 0 ;
+          c.valorDescuentoPromocionDiscontinuo = 0 ;
+          c.valorDescuentoVolumenContinuo = this.massiveDiscount.valorDescuento ;
+          c.valorDescuentoVolumenDiscontinuo = 0 ;
           c.valorTotal = c.valorDescuentoVolumenContinuo + (c.valorDescuento ? c.valorDescuento : 0 );
         }
       );
-      
+
     }
 
     this.newContract = {
@@ -257,7 +255,8 @@ export class NewproductdetailComponent implements OnInit {
       discount: this.discount,
       plans: this.plans,
       lineas: lineas,
-      devices: devices
+      devices: devices,
+      orders: []
 
     };
 
