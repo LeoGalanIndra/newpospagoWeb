@@ -17,4 +17,6 @@ export interface NewProductContract {
     lineas: Linea[] ;
     devices: Device[] ;
     orders:ServiceOrder[];
+    
+
 }

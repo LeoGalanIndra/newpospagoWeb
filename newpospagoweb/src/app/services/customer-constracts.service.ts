@@ -86,6 +86,10 @@ export class CustomerConstractsService {
       this.dataService.saveLine(newContract.lineas);
     }
 
+    if(newContract.orders.length > 0){
+      this.dataService.saveOrders(newContract.orders);
+    }
+
 
   }
 

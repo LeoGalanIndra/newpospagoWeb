@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, Renderer2, RendererFactory2,ElementRef  } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef, Renderer2, RendererFactory2, ElementRef } from '@angular/core';
 import { NewProductContract } from '../../models/new-product-contract';
 import { BillAccount } from '../../models/bill-account';
 import { Plan } from '../../models/plan';
@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { Portabilidad } from '../../models/portabilidad';
 import { CesionContrato } from '../../models/cesion-contrato';
 import { ServiceOrder } from '../../models/serviceOrder';
+import { LineServiceDetail } from '../../models/line-service-detail';
 
 declare let bootstrap: any;
 
@@ -30,7 +31,7 @@ declare let bootstrap: any;
 export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
 
- // @ViewChild('infoContrato', { static: false }) infoContratoTab!: ElementRef;
+  // @ViewChild('infoContrato', { static: false }) infoContratoTab!: ElementRef;
   @ViewChild('infoCuentaFacturacion', { static: false }) infoCuentaFacturacion!: ElementRef;
   @ViewChild('infoOrdenServicio', { static: false }) infoOrdenServicio!: ElementRef;
   @ViewChild('infoCargueMasivo', { static: false }) infoCargueMasivo!: ElementRef;
@@ -39,7 +40,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('infoResumen', { static: false }) infoResumen!: ElementRef;
 
   selectedLinea: Linea | null = null; // Inicializa como null
-  descuentosAdicionales: { tipo: string; porcentaje: number; descripcion: string; mes: string []}[] = []; // Array para almacenar descuentos
+  descuentosAdicionales: { tipo: string; porcentaje: number; descripcion: string; mes: string[] }[] = []; // Array para almacenar descuentos
 
 
   preciosPlanes: { [key: string]: number } = {
@@ -51,8 +52,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   };
 
 
-   // Propiedades para el formulario
-   newPlan1 = {
+  // Propiedades para el formulario
+  newPlan1 = {
     plan: '',
     valorUnitario: ''
   };
@@ -70,23 +71,23 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     console.log(this.newPlan.plan)
 
-    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.0'){
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.0') {
       this.newPlan.valorUnitario = 10084;
     }
 
-    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.1'){
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.1') {
       this.newPlan.valorUnitario = 15126;
     }
 
-    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.2'){
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.2') {
       this.newPlan.valorUnitario = 19328;
     }
 
-    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.3'){
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.3') {
       this.newPlan.valorUnitario = 25210;
     }
 
-    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.4'){
+    if (this.newPlan.plan === 'Plan Tigo Empresarial 6.4') {
       this.newPlan.valorUnitario = 29412;
     }
   }
@@ -95,15 +96,15 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     console.log(this.newPlan.plan)
 
-    if (this.nuevoEquipo.redencionEquipos === 'NO'){
+    if (this.nuevoEquipo.redencionEquipos === 'NO') {
       this.nuevoEquipo.porcentajeDescuento = 0;
       this.nuevoEquipo.porcentajeDescuento = 0;
     }
 
   }
 
-  variables: Variables =  {
-    esCargueMasivo : false,
+  variables: Variables = {
+    esCargueMasivo: false,
     hayOrden: false
   }
 
@@ -131,9 +132,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       tipoDocumentoRepresentanteLegal: '',
       numeroDocumentoRepresentanteLegal: NaN,
       fechaExpedicionRepresentanteLegal: '',
-      saldo: 0, 
-      valorBolsa: NaN, 
-
+      saldo: 0,
+      valorBolsa: 0,
     },
     billAccounts: [],
     discount: {
@@ -148,24 +148,24 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     plans: [],
     lineas: [],
     devices: [],
-    orders:[]
+    orders: []
   };
 
-  newServiceOrder: ServiceOrder={
-      id: 0,
-      agreementId: 0,
-      billAccountId :0,
-      serviceOrder: '',
-      durationMonths: 0,
-      startDate: '',
-      finVigencia:'',
-      bagRedemption: 0,
-      bagValue: 0,
-      discountValue: 0,
-      discountReasonId: 0,
-      sellerId: '',
-      statusOrder:0
-     }
+  newServiceOrder: ServiceOrder = {
+    id: 0,
+    agreementId: 0,
+    billAccountId: 0,
+    serviceOrder: '',
+    durationMonths: 0,
+    startDate: '',
+    finVigencia: '',
+    bagRedemption: 0,
+    bagValue: 0,
+    discountValue: 0,
+    discountReasonId: 0,
+    sellerId: '',
+    statusOrder: 0
+  }
 
   newPlan: Plan = {
     tipoProducto: '',
@@ -189,7 +189,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   showedPlans: Plan[] = [];
 
-  cesionContratoLinea : CesionContrato = {
+  cesionContratoLinea: CesionContrato = {
     tipoDocumento: '',
     numeroDocumento: NaN,
     nombre: '',
@@ -200,25 +200,25 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     ciudad: '',
   }
 
-  portabilidadLinea : Portabilidad = {
-      tipoDocumento: '',
-      numeroDocumento: NaN,
-      anioExpedicion: NaN,
-      fechaExpedicion: '',
-      digitoVerificacion: NaN,
-      tipoDocumentoRepresentanteLegal: '',
-      numeroDocumentoRepresentanteLegal: NaN,
-      fechaExpedicionRepresentanteLegal: '',
-      tipoTelefoniaActual : '',
-      tipoSolicitante : '',
-      operadorDonante : '',
-      nip : '',
-      esFechaCalendarizada : false,
-      fechaSugeridaPortacion: '',
-      lineaTemporal : '',
-      tipoVenta : '',
-      imei: '',
-      cesionContrato : this.cesionContratoLinea
+  portabilidadLinea: Portabilidad = {
+    tipoDocumento: '',
+    numeroDocumento: NaN,
+    anioExpedicion: NaN,
+    fechaExpedicion: '',
+    digitoVerificacion: NaN,
+    tipoDocumentoRepresentanteLegal: '',
+    numeroDocumentoRepresentanteLegal: NaN,
+    fechaExpedicionRepresentanteLegal: '',
+    tipoTelefoniaActual: '',
+    tipoSolicitante: '',
+    operadorDonante: '',
+    nip: '',
+    esFechaCalendarizada: false,
+    fechaSugeridaPortacion: '',
+    lineaTemporal: '',
+    tipoVenta: '',
+    imei: '',
+    cesionContrato: this.cesionContratoLinea
   }
 
   newLinea: Linea = {
@@ -234,7 +234,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     fechaExpedicion: NaN,
     idPlan: NaN,
     addServices: [],
-    idContract: NaN, 
+    idContract: NaN,
     nuipValue: '',
     portabilidadInfo: this.portabilidadLinea
 
@@ -249,7 +249,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     valorEquipo: 0,
     porcentajeDescuento: 0,
     valorDescontado: 0,
-    redencionEquipos: '',
+    redencionEquipos: 'NO',
     id: NaN,
     idContract: NaN
 
@@ -314,6 +314,17 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     ordenServicio: false
   };
 
+  isLinesLoadingAvailable : boolean = false ;
+  
+  lineServicesDetail : LineServiceDetail[] = [] ; 
+
+  lineServiceAddServiceInfo : boolean = false ;
+  lineServicePortabilityInfo : boolean = false ; 
+
+  isMassiveLoad : boolean = false ;
+
+  selectedMonth: string | null = null;
+
   constructor(private route: ActivatedRoute,
     private contractService: CustomerConstractsService,
     private inventarioService: InventoryService,
@@ -343,7 +354,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.newContract.contract.estado = this.idContractParam == "-1" ? 'PENDIENTE' : '';
 
-    if(this.idContractParam != "-1"){
+    if (this.idContractParam != "-1") {
       this.initContract(this.idContractParam);
     }
 
@@ -355,6 +366,8 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.adicionarServicioAdicionalDefault();
 
     this.inventarios = this.inventarioService.getInventarios();
+
+    this.newServiceOrder.durationMonths = 12;
 
 
 
@@ -413,6 +426,23 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   agregarPlan() {
 
+    if(this.newPlan.cantidad > 20){
+      this.isLinesLoadingAvailable = true ; 
+      return ; 
+    } 
+
+    if(this.newContract.plans.length > 0){
+      let totalLines = this.newContract.plans.map(a => a.cantidad).reduce((a, b) => a+b) ; 
+      totalLines += this.newPlan.cantidad ;
+      
+      if(totalLines > 20){
+        this.isLinesLoadingAvailable = true ; 
+        return ; 
+      } 
+
+    }
+    this.isLinesLoadingAvailable = false ; 
+
     let idCuentaFacturacion = this.selectedBillAccount.id;
     let cuentaFacturacionValue = this.selectedBillAccount.cuentaFacturacion;
 
@@ -459,6 +489,13 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   adicionarServicioAdicional() {
+
+    if(this.addService.tipo === 'ROAMING PLAN 1' || this.addService.tipo==='ROAMING PLAN 2'){
+      this.addService.descuento = 0; 
+    }
+
+    this.addService.cargoBasico = 15000 ;     
+
     this.newLinea.addServices.push({ ... this.addService });
 
     let addServiceId = this.addService.idPlan + 1;
@@ -473,7 +510,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   nothing() {
-   this.variables.esCargueMasivo = true;
+    this.variables.esCargueMasivo = true;
   }
 
   adicionarServicioAdicionalDefault() {
@@ -500,9 +537,13 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.newLinea.tipoEnvio = mySelectedPlan.tipoEnvio;
     this.newLinea.valorUnitario = mySelectedPlan.valorUnitario;
     this.newLinea.valorDescuento = mySelectedPlan.valorDescuento;
-    this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento ;
-    this.newLinea.mesesPersonalizados = this.newContract.discount.mesesAnio ;
+    this.newLinea.valorDescuentoDiscontinuo = this.newContract.discount.valorDescuento;
+    this.newLinea.mesesPersonalizados = this.newContract.discount.mesesAnio;
     this.newLinea.idContract = this.idContract;
+
+    if(mySelectedPlan.vozAndSMS){
+      this.newLinea.addServices.push({ ... this.vozAndSMSService }) ; 
+    }
 
     if (this.newLinea.tipoLinea === 'Portabilidad') {
       this.newLinea.portabilidadInfo!.tipoDocumento = this.documentTypeParam;
@@ -534,35 +575,35 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     console.log(this.newContract.lineas);
 
     this.cesionContratoLinea = {
-        tipoDocumento: '',
-        numeroDocumento: NaN,
-        nombre: '',
-        apellido: '',
-        email: '',
-        direccion: '',
-        departamento: '',
-        ciudad: '',
+      tipoDocumento: '',
+      numeroDocumento: NaN,
+      nombre: '',
+      apellido: '',
+      email: '',
+      direccion: '',
+      departamento: '',
+      ciudad: '',
     }
 
     this.portabilidadLinea = {
-        tipoDocumento: '',
-        numeroDocumento: NaN,
-        anioExpedicion: NaN,
-        fechaExpedicion: '',
-        digitoVerificacion: NaN,
-        tipoDocumentoRepresentanteLegal: '',
-        numeroDocumentoRepresentanteLegal: NaN,
-        fechaExpedicionRepresentanteLegal: '',
-        tipoTelefoniaActual : '',
-        tipoSolicitante : '',
-        operadorDonante : '',
-        nip : '',
-        esFechaCalendarizada : false,
-        fechaSugeridaPortacion: '',
-        lineaTemporal : '',
-        tipoVenta : '',
-        imei: '',
-        cesionContrato : this.cesionContratoLinea
+      tipoDocumento: '',
+      numeroDocumento: NaN,
+      anioExpedicion: NaN,
+      fechaExpedicion: '',
+      digitoVerificacion: NaN,
+      tipoDocumentoRepresentanteLegal: '',
+      numeroDocumentoRepresentanteLegal: NaN,
+      fechaExpedicionRepresentanteLegal: '',
+      tipoTelefoniaActual: '',
+      tipoSolicitante: '',
+      operadorDonante: '',
+      nip: '',
+      esFechaCalendarizada: false,
+      fechaSugeridaPortacion: '',
+      lineaTemporal: '',
+      tipoVenta: '',
+      imei: '',
+      cesionContrato: this.cesionContratoLinea
     }
 
     this.newLinea = {
@@ -578,7 +619,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       fechaExpedicion: NaN,
       idPlan: NaN,
       addServices: [],
-      idContract: NaN, 
+      idContract: NaN,
       nuipValue: '',
       portabilidadInfo: this.portabilidadLinea
     };
@@ -608,11 +649,21 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.nuevoEquipo.valorDescontado = (this.nuevoEquipo.cantidad * this.nuevoEquipo.valorEquipo * (this.nuevoEquipo.porcentajeDescuento / 100));
 
+    if(this.newContract.contract.tipoContrato === 'Negociado'){
+      this.newContract.contract.saldoBolsa = this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos();
+      this.newContract.contract.valorNoRedimible = this.calcularTotalValorEquiposNoRedimible();
+
+    }else{
+      this.nuevoEquipo.porcentajeDescuento = 0 ; 
+      this.nuevoEquipo.valorDescontado = 0 ; 
+      this.nuevoEquipo.redencionEquipos = 'NO' ;       
+      this.newContract.contract.saldoBolsa = 0;       
+      this.newContract.contract.valorNoRedimible = 0;     
+    }
+
     this.newContract.devices.push({ ...this.nuevoEquipo });
 
-    //this.newContract.contract.saldoBolsa = this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos();
-    this.newContract.contract.saldoBolsa = -1; //Todo: Hacer cálculo nuevo de acuerdo a nuevo
-    this.newContract.contract.valorNoRedimible = this.calcularTotalValorEquiposNoRedimible();
+    
 
     this.deviceSelected = '';
 
@@ -625,7 +676,7 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       valorEquipo: 0,
       porcentajeDescuento: 0,
       valorDescontado: 0,
-      redencionEquipos: '',
+      redencionEquipos: 'NO',
       id: NaN,
       idContract: NaN
     };
@@ -638,24 +689,23 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
   calcularMesFinContrato() {
     // Verificar que el tipo de contrato sea 'Negociado'
     if (this.newContract.contract.tipoContrato === 'Negociado') {
-        // Comprobar que se ha definido una fecha de inicio y una duración válida
-        if (this.newServiceOrder.startDate && this.newServiceOrder.durationMonths > 0) {
-            // Convertir la fecha de inicio a un objeto Date
-            const startDate = new Date(this.newServiceOrder.startDate);
-            // Sumar los meses de duración a la fecha de inicio
-            const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newServiceOrder.durationMonths));
-            // Asignar la fecha calculada a finVigencia
-            this.newServiceOrder.finVigencia = newDate.toDateString();
-          }
-        } else {
-            console.log("Duración no válida; se usa duración predeterminada de 12 meses");
-            // Asignar una duración predeterminada de 12 meses si no se especifica duración válida
-            this.newServiceOrder.durationMonths = 12;
-            const startDate = new Date(this.newServiceOrder.startDate);
-            const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newServiceOrder.durationMonths));
-            this.newServiceOrder.finVigencia = newDate.toDateString();
-        }
+      // Comprobar que se ha definido una fecha de inicio y una duración válida
+      if (this.newServiceOrder.startDate && this.newServiceOrder.durationMonths > 0) {
+        // Convertir la fecha de inicio a un objeto Date
+        const startDate = new Date(this.newServiceOrder.startDate);
+        // Sumar los meses de duración a la fecha de inicio
+        const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newServiceOrder.durationMonths));
+        // Asignar la fecha calculada a finVigencia
+        this.newServiceOrder.finVigencia = newDate.toDateString();
+      }
+    } else {
+      console.log("Duración no válida; se usa duración predeterminada de 12 meses");
+      // Asignar una duración predeterminada de 12 meses si no se especifica duración válida
+      const startDate = new Date(this.newServiceOrder.startDate);
+      const newDate = new Date(startDate.setMonth(startDate.getMonth() + this.newServiceOrder.durationMonths));
+      this.newServiceOrder.finVigencia = newDate.toDateString();
     }
+  }
 
 
   calcularTotalCargosServiciosAdicionales() {
@@ -670,6 +720,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   calcularTotalValorEquipos(): number {
 
+    if(this.newContract
+      .devices.length === 0)
+      return 0 ;  
+
     return this.newContract
       .devices
       .map(a => {
@@ -681,6 +735,10 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   calcularTotalValorEquiposNoRedimible(): number {
 
+    if(this.newContract
+      .devices.length === 0)
+      return 0 ; 
+
     return this.newContract
       .devices
       .map(a => {
@@ -690,11 +748,49 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
       .reduce((a, b) => a + b);
   }
 
+  calcularTotalValorEquiposSinRedencion(): number {
+
+    if(this.newContract
+      .devices.length === 0)
+      return 0 ;  
+
+    return this.newContract
+      .devices
+      .map(a => {
+
+        return a.cantidad * a.valorEquipo ;
+      })
+      .reduce((a, b) => a + b);
+  }
+
+  calcularTotalEquiposSinRedencion(): number {
+
+    if(this.newContract
+      .devices.length === 0)
+      return 0 ;  
+
+    return this.newContract
+      .devices
+      .map(a => {
+
+        return a.cantidad ;
+      })
+      .reduce((a, b) => a + b);
+  }
+
+  calcularSaldo(): number {
+    if(this.newContract
+      .devices.length === 0)
+      return 0 ; 
+    
+    return this.newContract.contract.valorBolsa - this.calcularTotalValorEquipos(); 
+  }
+
   activarVozAndSMS() {
 
   }
 
-  changeEsFechaCalendarizada(){
+  changeEsFechaCalendarizada() {
 
   }
 
@@ -715,11 +811,11 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     //this.enabledPanels.billAccount = false;
 
-    if (this.newContract.contract.tipoContrato === 'Estandar' ){
+    if (this.newContract.contract.tipoContrato === 'Estandar') {
       this.enabledPanels.billAccount = false;
     }
 
-    if (this.newContract.contract.tipoContrato === 'Negociado' ){
+    if (this.newContract.contract.tipoContrato === 'Negociado') {
       this.enabledPanels.serviceOrder = false;
     }
 
@@ -755,13 +851,15 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
     this.enabledPanels.massiveLoad = false;
 
-      // Llama al método para mostrar la ventana modal informativa
-      //this.createModalInformativo(2);
+    // Llama al método para mostrar la ventana modal informativa
+    //this.createModalInformativo(2);
 
   }
 
   cargarRegistrosMasivos() {
     this.enabledPanels.product = false;
+
+    this.isMassiveLoad = !this.isMassiveLoad ; 
 
   }
 
@@ -789,11 +887,13 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
     this.contractService.saveNewContract(this.newContract);
 
     this.contractService.printDatasource();
-          // Llama al método para mostrar la ventana modal informativa
-          //this.createModalInformativo(5);
+    // Llama al método para mostrar la ventana modal informativa
+    //this.createModalInformativo(5);
   }
 
   activarContrato() {
+
+    this.newContract.contract.saldo = this.calcularSaldo(); 
 
     this.newContract.contract.estado = "EN EJECUCION";
     this.contractService.saveNewContract(this.newContract);
@@ -812,26 +912,37 @@ export class NewproductcreateComponent implements OnInit, OnChanges, OnDestroy {
 
   }
 
-//mrmelor
-orders: ServiceOrder [] = [];
+  //mrmelor
+  orders: ServiceOrder[] = [];
 
-saveOrder(){
+  saveOrder() {
 
-  this.newServiceOrder.agreementId = this.newContract.contract.idContract;
-  this.newServiceOrder.id = this.newServiceOrder.id + 1;
-  this.newServiceOrder.billAccountId = this.selectedBillAccount.cuentaFacturacion; //se cambia orden de pestañas, ahora se debe actualizar cuando se seleccione la cuenta
+    this.newServiceOrder.serviceOrder = "" + Math.floor(100000000 + Math.random() * 900000000) ; 
+    this.newServiceOrder.agreementId = this.newContract.contract.idContract;
+    this.newServiceOrder.id = this.newServiceOrder.id + 1;
+    this.newServiceOrder.billAccountId = this.selectedBillAccount.cuentaFacturacion; //se cambia orden de pestañas, ahora se debe actualizar cuando se seleccione la cuenta
 
-  console.log("this.selectedBillAccount");
-  console.log(this.selectedBillAccount);
+    console.log("this.selectedBillAccount");
+    console.log(this.selectedBillAccount);
 
-  if (this.newContract.contract.tipoContrato === 'Estandar'){
-    this.newServiceOrder.serviceOrder = this.newServiceOrder.id.toString();
-  }
+    if (this.newContract.contract.tipoContrato === 'Estandar') {
+      this.newServiceOrder.serviceOrder = this.newServiceOrder.id.toString();
+    }
 
 
-  this.orders.push({... this.newServiceOrder})
-  this.variables.hayOrden = false;
+    this.orders.push({ ... this.newServiceOrder }); 
+    this.newContract.orders.push({ ... this.newServiceOrder }); 
 
+    this.variables.hayOrden = false;
+
+    this.newContract.contract.valorBolsa =  ( this.newServiceOrder.bagValue ? this.newServiceOrder.bagValue : 0 ) ; 
+    this.newContract.contract.saldo +=  ( this.newServiceOrder.bagValue ? this.newServiceOrder.bagValue : 0 ) ; 
+    this.newContract.contract.saldoBolsa +=  ( this.newServiceOrder.bagValue ? this.newServiceOrder.bagValue : 0 ) ; 
+
+    this.contractService.saveNewContract(this.newContract);
+
+    this.contractService.printDatasource();
+    
     console.log(this.newServiceOrder);
     console.log(this.orders);
 
@@ -900,17 +1011,17 @@ saveOrder(){
 
           if (option === 1) {
             this.crearContrato();
-            if (this.newContract.contract.tipoContrato==='Estandar'){
+            if (this.newContract.contract.tipoContrato === 'Estandar') {
               this.saveOrder();
             }
             // Llama al método para mostrar la ventana modal informativa
             this.createModalInformativo(1);
             let tabElement: any;
-            if (this.newContract.contract.tipoContrato==='Estandar'){
+            if (this.newContract.contract.tipoContrato === 'Estandar') {
 
               tabElement = new bootstrap.Tab(this.infoCuentaFacturacion.nativeElement);
             }
-            if (this.newContract.contract.tipoContrato==='Negociado'){
+            if (this.newContract.contract.tipoContrato === 'Negociado') {
               tabElement = new bootstrap.Tab(this.infoOrdenServicio.nativeElement);
             }
             tabElement.show();
@@ -919,10 +1030,10 @@ saveOrder(){
           if (option === 2) {
             this.crearCuentasFacturacion();
             this.createModalInformativo(2);
-            let tabElement: any;
+            // let tabElement: any;
 
-            tabElement = new bootstrap.Tab(this.infoProducto.nativeElement);
-            tabElement.show();
+            // tabElement = new bootstrap.Tab(this.infoProducto.nativeElement);
+            // tabElement.show();
           }
 
           if (option === 3) {
@@ -939,11 +1050,11 @@ saveOrder(){
 
             this.createModalInformativo(4);
             let tabElement: any;
-            if (this.newContract.billAccounts.length>0) {
-              tabElement = new bootstrap.Tab(this.infoEquipos .nativeElement);
+            if (this.newContract.billAccounts.length > 0) {
+              tabElement = new bootstrap.Tab(this.infoEquipos.nativeElement);
             }
 
-            if (this.newContract.billAccounts.length==0) {
+            if (this.newContract.billAccounts.length == 0) {
               tabElement = new bootstrap.Tab(this.infoCargueMasivo.nativeElement);
             }
 
@@ -987,17 +1098,19 @@ saveOrder(){
       this.subSucess.unsubscribe();
   }
 
-    //mrmelor
-    formatCurrency(value: number): string {
-      return value.toLocaleString('en-US',
-        { style: 'currency',
-          currency: 'USD',
-          minimumFractionDigits: 2,
-           maximumFractionDigits: 2 });
-    }
+  //mrmelor
+  formatCurrency(value: number): string {
+    return value.toLocaleString('en-US',
+      {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+  }
 
   // Maneja la entrada del usuario
-  onInput(event: Event, campo: string): void{
+  onInput(event: Event, campo: string): void {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement) {
       // Extrae solo los números del valor ingresado
@@ -1005,49 +1118,51 @@ saveOrder(){
       // Convierte el valor a número
       const numberValue = parseFloat(value) || 0;
       console.log("campo = " + campo);
-      console.log( numberValue );
-      console.log( "valor formateado" + this.formatCurrency(numberValue));
+      console.log(numberValue);
+      console.log("valor formateado" + this.formatCurrency(numberValue));
 
-      if (campo ==="valorUnitario"){
+      inputElement.value = this.formatCurrency(numberValue) ; 
+
+      if (campo === "valorUnitario") {
         // Actualiza el modelo
         //this.newContract.contract.valorBolsa = numberValue;
         inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
       }
-      if (campo ==="valorBolsa"){
-          // Actualiza el modelo
-          //this.newContract.contract.valorBolsa = numberValue;
-          //inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
-        }
-      if (campo ==="saldo"){
-          // Actualiza el modelo
-          //this.newContract.contract.saldo = numberValue;
-          //inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
-        }
-           }
-  }
-
-    // Opcional: formatea el valor al salir del campo
-    onBlur(event: Event,campo: string) {
-      const inputElement = event.target as HTMLInputElement;
-      if (inputElement) {
-        if (campo ==="ValorUnitario"){
-            inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
-          }
-        if (campo ==="valorBolsa"){
-          //inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
-          inputElement.value ="-1";
-        }
-        if (campo ==="saldo"){
-          //inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
-          inputElement.value = "-1";
-        }
+      if (campo === "valorBolsa") {
+        // Actualiza el modelo
+        //this.newContract.contract.valorBolsa = numberValue;
+        //inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+      }
+      if (campo === "saldo") {
+        // Actualiza el modelo
+        //this.newContract.contract.saldo = numberValue;
+        //inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
       }
     }
+  }
 
-    updateValue(value: string) {
-      const numericValue = value.replace(/[^0-9.]/g, '');
-      this.newPlan.valorUnitario = parseFloat(numericValue);
+  // Opcional: formatea el valor al salir del campo
+  onBlur(event: Event, campo: string) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement) {
+      if (campo === "ValorUnitario") {
+        inputElement.value = this.formatCurrency(this.newPlan.valorUnitario);
+      }
+      if (campo === "valorBolsa") {
+        //inputElement.value = this.formatCurrency(this.newContract.contract.valorBolsa);
+        inputElement.value = "-1";
+      }
+      if (campo === "saldo") {
+        //inputElement.value = this.formatCurrency(this.newContract.contract.saldo);
+        inputElement.value = "-1";
+      }
     }
+  }
+
+  updateValue(value: string) {
+    const numericValue = value.replace(/[^0-9.]/g, '');
+    this.newPlan.valorUnitario = parseFloat(numericValue);
+  }
 
   createModalInformativo(option: number) {
 
@@ -1061,7 +1176,7 @@ saveOrder(){
       {
         id: 2,
         title: 'Creación de cuentas de facturación',
-        body: 'Cuenta de facturación creada con éxito',
+        body: 'Cuenta de facturación creada con éxito. \n\nPara continuar, por favor seleccione una cuenta de facturación a aprovisionar.',
 
       },
       {
@@ -1116,35 +1231,41 @@ saveOrder(){
       });
   }
 
-  initContract(idContract : any ){
+  initContract(idContract: any) {
 
     let contract = this.contractService.getContractsByIdContract(idContract)[0];
     let billAccounts = this.contractService.getBillAccountsByIdContract(idContract);
     let discount = this.contractService.getDiscountByIdContract(idContract)[0];
+    console.log("discount");
+    console.log(discount);
     let plans = this.contractService.getProductsByIdContract(idContract);
     let lineas = this.contractService.getLinesByIdContract(idContract);
     let devices = this.contractService.getDevicesByIdContract(idContract);
-   // let orders = this.contractService.  .contractService.getServiceOrderByIdContract(idContract);
-    //this.contractService.getDevicesByIdContract(idContract);//temporal, mrmrlor se necesita corregir
+    let orders = this.contractService.getServiceOrderByIdContract(idContract);
+    
+    this.contractService.getDevicesByIdContract(idContract);//temporal, mrmrlor se necesita corregir
 
 
     this.newContract = {
-      contract: contract ,
+      contract: contract,
       billAccounts: billAccounts,
       discount: discount,
       plans: plans,
       lineas: lineas,
       devices: devices,
-      orders: []
+      orders: orders
     };
 
 
+    console.log("Init contract");
+    console.log(this.newContract);
+
     this.enabledPanels = {
-      billAccount: (!(billAccounts.length > 0 )),
-      massiveLoad: (!(plans.length > 0)),
-      product: (!(plans.length > 0)),
-      devices: (!(devices.length > 0 )),
-      ordenServicio: !this.variables.hayOrden
+      billAccount: false,
+      massiveLoad: false,
+      product: false,
+      devices: false,
+      ordenServicio: false
     };
 
 
@@ -1159,10 +1280,63 @@ saveOrder(){
     return this.newPlan.tipoProducto.trim() !== '';
   }
 
-    // Método para seleccionar una línea basada en el imsi
-    selectLineaByImsi(imsi: number): void {
-      this.selectedLinea = this.newContract.lineas.find(linea => linea.imsi === imsi) || null;
+  // Método para seleccionar una línea basada en el imsi
+  selectLineaByImsi(imsi: number): void {
+
+    console.log("selectLineaByImsi start"); 
+
+    this.selectedLinea = this.newContract.lineas.find(linea => linea.imsi === imsi) || null;
+
+    this.lineServicesDetail = []; 
+    this.lineServiceAddServiceInfo = false ;
+    this.lineServicePortabilityInfo = false ; 
+
+    let detail : LineServiceDetail = {
+      discountPorcentage: "" + this.selectedLinea?.valorDescuentoPromocionContinuo ,
+      discountReason: this.selectedLinea?.motivoDescuento ? "" + this.selectedLinea?.motivoDescuento : "No aplica", 
+      discountValue: this.selectedLinea?.valorDescuento ? "" + this.selectedLinea?.valorDescuento : "", 
+      priceFull: "" + this.selectedLinea?.valorTotal, 
+      priceNonTaxes: "" + this.selectedLinea?.valorUnitario, 
+      service: "" + this.selectedLinea?.plan
     }
+
+    this.lineServicesDetail.push({ ... detail }); 
+
+    this.selectedLinea?.addServices.forEach((value) => {
+
+      console.log(value); 
+
+      detail = {
+        discountPorcentage: "" + value.descuento ,
+        discountReason: "Descuento servicio adicional" , 
+        discountValue: "" + ((value.cargoBasico * value.descuento)/100) , 
+        priceFull: "" + (value.cargoBasico - ((value.cargoBasico * value.descuento)/100)), 
+        priceNonTaxes: "" + value.cargoBasico, 
+        service: "" + value.tipo
+      }
+  
+      this.lineServicesDetail.push({ ... detail });
+
+
+
+    }); 
+    
+
+    this.lineServiceAddServiceInfo = false ;
+    this.lineServicePortabilityInfo = false ; 
+
+    if(this.selectedLinea?.portabilidadInfo?.nip){
+      this.lineServicePortabilityInfo = true ; 
+    }
+      
+
+    if(this.newContract.discount.mesesAnio && this.newContract.discount.mesesAnio?.length > 0){
+      this.lineServiceAddServiceInfo = true ;
+    }
+
+    console.log("selectLineaByImsi end ");    
+
+  }
 
 
   openModal(): void {
@@ -1170,7 +1344,7 @@ saveOrder(){
     const modalElement = document.getElementById('verDetalleLineaNegociadoModal');
     if (modalElement) {
 
-        this.buscarDescuentosAdicionales();
+      this.buscarDescuentosAdicionales();
 
       const modal = new bootstrap.Modal(modalElement);
       modal.show();
@@ -1183,21 +1357,35 @@ saveOrder(){
     const descuento = this.newContract;
 
     if (descuento) {
-        // Obtener el valorDescuentoDiscontinuo y mesesPersonalizados
-        if (descuento.discount) {
-            const meses = descuento.discount.meses || [];
-            for (const mes of meses) {
-              console.log("Guardar descuento");
-                this.descuentosAdicionales.push({
-                    tipo:  'Descuento Discontinuo',
-                    porcentaje: descuento.discount.valorDescuento,
-                    descripcion: descuento.discount.motivoDescuento,
-                    mes: descuento.discount.meses
-                });
-            }
+      // Obtener el valorDescuentoDiscontinuo y mesesPersonalizados
+      if (descuento.discount) {
+        const meses = descuento.discount.meses || [];
+        for (const mes of meses) {
+          console.log("Guardar descuento");
+          this.descuentosAdicionales.push({
+            tipo: 'Descuento Discontinuo',
+            porcentaje: descuento.discount.valorDescuento,
+            descripcion: descuento.discount.motivoDescuento,
+            mes: descuento.discount.meses
+          });
         }
+      }
     }
     console.log("buscarDescuentosAdicionales - Fin");
-}
+  }
+
+  adicionarMesDescuento(){
+
+    let selectedMonthTemp : string | null = this.selectedMonth; 
+    if(selectedMonthTemp)
+      this.newContract.discount.meses.push(selectedMonthTemp) ;
+    
+    this.selectedMonth = null; 
+  }
+
+  // Método para eliminar un mes de la lista
+  removeMonth(index: number): void {
+    this.newContract.discount.meses.splice(index, 1);
+  }
 
 }

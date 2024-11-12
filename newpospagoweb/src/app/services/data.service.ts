@@ -92,7 +92,18 @@ export class DataService {
   }
 
   public getDiscountByIdContract(idContract: number): Discount[] {
-    return DataService.discounts.filter(c => c.idContract == idContract);
+    return [ 
+      {
+        esContinuo: false,
+        meses: ["01/01/2025", "02/02/2025", "03/03/2025"],
+        anio: "",
+        mesesAnio: [],
+        motivoDescuento: "",
+        valorDescuento: 0,
+        idContract: NaN
+      }
+    ]; 
+    // return DataService.discounts.filter(c => c.idContract == idContract);
   }
 
   public getDevicesByIdContract(idContract: number): Device[] {
@@ -231,8 +242,18 @@ export class DataService {
         }
       }
     );
+  }
 
+  public saveOrders(orders: ServiceOrder[]){
+    orders.forEach(
+      order => {
+        if(DataService.servicesOrders.filter(value => value.agreementId === order.agreementId).length === 0){
+          DataService.servicesOrders.push({ ... order });
+        }else{
 
+        }
+      }
+    );
   }
 
   private randomContracts(): void {
@@ -273,8 +294,9 @@ export class DataService {
   }
 
   private getRandomTipoIdentificacion(): string {
-    const tipos = ['CC', 'CE', 'NIT', 'TI'];
-    return tipos[Math.floor(Math.random() * tipos.length)];
+    const tipos = ['NIT'];
+    return tipos[0];
+    // return tipos[Math.floor(Math.random() * tipos.length)];
   }
 
   private getRandomNumeroIdentificacion(): number {
@@ -310,7 +332,7 @@ export class DataService {
 
   // Método para añadir una orden de servicio a la lista
   public addServiceOrder(serviceOrder: ServiceOrder): void {
-    DataService.servicesOrders.push(serviceOrder);
+    DataService.servicesOrders.push({ ... serviceOrder });
   }
 
   // Método para obtener una orden de servicio por ID

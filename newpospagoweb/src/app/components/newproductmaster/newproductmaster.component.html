@@ -15,10 +15,10 @@
                         [(ngModel)]="customer.documentType" id="documentType" name="documentType">
                         <option selected disabled value="">
                             Seleccione...</option>
+                        <option value="NIT">NIT</option> 
                         <option value="CC">Cédula de Ciudadanía</option>
-                        <option value="CE">Cédula de Extranjería</option>
-                        <option value="NIT">NIT</option>
-                        <option value="TI">Tarjeta de Identidad</option>
+                        <option value="NE">Cédula de Extranjería</option>
+                                               
                     </select>
                 </div>
                 <div class="col-md-6">
@@ -66,7 +66,7 @@
                     <th scope="col">Numero Contrato</th>
                     <th scope="col">Tipo Contrato</th>
                     <th scope="col">Estado</th>
-                    <th scope="col"  colspan="2">Acciones</th>
+                    <th scope="col" colspan="3" style="align-self: center; " >Acciones</th>
                     
                 </tr>
             </thead>
@@ -76,17 +76,23 @@
                     <td>{{ contrato.numeroContrato }}</td>
                     <td>{{ contrato.tipoContrato }}</td>
                     <td>{{ contrato.estado }}</td>
-                    <td><a [routerLink]="['/detailproduct']" [queryParams]="{
+                    <td *ngIf="false"><a [routerLink]="['/detailproduct']" [queryParams]="{
                         idAccount: this.customer.idAccount, 
                         idContract: contrato.idContract,
                         documentNumber: this.customer.documentNumber, 
                         legalName: this.customer.legalName  }">Detalle</a></td>
-                    <td *ngIf="contrato.estado==='PENDIENTE'"><a [routerLink]="['/createproduct']" [queryParams]="{
+                    <td *ngIf="contrato.estado==='PENDIENTE' && false"><a [routerLink]="['/createproduct']" [queryParams]="{
                         idAccount: this.customer.idAccount, 
                         idContract: contrato.idContract,
                         documentNumber: this.customer.documentNumber, 
                         legalName: this.customer.legalName  }">Modificar</a></td>
-                    <td *ngIf="contrato.estado!=='PENDIENTE'"></td>
+                    <td *ngIf="contrato.tipoContrato==='Negociado'"><a [routerLink]="['/createproduct']" [queryParams]="{
+                        idAccount: this.customer.idAccount, 
+                        idContract: contrato.idContract,
+                        documentNumber: this.customer.documentNumber, 
+                        legalName: this.customer.legalName  }">Nueva Orden</a></td>
+                    <td *ngIf="contrato.tipoContrato!=='Negociado'"></td>
+
                     
 
                     
